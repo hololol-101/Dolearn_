@@ -1,0 +1,140 @@
+@charset "utf-8";
+/**
+ * @File Name : login.css
+ * @Description : Login Page
+ * @Modification Information
+ * <pre>
+ * 수정일 | 수정자 | 수정내용
+ * 2019.11.15 | 문영신 | 최초 등록 (( 이전버전 (20140609.~)
+ * 2019.11.21 | 문영신 | 요구반영. 결함개선. 고도화.
+ * </pre>
+ * @author 아이액츠
+ * @since 2019.11.14
+ *
+ * @Copyright (C) IACTS.CO.KR All rights reserved.
+ */
+
+
+/* All Device ◆◆◆◆◆◆◆◆◆◆ */
+
+
+/* 20191121 */
+html{
+	background:url(/assets_doadm/img/inc2/login1bg1.jpg) no-repeat fixed center center;
+	background-size:cover;
+	-ms-text-size-adjust:100%;
+	-webkit-text-size-adjust:100%;
+}
+body{
+	margin:0;
+	background:transparent;
+	font-size:1em;
+	line-height:1.375;
+	letter-spacing:-.03125em;
+	font-family:
+		'Apple SD Gothic Neo',
+		'Microsoft JhengHei',
+		'맑은 고딕','Malgun Gothic',
+		'나눔고딕',NanumGothic,'Nanum Gothic',
+		'돋움',Dotum,
+		Helvetica,
+		sans-serif	;
+}
+label,button,input,select,textarea{font-size:1em;}
+button,input[type=button],input[type=submit],input[type=reset],input[type=image]{overflow:visible;cursor:pointer;}
+img,form,fieldset,iframe,object,embed,video,audio{border:0;vertical-align:top;}
+h1,h2,h3,h4,h5,h6{
+	margin-bottom:.666em;
+	font-weight:600;
+	line-height:1.375;
+	letter-spacing:-.0625em;
+}
+form{margin:0;}
+fieldset{margin-left:0;margin-right:0;padding:0;}
+.blind{position:absolute !important;left:-9999px;width:1px;height:1px;font-size:0;line-height:0;overflow:hidden;}
+
+
+/* 20191121 */
+.cms1login1{
+	position:relative;
+	margin:170px auto;
+	width:1060px;
+	text-align:center;
+	overflow:hidden;
+}
+.cms1login1 .logo{
+	margin:0 0 57px;
+}
+.cms1login1 .logo img{
+	width:auto;
+	height:68px;
+}
+.cms1login1s1{float:right;
+	box-sizing:border-box; /* ☆ */
+	width:500px;
+	height:450px;
+	padding:50px;
+	background:#203146;
+	color:#fff;
+}
+.cms1login1s2{float:left;
+	box-sizing:border-box; /* ☆ */
+	height:450px;
+	padding:50px 0 50px 40px;
+	background:#203146;
+}
+/* ☆ */
+.cms1login1 .hg2{
+	margin:0 0 28px;
+}
+.cms1login1 .hg2 .h1{display:block;
+	margin:0 0 3px;
+	font-size:40px;
+	letter-spacing:0;
+}
+.cms1login1 .hg2 .t1{display:block;}
+.cms1login1 .item{
+	position:relative;
+	margin:0;
+}
+.cms1login1 .lb{display:inline-block;
+	position:absolute;left:0;top:50%;
+	width:32px;height:32px;
+	margin:-16px 32px;
+	background:url() no-repeat center center;
+	background-size:contain;
+	text-indent:-9999px;
+	overflow:hidden;
+}
+.cms1login1 .lb.id{
+	background-image:url(/assets_doadm/img/inc2/ic32a4c1person1.png);
+}
+.cms1login1 .lb.pw{
+	background-image:url(/assets_doadm/img/inc2/ic32a4c1gear1.png);
+}
+.cms1login1 .input{display:block;
+	box-sizing:border-box; /* ☆ */
+	width:100%;
+	height:66px;
+	margin:0 0 20px;
+	padding:0 33px 0 78px;
+	border:0;
+	border-radius:9999px;
+	background:#fff;
+	color:#959595;
+}
+.cms1login1 .input:focus{
+	color:#333;
+}
+.cms1login1 .submit{display:block;
+	width:100%;
+	height:70px;
+	border:0;
+	border-radius:9999px;
+	background:#0657c2;
+	background:linear-gradient(to right, #01c2c3 0, #0657c2 100%);
+	color:#fff;
+	font-weight:bold;
+	font-size:20px;
+	text-align:center;
+}

@@ -1,0 +1,54 @@
+@charset "utf-8";
+
+html{overflow-y:scroll;font-size:62.5%;
+		-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;
+}
+body{margin:0;background:#fff;font-size:1.4em;line-height:1.666;letter-spacing:0;
+	font-family: 'Apple SD Gothic Neo','Microsoft JhengHei', '맑은 고딕','Malgun Gothic','나눔고딕',NanumGothic,'Nanum Gothic','돋움',Dotum,Helvetica,sans-serif;
+	background:url(/scms-static/img/inc/bg2.gif);
+}
+label,button,input,select,textarea{font-size:1em;}
+button,input[type=button],input[type=submit],input[type=reset],input[type=image]{overflow:visible;cursor:pointer;}
+img,form,fieldset,iframe,object,embed,video,audio{border:0;vertical-align:top;}
+h1,h2,h3,h4,h5,h6{margin-bottom:.666em;font-weight:600;line-height:1.333;letter-spacing:-1px;}
+form{margin:0;}
+fieldset{margin-left:0;margin-right:0;padding:0;}
+.blind{position:absolute !important;left:-9999px;width:1px;height:1px;font-size:0;line-height:0;overflow:hidden;/* opacity:0;filter:alpha(opacity=0); ☆Naver */}
+	*+html .blind{height:0;}
+
+
+.login1b{width:800px;height:auto;min-height:100px;overflow:hidden;margin:100px auto 0;}
+.login1b *{list-style:none;margin:0;padding:0;border:0;overflow:hidden;text-align:left;}
+.login1b .title{color:#000;font-size:1em;margin-bottom:0em;}
+.login1b .title:after{content:'';display:table;clear:both;}
+.login1b .title>.h1{float:left;font-size:40px;}
+.login1b .title>.t1{position:relative;float:left;margin:30px 0 0 10px;padding:0 0 0 10px;font-size:16px;}
+.login1b .title>.t1:after{content:"";display:block;position:absolute;top:5px;left:0;height:14px;border-left:1px solid #222;}
+.login1b .wrap1con{border-top:2px solid #222;border-bottom:1px solid #e9e9e9;padding:2em 0;}
+.login1b .loginform{position:relative;width:705px;margin:20px auto;}
+.login1b .loginform>* p{margin:5px 0;}
+.login1b .loginform .lb1{float:left;width:125px;font-size:18px;color:#000;}
+.login1b .loginform .lb1>.ic1{float:left;display:block;width:24px;height:24px;margin:4px 4px 0 0;background:#000 url() no-repeat 50% 50%;background-size:contain;}
+.login1b .loginform .lb1>.ic1.id{background-image:url(../../img/inc/login1bic1id.png);}
+.login1b .loginform .lb1>.ic1.password{background-image:url(../../img/inc/login1bic1password.png);}
+.login1b .loginform .input{float:left;width:430px;height:40px;border:1px solid #d0d0d0;}
+.login1b .loginform .submit{position:absolute;right:0;top:5px;width:130px;height:89px;background:#222;color:#fff;text-align:center;font-size:1.429em;}
+.login1b .note li{padding:0 0 0 2em;font-size:16px;color:#666;}
+.login1b .note li:before{content:'·  ';vertical-align:middle;}
+
+
+.cms1login1{position:relative;margin:100px auto 0;width:950px;overflow:hidden;}
+/* .cms1login1 .logo{margin:32px 0 0;} */
+.cms1login1s1{float:left;width:500px;height:490px;background:#fff;}
+.cms1login1s1 .title1{margin:0 32px;padding:32px 0;border-bottom:1px solid #ddd;text-align:center;}
+.cms1login1s1 .title1 .h1{display:block;font-size:30px;margin:0 0 0;}
+.cms1login1s1 .title1 .t1{display:block;font-size:15px;font-weight:normal;}
+.cms1login1s1 .login_box{width:400px;margin:20px auto 0;}
+.cms1login1s1 .lb1{display:block;font-weight:bold;font-size:16px;}
+.cms1login1s1 .input{display:block;width:398px;height:40px;margin:0 0 15px;background:#fff;border:1px solid #ddd;text-align:middle;line-height:40px;}
+.cms1login1s1 .submit{display:block;width:400px;height:70px;color:#fff;font-weight:bold;font-size:20px;text-align:center;
+	font-family: 'Apple SD Gothic Neo','Microsoft JhengHei', '맑은 고딕';
+	background:#607084 url(/scms-static/img/inc/login1img2.png) no-repeat 37% 50%;
+	border:0;
+}
+.cms1login1s2{float:left;width:450px;height:490px;}

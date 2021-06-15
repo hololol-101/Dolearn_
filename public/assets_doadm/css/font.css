@@ -1,0 +1,196 @@
+@charset "utf-8";
+ /**
+ * font.css
+ * @font-face | class font-family | Mobile
+ * 20201217 | @m | 최초 등록
+ * 20201228 | @m | 요구반영. 결함개선. 고도화.
+ */
+
+
+/* ◇◆ @font-face ◇◆ */
+
+
+/* NanumGothic */
+@font-face {
+	font-family: 'Nanum Gothic';
+	font-weight: 400;
+	src:
+		url(../../font/NanumGothic/400.woff2) format('woff2'),url(../../font/NanumGothic/400.woff) format('woff');
+}
+@font-face {
+	font-family: 'Nanum Gothic';
+	font-weight: 700;
+	src:
+		url(../../font/NanumGothic/700.woff2) format('woff2'),url(../../font/NanumGothic/700.woff) format('woff');
+}
+@font-face {
+	font-family: 'Nanum Gothic';
+	font-weight: 800;
+	src: 
+		url(../../font/NanumGothic/800.woff2) format('woff2'),url(../../font/NanumGothic/800.woff) format('woff');
+}
+
+
+/* Noto Sans KR. 20191129. 20200911. (선명(O).경량(O))
+ */
+@font-face {
+	font-family: 'NotoSans';
+	font-weight: 100;
+	src: local('Noto Sans KR Thin'),local('NotoSansKR-Thin'),
+		url(../../font/NotoSans/100.woff2) format('woff2'),url(../../font/NotoSans/100.woff) format('woff');
+}
+@font-face {
+	font-family: 'NotoSans';
+	font-weight: 300;
+	src: local('Noto Sans KR Light'),local('NotoSansKR-Light'),
+		url(../../font/NotoSans/300.woff2) format('woff2'),url(../../font/NotoSans/300.woff) format('woff');
+}
+@font-face {
+	font-family: 'NotoSans';
+	font-weight: 400;
+	src: local('Noto Sans KR Regular'),local('NotoSansKR-Regular'),
+		url(../../font/NotoSans/400.woff2) format('woff2'),url(../../font/NotoSans/400.woff) format('woff');
+}
+@font-face {
+	font-family: 'NotoSans';
+	font-weight: 500;
+	src: local('Noto Sans KR Medium'),local('NotoSansKR-Medium'),
+		url(../../font/NotoSans/500.woff2) format('woff2'),url(../../font/NotoSans/500.woff) format('woff');
+}
+@font-face {
+	font-family: 'NotoSans';
+	font-weight: 600; /* 20200911. Medium 적용 */
+	src: local('Noto Sans KR Medium'),local('NotoSansKR-Medium'),
+		url(../../font/NotoSans/500.woff2) format('woff2'),url(../../font/NotoSans/500.woff) format('woff');
+}
+@font-face {
+	font-family: 'NotoSans';
+	font-weight: 700;
+	src: local('Noto Sans KR Bold'),local('NotoSansKR-Bold'),
+		url(../../font/NotoSans/700.woff2) format('woff2'),url(../../font/NotoSans/700.woff) format('woff');
+}
+@font-face {
+	font-family: 'NotoSans';
+	font-weight: 900;
+	src: local('Noto Sans KR Black'),local('NotoSansKR-Black'),
+		url(../../font/NotoSans/900.woff2) format('woff2'),url(../../font/NotoSans/900.woff) format('woff');
+}
+
+
+/* Open Sans 20200205
+ * 유니코드범위 0123456789.A-Za-z
+		unicode-range: U+0030-0039, U+002E, U+0041-005A, U+0061-007A;
+		)) [FF]bugFix) Open Sans 하위세트 사용안함
+ */
+@font-face {
+	font-family: 'OpenSans';
+	font-weight: 300;
+	font-style: normal;
+	src: url(../../font/OpenSans/300.woff2) format('woff2'), url(../../font/OpenSans/300.woff) format('woff');
+}
+@font-face {
+	font-family: 'OpenSans';
+	font-weight: 300;
+	font-style: italic;
+	src: url(../../font/OpenSans/300Italic.woff2) format('woff2'), url(../../font/OpenSans/300Italic.woff) format('woff');
+}
+@font-face {
+	font-family: 'OpenSans';
+	font-weight: 400;
+	font-style: normal;
+	src: url(../../font/OpenSans/400.woff2) format('woff2'), url(../../font/OpenSans/400.woff) format('woff');
+}
+@font-face {
+	font-family: 'OpenSans';
+	font-weight: 400;
+	font-style: italic;
+	src: url(../../font/OpenSans/400Italic.woff2) format('woff2'), url(../../font/OpenSans/400Italic.woff) format('woff');
+}
+@font-face {
+	font-family: 'OpenSans';
+	font-weight: 600;
+	font-style: normal;
+	src: url(../../font/OpenSans/600.woff2) format('woff2'), url(../../font/OpenSans/600.woff) format('woff');
+}
+@font-face {
+	font-family: 'OpenSans';
+	font-weight: 600;
+	font-style: italic;
+	src: url(../../font/OpenSans/600Italic.woff2) format('woff2'), url(../../font/OpenSans/600Italic.woff) format('woff');
+}
+@font-face {
+	font-family: 'OpenSans';
+	font-weight: 700;
+	font-style: normal;
+	src: url(../../font/OpenSans/700.woff2) format('woff2'), url(../../font/OpenSans/700.woff) format('woff');
+}
+@font-face {
+	font-family: 'OpenSans';
+	font-weight: 700;
+	font-style: italic;
+	src: url(../../font/OpenSans/700Italic.woff2) format('woff2'), url(../../font/OpenSans/700Italic.woff) format('woff');
+}
+@font-face {
+	font-family: 'OpenSans';
+	font-weight: 800;
+	font-style: normal;
+	src: url(../../font/OpenSans/800.woff2) format('woff2'), url(../../font/OpenSans/800.woff) format('woff');
+}
+@font-face {
+	font-family: 'OpenSans';
+	font-weight: 800;
+	font-style: italic;
+	src: url(../../font/OpenSans/800Italic.woff2) format('woff2'), url(../../font/OpenSans/800Italic.woff) format('woff');
+}
+
+
+/* ◇◆ class font-family ◇◆ */
+
+
+.ffdu{
+	font-family:
+		'돋움',Dotum,
+		sans-serif;
+}
+
+.ffmg{
+	font-family:
+		'맑은 고딕','Malgun Gothic',
+		sans-serif;
+}
+
+.ffng{
+	font-family:
+		'나눔고딕',NanumGothic,'Nanum Gothic',
+		'Microsoft JhengHei',
+		sans-serif;
+}
+
+.ffnsk,
+.ffnss{
+	font-family:
+		'본고딕',NotoSans,'Noto Sans CJK KR',
+		'Microsoft JhengHei',
+		sans-serif;
+}
+
+
+@media only screen and (-webkit-min-device-pixel-ratio:1.3){ /* [Mobile] ◇◆◇◆◇◆◇◆◇◆ */
+
+
+/* UA 기본폰트 */
+html[lang|='ko'],
+html [lang|='ko'],
+html [lang|='ko']>*{
+	font-family:sans-serif;
+}
+
+/* [class], */ /* ☆ 이거하면 위에서 클래스로 정의한 모든 폰트를 기본으로 되돌린다. */
+.ffng,
+.ffnsk,
+.ffnss{
+	font-family:sans-serif;
+}
+
+
+}/* /[Mobile] */

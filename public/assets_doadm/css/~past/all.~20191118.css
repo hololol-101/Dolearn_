@@ -1,0 +1,135 @@
+@charset "utf-8";
+/**
+ * @File Name : all.css
+ * @Description : Base Adjust + Layout[main+sub] Mobile First!
+ * @Modification Information
+ * <pre>
+ * 수정일 | 수정자 | 수정내용
+ * 2019.11.15 | 문영신 | 최초 등록 (( 이전버전
+ * 2019.11.20 | 문영신 | 요구반영. 결함개선. 고도화.
+ * </pre>
+ * @author 웹표준화실 문영신
+ * @since 2019.11.14
+ *
+ * @Copyright (C) IACTS.CO.KR All rights reserved.
+ */
+
+
+/* All Device ◆◆◆◆◆◆◆◆◆◆ */
+
+/* Layout Main&Sub Pages ◆◆◆ */
+
+html{}
+body{}
+#container{position:relative;margin:auto;}
+
+
+/* Reset */
+.init, .init *{list-style:none;margin:0;padding:0;}
+
+
+/* Layout */
+.layout_top{height:170px;background:#030a23;}
+
+
+/* table.layout */
+table.layout{
+	table-layout:fixed;
+	width:100%;
+	border:0;border-collapse:collapse;
+	word-break:break-all;
+}
+table.layout td.layout_left{
+	width:230px;
+	background:#08214c;
+	vertical-align:top;
+	overflow:hidden;
+}
+table.layout td.layout_right{
+	vertical-align:top;
+}
+
+
+/* 로고 */
+#logo{
+	float:left;
+	z-index:10;
+	position:absolute;left:0;top:40px;
+	margin:0;
+	padding:44px 0 0 46px;
+	border:0;
+	background:none;
+	overflow:hidden;
+}
+
+
+/* GNB */
+#gnb1{float:right;}
+#gnb1 a{display:block;
+	float:left;
+	padding:10px 20px;
+	height:20px;
+	line-height:20px;
+	font-size:14px;
+	color:#f3f5fb;
+	border-left:1px solid rgba(255,255,255, .2);
+	text-decoration:none
+}
+#gnb1 .ic1{display:inline-block;
+	float:left;
+	width:20px;
+	height:20px;
+	margin:0 4px 0 0;
+	background:url() no-repeat;
+}
+#gnb1 a.time1 .ic1{background-image:url(/scms-static2/img/inc2/ic20a1c0clock1.png)}
+#gnb1 a.home1 .ic1{background-image:url(/scms-static2/img/inc2/ic20a1c0home1.png)}
+#gnb1 a.logout1 .ic1{background-image:url(/scms-static2/img/inc2/ic20a1c0power1.png)}
+#gnb1 a.adm1set1 .ic1{background-image:url(/scms-static2/img/inc2/ic20a1c0gear1.png)}
+
+
+/*  비주얼 */
+#visual{
+	clear:both;
+	height:130px;
+	background:url(/scms-static2/img/inc2/v1p.jpg) no-repeat;
+	overflow:hidden;
+}
+
+
+/* #tnb1 */
+#tnb1{display:block;
+	position:relative;
+	width:100%;
+	padding:30px 0 0;
+	overflow:hidden;
+}
+#tnb1 div.d1{}
+#tnb1 div.d1 div.bg{}
+#tnb1 div.d1>ul{}
+#tnb1 div.d1>ul>li{display:inline;}
+/*#tnb1 div.d1>ul>li>a{display:block;height:54px;margin:0;padding:0 30px 0 18px;color:#fff;font-size:17px;line-height:54px;text-decoration:none;overflow:hidden;}*/
+#tnb1 div.d1>ul>li>a{display:block;height:54px;margin:0;padding:0 0 0 18px;color:#fff;font-size:17px;line-height:54px;text-decoration:none;overflow:hidden;}
+#tnb1 div.d1>ul>li:first-child>a{}
+#tnb1 div.d1>ul>li>a:after{content:'';display:inline-block;margin:0 0 0 5px;width:15px;height:13px;background:url(/scms-static2/img/inc/tnb1ic1.png) no-repeat;}
+#tnb1 div.d1>ul>li.on>a{position:relative;background-color:#425064;}
+#tnb1 div.d1>ul>li.on>a:after{background:none;}
+#tnb1 div.d2{display:none;padding:10px 0;}
+#tnb1 li.on>div.d2{/* display:block; */}
+#tnb1 div.d2 div.bg{}
+#tnb1 div.d2>ul{}
+#tnb1 div.d2>ul>li{display:inline;}
+#tnb1 div.d2>ul>li>a{display:block;margin:-1px 0 0 0;padding:4px 30px 4px 18px;color:#c4ccd6;line-height:18px;text-decoration:none;overflow:hidden;}
+#tnb1 div.d2>ul>li.hasSubNav>a{}
+#tnb1 div.d2>ul>li.on>a{background-color:#fff;color:#8692a0;font-weight:bold;}
+#tnb1 div.d2>ul>li>a:hover,
+#tnb1 div.d2>ul>li>a:focus{background-color:#fff;color:#8692a0}
+#tnb1 div.d3{padding:10px 0;background:#fff;}
+#tnb1 div.d3>ul>li>a{display:block;margin:-1px 0 0 0;padding:2px 30px 2px 18px;color:#333;line-height:18px;text-decoration:none;overflow:hidden;}
+#tnb1 div.d3>ul>li>a:before{content:'- '}
+#tnb1 div.d3>ul>li>a:hover{color:#bf0023;}
+#tnb1 div.d3>ul>li.on>a{color:#bf0023;font-weight:bold;}
+
+/* #content1 */
+#content1{padding:50px 36px 50px;}
+

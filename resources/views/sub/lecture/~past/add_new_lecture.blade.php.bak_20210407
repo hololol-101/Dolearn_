@@ -1,0 +1,463 @@
+<!--
+/**
+ * SubPage Template
+ * 20210102 | @m | 최초 등록
+ * 20210215 | @m | 요구반영. 결함개선. 고도화.
+ * ~20210318~20210302 | @m |
+ */
+-->
+@php
+$step = isset($_GET['step']) ? $_GET['step'] : '';
+$isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
+$title = '';
+
+if ($step == '' || $step == 'basic_info') {
+    $title = '기본정보';
+
+} else if ($step == 'introduce') {
+    $title = '강좌소개';
+
+} else if ($step == 'curriculum') {
+    $title = '커리큘럼';
+
+} else if ($step == 'preview') {
+    $title = '미리보기';
+}
+@endphp
+
+@extends('master_sub')
+
+@section('title', '새 강좌 만들기 - '.$title)
+
+@section('content')
+<!-- #body -->
+<div id="body" tabindex="-1">
+<!-- container -->
+<div class="container clearfix">
+
+
+<!-- width2wrap1 -->
+<div class="width2wrap1 bgc2">
+<!-- container -->
+<div class="container clearfix">
+
+
+<!-- even-grid -->
+<div class="even-grid gap0 vgap00">
+	<div class="small-12 medium-12 large-3 column tal vam">
+		<a href="{{ url('/') }}" class="cp1b1back1"><i class="ic1"></i><span class="t1">돌아가기</span></a>
+		<h2 class="hb1 h1 mgt025em mgb025em">새 강좌 만들기</h2>
+	</div>
+	<div class="small-12 medium-8 large-6 column tac vam">
+		<!-- cp1step1 -->
+		<div class="cp1step1">
+			<strong class="blind">진행 단계</strong>
+			<ol class="w1step">
+			<li class="step @if ($step == '' || $step == 'basic_info') on @endif" title="현재 진행 단계">기본정보</li>
+			<li class="step @if ($step == 'introduce') on @endif">강좌소개</li>
+			<li class="step @if ($step == 'curriculum') on @endif">커리큘럼</li>
+			<li class="step @if ($step == 'preview') on @endif">미리보기</li>
+			</ol>
+		</div>
+		<!-- /cp1step1 -->
+	</div>
+	<div class="small-12 medium-4 large-3 column tar vam">
+		{{-- <a href="{{ route('sub.lecture.add_new_lecture', ['step' => 'introduce']) }}" class="button t1ic1 mgl0375em fsS1"><span class="t1">저장 후 다음</span> <i class="ic1 next"></i></a> --}}
+        @if ($step == '' || $step == 'basic_info')
+            <a href="javascript:void(0);" onclick="saveAndGoNextStep('introduce')" class="button t1ic1 mgl0375em fsS1"><span class="t1">저장 후 다음</span> <i class="ic1 next"></i></a>
+        @elseif ($step == 'introduce')
+            <a href="javascript:void(0);" onclick="saveAndGoNextStep('basic_info')" class="button ic1t1 mgl0375em fsS1"><i class="ic1 prev"></i> <span class="t1">저장 후 이전</span></a>
+            <a href="javascript:void(0);" onclick="saveAndGoNextStep('curriculum')" class="button ic1t1 mgl0375em fsS1"><span class="t1">저장 후 다음</span> <i class="ic1 next"></i></a>
+        @elseif ($step == 'curriculum')
+            <a href="javascript:void(0);" onclick="saveAndGoNextStep('introduce')" class="button ic1t1 mgl0375em fsS1"><i class="ic1 prev"></i> <span class="t1">저장 후 이전</span></a>
+            <a href="javascript:void(0);" onclick="saveAndGoNextStep('preview')" class="button t1ic1 mgl0375em fsS1"><span class="t1">저장 후 다음</span> <i class="ic1 next"></i></a>
+        @elseif ($step == 'preview')
+            <a href="javascript:history.back();" onclick="" class="button ic1t1 mgl0375em fsS1"><i class="ic1 prev mgl-0375em mgr0375em"></i> <span class="t1">이전</span></a>
+            <a href="javascript:void(0);" onclick="" class="button mgl0375em fsS1 pdl1em pdr1em"><span class="t1">생성하기</span></a>
+        @endif
+	</div>
+</div>
+<!-- /even-grid -->
+
+
+</div>
+<!-- /container -->
+</div>
+<!-- /width2wrap1 -->
+
+{{-- 기본정보입력 --}}
+@if ($step == '' || $step == 'basic_info')
+@include('sub.lecture.inc_new_lecture_basic_info')
+
+{{-- 강좌소개입력 --}}
+@elseif ($step == 'introduce')
+@include('sub.lecture.inc_new_lecture_introduce')
+
+{{-- 커리큘럼입력 --}}
+@elseif ($step == 'curriculum')
+@include('sub.lecture.inc_new_lecture_curriculum')
+
+{{-- 미리보기 --}}
+@elseif ($step == 'preview')
+@include('sub.lecture.inc_new_lecture_preview')
+@endif
+
+</div>
+<!-- /container -->
+</div>
+<!-- /#body -->
+@endsection
+
+@section('script')
+<script>
+$(function() {
+    @if ($isFree == 'Y' || $isFree == '')
+    $('#price').hide();
+    $('#div_duration').hide();
+    @endif
+
+    // 필수 대분류 카테고리 선택
+    $('#main_bcate').change(function() {
+        $('#main_scate').empty();
+        $('#main_psubject').empty();
+        $('#main_scate').append('<option value="">선택하세요</option>');
+        $('#main_psubject').append('<option value="">선택하세요</option>');
+
+        var bcateId = $('#main_bcate').val();
+        var scateId = $('#main_scate').val();
+
+        getCategoryData(bcateId, scateId, 'main');
+    });
+
+    // 필수 소분류 카테고리 선택
+    $('#main_scate').change(function() {
+        $('#main_psubject').empty();
+        $('#main_psubject').append('<option value="">선택하세요</option>');
+
+        var bcateId = $('#main_bcate').val();
+        var scateId = $('#main_scate').val();
+
+        getCategoryData(bcateId, scateId, 'main');
+    });
+
+
+    // 서브 대분류 카테고리 선택
+    $('#sub_bcate').change(function() {
+        $('#sub_scate').empty();
+        $('#sub_psubject').empty();
+        $('#sub_scate').append('<option value="">선택하세요</option>');
+        $('#sub_psubject').append('<option value="">선택하세요</option>');
+
+        var bcateId = $('#sub_bcate').val();
+        var scateId = $('#sub_scate').val();
+
+        getCategoryData(bcateId, scateId, 'sub');
+    });
+
+    // 서브 소분류 카테고리 선택
+    $('#sub_scate').change(function() {
+        $('#sub_psubject').empty();
+        $('#sub_psubject').append('<option value="">선택하세요</option>');
+
+        var bcateId = $('#sub_bcate').val();
+        var scateId = $('#sub_scate').val();
+
+        getCategoryData(bcateId, scateId, 'sub');
+    });
+
+    // 기존 저장된 주제 목록 추가
+    @if (isset($lectureTagList))
+        @foreach ($lectureTagList as $lectureTag)
+        $('#add_subject').append('<a href="javascript:void(0);" class="a1 on">{{ $lectureTag }}</a>');
+        @endforeach
+    @endif
+});
+
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
+// 강좌 썸네일 이미지 파일 업로드
+$('#★1file0').change(function() {
+    $('#image-upload-form').submit();
+});
+
+$('#image-upload-form').submit(function(e) {
+    e.preventDefault();
+    var formData = new FormData(this);
+
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: "{{ route('etc.store_image') }}",
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: (response) => {
+            if (response.status == 'success') {
+                $('#thumb-image').attr('src', response.savePath);
+                $('#input-filename').val(response.fileName);
+            }
+        },
+        error: function(response) {
+            console.log(response);
+        }
+    });
+});
+
+// 유/무료 선택 시 가격, 수강 기간 표시 토글
+function toggleFreeValue(isFree) {
+    $('#is_free').val(isFree);
+
+    if (isFree == 'Y') {
+        $('#price').hide();
+        $('#div_duration').hide();
+    } else {
+        $('#price').show();
+        $('#div_duration').show();
+    }
+}
+
+// 필수/서브 카테고리 선택 시 카테고리 목록 조회
+function getCategoryData(bcateId, scateId, isMain) {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: "{{ route('sub.lecture.get_category_data') }}",
+        data: {
+            'bcate_id': bcateId,
+            'scate_id': scateId
+        },
+        // contentType: false,
+        // processData: false,
+        success: (data) => {
+            if (data.status == 'success') {
+                var html = '';
+
+                if (scateId != '') {
+                    var psubjectList = JSON.parse(data.psubjectList);
+
+                    for (var key in psubjectList) {
+                        // console.log(psubjectList[key].psubject_name);
+                        html = "<option value='"+ psubjectList[key].psubject_name +"'>" + psubjectList[key].psubject_name + "</option>";
+
+                        if (isMain == 'main') {
+                            $('#main_psubject').append(html);
+                        } else {
+                            $('#sub_psubject').append(html);
+                        }
+                    }
+
+                } else {
+                    var scategoryList = JSON.parse(data.scategoryList);
+
+                    for (var key in scategoryList) {
+                        // console.log(scategoryList[key].scate_name);
+                        html = "<option value='"+ scategoryList[key].scate_id +"'>" + scategoryList[key].scate_name + "</option>";
+
+                        if (isMain == 'main') {
+                            $('#main_scate').append(html);
+                        } else {
+                            $('#sub_scate').append(html);
+                        }
+                    }
+                }
+            }
+        },
+        error: function(request, status, error) {
+            console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
+        },
+        complete: function(data) {
+
+        }
+    });
+}
+
+// 입력 정보 저장 후 다음 단계로 이동
+function saveAndGoNextStep(nextStep) {
+    // 기본 정보
+    var title = $('#title').val();
+    var description = $('#description').val();
+    var saveThumbnail = $('#input-filename').val();
+    var level = $('input[name=level]:checked').val();
+
+    @if ($step == 'basic_info')
+    var isFree = $('#is_free').val();
+    @else
+    var isFree = '{{ $isFree }}';
+    @endif
+
+    var price = $('#price').val();
+    var duration = $('#duration').val();
+    var category1 = $('#main_psubject').val();
+    var category2 = $('#sub_psubject').val();
+    var mainBCateId = $('#main_bcate').val();
+    var mainSCateId = $('#main_scate').val();
+    var mainSubject = $('#main_psubject').val();
+    var subBCateId = $('#sub_bcate').val();
+    var subSCateId = $('#sub_scate').val();
+    var subSubject = $('#sub_psubject').val();
+    var lectureTags = '';
+
+    $.each($('#add_subject').children(), function(index, item) {
+        lectureTags += item.text;
+        lectureTags += '|';
+    });
+    lectureTags = lectureTags.slice(0, -1);
+
+    // 강좌 소개
+    var addInfo1InputList = $('#addinfo1 input[type=text]');
+    var addInfo2InputList = $('#addinfo2 input[type=text]');
+    var addInfo3InputList = $('#addinfo3 input[type=text]');
+    var addInfo1 = '';
+    var addInfo2 = '';
+    var addInfo3 = '';
+    var introduction = '';
+
+    $.each(addInfo1InputList, function(index, value) {
+        if ($(value).val() != '') {
+            addInfo1 += $(value).val() + '|';
+        }
+    });
+
+    $.each(addInfo2InputList, function(index, value) {
+        if ($(value).val() != '') {
+            addInfo2 += $(value).val() + '|';
+        }
+    });
+
+    $.each(addInfo3InputList, function(index, value) {
+        if ($(value).val() != '') {
+            addInfo3 += $(value).val() + '|';
+        }
+    });
+
+    addInfo1 = addInfo1.slice(0, -1);
+    addInfo2 = addInfo2.slice(0, -1);
+    addInfo3 = addInfo3.slice(0, -1);
+
+    @if ($step == 'introduce')
+    introduction = CKEDITOR.instances.editor.getData();
+    @endif
+
+    // 커리큘럼
+
+    // 입력 데이터 유효성 검사
+    if (title == '') {
+        alert('강좌 제목을 입력해주세요.');
+        $('#title').focus();
+        return false;
+    }
+
+    if (description == '') {
+        alert('강좌 설명을 입력해주세요.');
+        $('#description').focus();
+        return false;
+    }
+
+    if (level == '') {
+        alert('난이도를 선택해주세요.');
+        return false;
+    }
+
+    if (isFree == 'N') {
+        if (price == 0 || price == '') {
+            alert('가격을 입력해주세요.');
+            $('#price').focus();
+            return false;
+        }
+    }
+
+    if (mainBCateId == '' || mainSCateId == '' || mainSubject == '') {
+        alert('필수 카테고리를 선택해주세요.');
+        $('#main_bcate').focus();
+        return false;
+    }
+
+    if (subBCateId == '' || subSCateId == '' || subSubject == '') {
+        alert('서브 카테고리를 선택해주세요.');
+        $('#sub_bcate').focus();
+        return false;
+    }
+
+    @if ($step == 'introduce')
+    if (addInfo1 == '' || addInfo2 == '' || addInfo3 == '') {
+        alert('필수 항목을 입력해주세요.');
+        return false;
+    }
+    @endif
+
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: "{{ route('sub.lecture.tempsave_add_lecture') }}",
+        data: {
+            'step': '{{ $step }}',
+            'title': title,
+            'description': description,
+            'save_thumbnail': saveThumbnail,
+            'level': level,
+            'free_yn': isFree,
+            'price': price,
+            'duration': duration,
+            'main_bcate_id': mainBCateId,
+            'main_scate_id': mainSCateId,
+            'main_subject': mainSubject,
+            'sub_bcate_id': subBCateId,
+            'sub_scate_id': subSCateId,
+            'sub_subject': subSubject,
+            'lecture_tags': lectureTags,
+            'add_info_1': addInfo1,
+            'add_info_2': addInfo2,
+            'add_info_3': addInfo3,
+            'introduction': introduction,
+            'main_video': '',
+            'b_cate_list': '',
+            's_cate_list': '',
+            'lecture_list': '',
+            'curriculum_tags': ''
+        },
+        // contentType: false,
+        // processData: false,
+        success: (data) => {
+            if (data.status == 'success') {
+                // alert('done!');
+                location.href='/sub/lecture/add_new_lecture?step=' + nextStep + '&is_free=' + isFree;
+            }
+        },
+        error: function(request, status, error) {
+            console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
+        },
+        complete: function(data) {
+
+        }
+    });
+
+    // location.href='/sub/lecture/add_new_lecture?step=' + nextStep + '&is_free=' + isFree;
+}
+
+// 키보드로 입력 시 숫자 유효성 검사
+function checkInputInteger() {
+    /** 키보드 ASCII 코드
+     * 48~57 : 0~9
+     * 96~105 : 키패드 0~9
+     * 37~40 : 방향키
+     * 8 : BACKSPACE
+     * 9 : TAB
+     * 46 : DEL
+     * 13 : ENTER
+     * 27 : ESC
+    */
+    if (!((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || (event.keyCode >= 37 && event.keyCode <= 40) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 46 || event.keyCode == 13 || event.keyCode == 27)) {
+        alert('숫자만 입력해주세요.');
+        event.returnValue = false;
+        // $('#price').val('');
+        $('#price').focus();
+
+        return false;
+    }
+}
+</script>
+@endsection

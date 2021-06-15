@@ -1,0 +1,355 @@
+@charset "utf-8";
+/**
+ * @File Name : all.css
+ * @Description : Layout MainPage | Main Contents
+ * @Modification Information
+ * <pre>
+ * 수정일 | 수정자 | 수정내용
+ * 2019.11.15 | 문영신 | 최초 등록 (( 이전버전 (20140609.~)
+ * 2019.11.21 | 문영신 | 요구반영. 결함개선. 고도화.
+ * </pre>
+ * @author 아이액츠
+ * @since 2019.11.14
+ *
+ * @Copyright (C) IACTS.CO.KR All rights reserved.
+ */
+
+
+/* All Device ◆◆◆◆◆◆◆◆◆◆ */
+
+/* Layout MainPages ◆◆◆ */
+
+
+#content1{
+	padding:45px;
+	background:#f7f7f7;
+}
+
+#wrap{
+	clear:both;
+	z-index:10;
+	width:1000px;
+	margin:auto;
+}
+	#wrap:after{content:'';display:table;clear:both;}
+	#body{}
+	#body:after{content:'';display:table;clear:both;}
+
+
+/* Reset */
+.mainbody *{list-style:none;margin:0;padding:0;color:#666;}
+
+
+/* Contents ◆◆◆ */
+
+
+.bt1{display:inline-block;position:relative;height:22px;padding:0 10px 0 25px;border:1px solid #0b650b;border-color:#0b650b #095609 #095109 #0b650b;border-radius:4px;background:#1a891a;
+	background:linear-gradient(to bottom,#1a891a,#157115);	
+	color:#fff !important;font-size:0.923em;line-height:22px;
+}
+.bt1 .ic1{float:left;position:absolute;left:5px;top:3px;width:17px;height:17px;background:url(/assets_doadm/img/inc/b1s.png) no-repeat;overflow:hidden;text-indent:-9999px;}
+.bt2{display:inline-block;position:relative;height:22px;padding:0 10px;border:1px solid #ccc;border-color:#ccc #bbb #aaa #ccc;border-radius:4px;background:#f4f4f4;
+	background:linear-gradient(to bottom,#fff,#e5e5e5);
+	color:#333 !important;font-size:0.923em;line-height:22px;
+}
+
+
+#dashboard1{margin:0 0 20px 0;overflow:hidden;}
+#dashboard1 .header{position:relative;text-align:center;}
+#dashboard1 .h1{display:block;position:relative;margin:0 0 10px 0;background:none !important;padding:0 !important;border:0 !important;}
+#dashboard1 .set1{padding:12px 20px 0 0;text-align:center;font-size:15px;}
+#dashboard1 .ymd{margin:0 .8em 0 0;color:#888;}
+#dashboard1 .hm{margin:0 .8em 0 0;color:#888;}
+#dashboard1 .bt1.b2{float:left;background-position:-17px 0;}
+#dashboard1 .bt1.b2 .ic1{background-position:-17px 0;}
+
+
+/* 20191121 */
+#state1{
+	position:relative;
+	margin:0 0 35px;
+	background:#203146;
+	overflow:hidden;
+}
+#state1 .m{float:left;
+	position:relative;
+	width:249px;
+	height:100px;
+	margin:-1px 0 -1px -1px;
+	border:1px solid #475465;
+	background:#203146;
+}
+#state1 .m4,
+#state1 .m8{width:248px;border-right:0;}
+#state1 .m .w1{} /* 유연한 스타일 위해 추가했으나 안씀 */
+#state1 .m .txt1{display:block;
+	margin:0 0 0 80px;
+	padding:24px 0;
+	text-align:left;
+}
+#state1 .m .h1{display:block;
+	margin:0 0 5px;
+	color:#fff;
+	font-weight:normal;
+	font-size:14px;
+}
+#state1 .m .num{display:inline-block;
+	margin:0 0 5px;
+	color:#fff;
+	font-size:20px;
+}
+#state1 .m .updown{display:inline-block;
+	position:relative;
+	color:#fff;
+}
+#state1 .m .updown .ic1{display:none;width:12px;height:10px;background:url(/assets_doadm/img/inc/b4s.png) no-repeat;}
+#state1 .m .updown.up{}
+#state1 .m .updown.up .ic1{display:inline-block;background-position:0 0;}
+#state1 .m .updown.down{}
+#state1 .m .updown.down .ic1{display:inline-block;background-position:0 -10px;}
+#state1 .m .icon1{display:block;
+	position:absolute;left:0;top:50%;
+	width:50px;height:50px;
+	margin:-25px 20px;
+	background:url() no-repeat;
+}
+#state1 .m1 .icon1{background-image:url(/assets_doadm/img/inc2/state1p01.png);}
+#state1 .m2 .icon1{background-image:url(/assets_doadm/img/inc2/state1p02.png);}
+#state1 .m3 .icon1{background-image:url(/assets_doadm/img/inc2/state1p03.png);}
+#state1 .m4 .icon1{background-image:url(/assets_doadm/img/inc2/state1p04.png);}
+#state1 .m5 .icon1{background-image:url(/assets_doadm/img/inc2/state1p05.png);}
+#state1 .m6 .icon1{background-image:url(/assets_doadm/img/inc2/state1p06.png);}
+#state1 .m7 .icon1{background-image:url(/assets_doadm/img/inc2/state1p07.png);}
+#state1 .m8 .icon1{background-image:url(/assets_doadm/img/inc2/state1p08.png);}
+
+
+/* 20191121 */
+#popkeyword1{
+	position:relative;
+	box-sizing:border-box; /* ☆ */
+	margin:0 0 35px;
+	padding:20px;
+	background:#0081d2;
+	line-height:1.375;
+	overflow:hidden;
+	overflow-y:auto;
+}
+#popkeyword1 .h1{
+	position:relative;
+	margin:0 0 10px;
+	padding:8px 0 0 40px;
+	color:#fff;
+	font-size:20px;
+	background:transparent;
+}
+#popkeyword1 .h1 .ic1{
+	float:left;
+	position:absolute;left:0;top:0;
+	width:40px;height:40px;
+	background:url(/assets_doadm/img/inc2/ic32a3c0thumb1.png) no-repeat;
+	overflow:hidden;
+	text-indent:-9999px;
+}
+#popkeyword1 .bt2{float:left;position:absolute;right:19px;top:16px;}
+#popkeyword1 .ml{}
+#popkeyword1 .m{display:inline;}
+#popkeyword1 .m a{display:inline-block;
+	padding:.25em .5em;
+	border-radius:4px;
+	color:#fff;
+}
+#popkeyword1 .m a:hover,
+#popkeyword1 .m a:focus{
+	background:#044c7e;
+	text-decoration:none;
+}
+
+
+/* 20191121 */
+.listBox1{
+	position:relative;
+	box-sizing:border-box; /* ☆ */
+	width:486px;
+	height:250px;
+	margin:0 0 25px 0;
+	padding:27px 35px;
+	background:#fff;
+	overflow:hidden;
+	box-shadow:0 5px 10px 0 rgba(0, 0, 0, .1);
+}
+.listBox1 .h1{
+	position:relative;
+	margin:0;
+	padding:0;
+	background:none;
+	color:#333;
+	font-size:20px;
+}
+.listBox1 .more{float:left;
+	position:absolute;right:35px;top:27px;
+	width:25px;height:25px;
+	border:1px solid #555;
+	background:url(/assets_doadm/img/inc2/ic15a1c2plus1.png) no-repeat center center;
+	overflow:hidden;text-indent:-9999px;
+}
+.listBox1 .cont1{
+	padding:15px 0;
+}
+.listBox1 .m .t1{float:left;max-width:100%;line-height:30px;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;overflow:hidden;}
+.listBox1 .m .t2{float:right;width:50px;margin:0 -50px 0 0;line-height:30px;letter-spacing:0;text-align:right;}
+.listBox1 .m b{color:#333;}
+/* ☆ */
+.listType1{}
+.listType1 .bu1{}
+.listType1 .m{display:inline;}
+.listType1 .m a{display:block;height:30px;padding:0 50px 0 12px;background:url(/assets_doadm/img/inc2/bu1.png) no-repeat 0 12px;color:#666;overflow:hidden;cursor:pointer;}
+/* ☆ */
+.listType2{}
+.listType2 .bo1{padding:0;}
+.listType2 .m{display:inline;}
+.listType2 .m a{display:block;
+	position:relative;
+	height:30px;
+	padding:0 50px 0 30px;
+	color:#666;
+	overflow:hidden;
+	cursor:pointer;
+}
+.listType2 .m a:before{content:''; /* O */
+	display:inline-block;
+	position:absolute;left:0;top:0;
+	box-sizing:border-box; /* ☆ */
+	width:24px;height:24px;
+	margin:3px 0 0;
+	padding:2px 0 0;
+	border-radius:9999px;
+	background:#777;
+	color:#fff;
+	text-align:center;
+}
+.listType2 .m.n1 a:before{content:'1';background:#013c78;}
+.listType2 .m.n2 a:before{content:'2';background:#0153a7;}
+.listType2 .m.n3 a:before{content:'3';background:#2a71c5;}
+.listType2 .m.n4 a:before{content:'4';}
+.listType2 .m.n5 a:before{content:'5';}
+/* ☆ */
+.listType3{}
+.listType3 .scroll1{overflow:scroll;overflow-x:hidden;}
+.listType3 .bu1{width:347px;padding:15px 19px;}
+.listType3 .m{display:inline;}
+.listType3 .m a{float:left;width:157px;height:24px;padding:0 8px 0 8px;background:url(/assets_doadm/img/inc/bu1.png) no-repeat 0 9px;color:#666;line-height:24px;overflow:hidden;cursor:pointer;}
+/* ☆ */
+#list1, 
+#list3,
+#list5{float:left;}
+#list2, 
+#list4,
+#list6{float:right;}
+/* ☆ */
+#list1 .h1 .ic1{background-position:0 0;}
+#list1 .menu1{position:absolute;left:200px;top:27px;font-size:1.077em;}
+#list1 .menu1 .sep1{}
+#list1 .menu1 .m{color:#666;}
+#list1 .menu1 .m.on{color:#0fa0b3;font-weight:bold;}
+
+
+/* 20191121 */
+#mainchart1{float:left;
+	position:relative;
+	box-sizing:border-box; /* ☆ */
+	width:486px;
+	height:350px;
+	margin:0 0 25px 0;
+	padding:27px 35px;
+	background:#fff;
+	overflow:hidden;
+	box-shadow:0 5px 10px 0 rgba(0, 0, 0, .1);
+}
+#mainchart1 .h1{
+	position:relative;
+	margin:0;
+	padding:0;
+	background:none;
+	color:#333;
+	font-size:20px;
+}
+#mainchart1 .more{float:left;
+	position:absolute;right:35px;top:27px;
+	width:25px;height:25px;
+	border:1px solid #555;
+	background:url(/assets_doadm/img/inc2/ic15a1c2plus1.png) no-repeat center center;
+	overflow:hidden;text-indent:-9999px;
+}
+#mainchart1 .cont1{
+	padding:30px 0;
+}
+/* ☆ */
+#mainchart2{float:right;
+	position:relative;
+	box-sizing:border-box; /* ☆ */
+	width:486px;
+	height:350px;
+	margin:0 0 25px 0;
+	padding:27px 35px;
+	background:#fff;
+	overflow:hidden;
+	box-shadow:0 5px 10px 0 rgba(0, 0, 0, .1);
+}
+#mainchart2 .h1{
+	position:relative;
+	margin:0;
+	padding:0;
+	background:none;
+	color:#333;
+	font-size:20px;
+}
+#mainchart2 .more{float:left;
+	position:absolute;right:35px;top:27px;
+	width:25px;height:25px;
+	border:1px solid #555;
+	background:url(/assets_doadm/img/inc2/ic15a1c2plus1.png) no-repeat center center;
+	overflow:hidden;text-indent:-9999px;
+}
+#mainchart2 .cont1{
+	padding:30px 0;
+}
+/* ☆ */
+.newChart {width:100%;height:220px;}
+
+
+@media all and (min-width:1600px){/* ◇◆◇◆◇◆◇◆◇◆ */
+
+
+#wrap{width:1310px;}
+
+
+#state1{float:left;
+	width:865px;
+	height:200px;
+}
+#state1 .m{width:215px;}
+#state1 .m4,
+#state1 .m8{width:217px;}
+
+#popkeyword1{float:right;width:420px;height:200px;}
+
+.listBox1{
+	float:left !important;
+	width:420px;
+	margin:0 25px 25px 0;
+}
+
+#list4,
+#list7{
+	margin-right:0;	
+}
+
+#mainchart1{float:left;
+	width:642px;
+}
+#mainchart2{float:right;
+	width:642px;
+}
+
+
+} /* /(min-width:1600px) */

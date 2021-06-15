@@ -1,0 +1,136 @@
+@charset "utf-8";
+/* 20140617. Template by MoonYoungshin. YYYYMMDD. Last Writer. */
+/* Base Reset | Form | Property Solo | UX */
+
+/* Base Reset. 20140617 ◆◆◆ */
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block;}
+html{/* overflow-x:hidden; */overflow-y:scroll;}
+body{margin:0;background:#fff;font-size:13px; /* line-height:1.75; >> sub.css */ /* word-wrap:break-word; >> board.css */ -webkit-text-size-adjust:none;}
+body,input,select,button,textarea,pre,code,kbd,samp{font-family:'맑은 고딕','Malgun Gothic','Nanum Gothic','돋움',Dotum,AppleGothic,helvetica,sans-serif;}
+i,em,cite,dfn,var,address{font-style:normal;}
+label,select,input,button,textarea{font-size:1em;vertical-align:middle;overflow:visible;}
+button,input[type=submit],input[type=reset],input[type=button],input[type=image],input[type=radio],input[type=checkbox]{cursor:pointer;}
+img,form,fieldset,iframe,object,embed,video,audio{max-width:100%;/* height:auto; */border:0;vertical-align:top;}
+table,pre{font-size:1em;}
+table{border-collapse:collapse;border-spacing:0;}
+pre{white-space:pre-wrap;word-wrap:break-word;}
+h1,h2,h3,h4,h5,h6,p,ul,ol,dl,menu,blockquote,fieldset,form,pre{margin-top:1.5em;margin-bottom:1.5em;}
+blockquote,q{quotes:none;}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
+a{text-decoration:none;}
+a:link,a:visited{color:#04c;cursor:pointer;}
+a:link:hover,a:link:active,a:link:focus,
+a:visited:hover,a:visited:active,a:visited:focus{color:#000 /* #09c */;text-decoration:underline;}
+small,sub,sup{font-size:.88em}
+abbr{cursor:help}
+em{color:#d00;}
+hr{display:none;}
+/* body,h1,h2,h3,h4,h5,h6,p,ul,ol,dl,li,menu,blockquote,form,fieldset,pre{list-style:none;margin:0;padding:0;} */
+/* Class */
+.brclear{display:block;clear:both;width:0;height:0;margin:0;padding:0;font-size:0;line-height:0;}
+.blind{position:absolute;left:-9999px;width:1px;height:1px;font-size:0;line-height:0;overflow:hidden;/* opacity:0;filter:alpha(opacity=0); */}
+	*+html .blind{height:0;}
+	caption.blind{position:relative;}
+.dpn{display:none !important;}
+.ellipsis1{text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;overflow:hidden;}
+.ellipsis1 *{white-space:nowrap !important;}
+/* * html .png24{tmp:expression(setPng24(this));} */
+
+/* Form. 20140617  ◆◆◆ */
+form,
+fieldset,
+legend{margin:0;padding:0;border:0;}
+select.select{height:23px;margin:2px 0;padding:0 2px;border:1px solid #ccc;border-radius:0;background:#fff;font-size:13px /* ☆ */;}
+*+html select.select{margin:2px 0 1px;}
+input.text{width:210px;height:21px;margin:2px 0;padding:0;border:1px solid #ccc;border-radius:0;background:#fff;line-height:21px;}
+input.file{width:210px;height:auto;margin:2px 0;background:#fff;font-size:13px /* ☆ */;}
+textarea.textarea{width:100%;max-width:100%;margin:2px -1px;padding:0;border:1px solid #ccc;border-radius:0;}
+input.radio,
+input.checkbox{width:1em;height:1em;margin:2px 0;}
+label.label{display:inline-block;margin:2px 4px 2px 0;padding:0 2px 0 4px;}
+/* Button */
+a.button,
+input.button,
+button.button,
+img.button{display:inline-block;height:23px;margin:2px 0;padding:0 .67em;border:1px solid #ccc;border-radius:0;background:#fff;
+	color:#000 !important;font-weight:normal;font-size:13px /* ☆ */;line-height:normal;white-space:nowrap;text-decoration:none !important;vertical-align:middle;cursor:pointer;}
+*+html button.button{margin-left:4px;}/* 각개조정필요! */
+a.button{height:21px;line-height:21px;}
+img.button{height:auto;padding:0;border:0;}
+table .button{background:#fff;background:linear-gradient(to bottom,#fff,#fff);}
+/* addStyleButton */
+.button.a1{border-color:#ec6941;background:#ec6941 !important;color:#fff !important;padding-top:7px;padding-bottom:8px;}
+.button.a2{margin-left:3px;margin-right:3px;padding-left:1.5em;padding-right:1.5em;padding-top:7px;padding-bottom:8px;background:#f7f7f7}
+.button.a3{border-color:#245;background:#245;
+	background:linear-gradient(to bottom,#356,#245);
+	color:#fff !important;}
+/* icon */
+.button.icon{position:relative;padding-left:25px;}
+.button.icon .ic1{position:absolute;left:6px;top:4px;width:12px;height:12px;}
+.button.icon .ic1.close{background:url(../../img/inc/b5s.png) no-repeat 50%;}
+input.button.a1, input.button.a2{padding-top:9px;padding-bottom:9px;height:auto}
+
+
+/* Property Solo (※d=default값). 20140617  ◆◆◆ */
+/* layout */
+.dpn{display:none !important;}
+.dpb{display:block !important;}
+.dpi{display:inline !important;}
+.dpib{display:inline-block !important;}
+.fl{display:inline !important;float:left !important;}
+.fr{display:inline !important;float:right !important;}
+.clb{clear:both !important;}
+.psr{position:relative !important;}
+.zia{z-index:auto !important;}
+.ofa{overflow:auto !important;}
+.ofh{overflow:hidden !important;}
+.ofv{overflow:visible !important;}
+/* box */
+.w100{width:100% !important;}
+.w50{width:50% !important;}
+.h100{height:100% !important;}
+.wh100{width:100% !important;height:100% !important;}
+.waha{width:auto !important;height:auto !important;}
+.mg0{margin:0 !important;}
+.pd0{padding:0 !important;}
+.bd0{border:0 !important;}
+.bgf{background:#fff !important;}
+.bin{background-image:none !important;}
+/* color,font,text */
+.cd{color:#333 !important;}
+.fsn{font-style:normal !important;}
+.fsi{font-style:italic !important;}
+.fwn{font-weight:normal !important;}
+.fwb{font-weight:bold !important;}
+.fsd{font-size:1em !important;}/* 14px */
+.fsXXS{font-size:.714em !important;}/* 10px */
+.fsXS{font-size:.786em !important;}/* 11px */
+.fsS{font-size:.857em !important;}/* 12px */
+.fsM{font-size:1.143em !important;}/* 16px */
+.fsL{font-size:1.29em !important;}/* 18px */
+.fsXL{font-size:1.43em !important;}/* 20px */
+.fsXXL{font-size:1.714em !important;}/* 24px */
+.lhd{line-height:1.5 !important;}
+.ffd{font-family:'돋움',Dotum !important;}
+.ffe{font-family:tahoma !important;}
+.ls-1{letter-spacing:-1px !important;}
+.ls0{letter-spacing:0 !important;}
+.nowrap{white-space:nowrap !important;}
+.onwrap{white-space:normal !important;}
+.tdu{text-decoration:underline !important;}
+.tdlt{text-decoration:line-through !important;}
+.tdn{text-decoration:none !important;}
+.tal{text-align:left !important;}
+.tar{text-align:right !important;}
+.tac{text-align:center !important;}
+.vat{vertical-align:top !important;}
+.vab{vertical-align:bottom !important;}
+.vam{vertical-align:middle !important;}
+.vabl{vertical-align:baseline !important;}
+.wwbw{word-wrap:break-word !important;} /* 20140616 */
+
+/* UX */
+#skipnav{z-index:9999;position:absolute;left:0;top:0;width:100%;}
+#skipnav *{display:inline;list-style:none;margin:0;padding:0;}
+#skipnav a{display:block;position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden;}
+#skipnav a:focus{left:0;width:100%;height:auto;background:#ffd;color:#000;font:bold 1.334em/2 '나눔고딕','돋움';text-align:center;}

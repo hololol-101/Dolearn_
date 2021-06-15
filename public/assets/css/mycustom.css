@@ -1,0 +1,216 @@
+/* "내가 운영 중인 강좌와 비슷한"
+    ㄴ 상단의 "내가 수강 중인 강좌와 비슷한"과 id가 같아서 충돌 -> 3-5로 변경 */
+
+/* 비슷한 강좌 20210607 [JS] jQmCarousel1(); */
+#fcard3-1{display:block;
+	z-index:0;
+	position:relative;
+	margin:calc(18px + 4.5%) auto; /* ((72-18)/1200) */
+	padding:calc(18px + 2.5%) 0 0;
+	border-top:1px solid rgba(255,255,255, .2);
+	overflow:hidden;
+}
+#fcard3-1 .wrap1{
+	position:relative;
+}
+#fcard3-1 .hg1{display:block;
+	position:relative;
+	margin:0 0 16px;
+	overflow:hidden;
+}
+#fcard3-1 .h1{
+	margin:0 .75em 0 0;
+	font-weight:700;
+	font-size:20px;
+	vertical-align:middle;
+}
+#fcard3-1 .hg1>.t1{
+	display:inline-block;
+	margin:.75em 0;
+	color:#ccc;
+	font-size:.9375em;
+	vertical-align:middle;
+}
+#fcard3-1 .hg1 .t1t1{
+	display:inline-block;
+	margin:0 .75em 0 0;
+	vertical-align:middle;
+}
+/* ☆ */
+#fcard3-1 .more{
+	float:right;
+	margin:6px 0;
+	padding:6px 22px;
+	border:1px solid #666;
+	border-radius:9999px;
+	color:#ccc;
+	font-size:0;
+}
+#fcard3-1 .more .t1{display:inline-block;
+	font-size:1rem;
+	vertical-align:middle;
+}
+#fcard3-1 .more .ic1{display:inline-block;
+	width:8px;
+	height:8px;
+	margin:0 0 0 4px;
+	background:url(../images/main/ic8a1c3plus1.png) no-repeat center center / contain;
+	vertical-align:middle;
+}
+/* .owl-carousel > .owl-stage-outer > .owl-stage > .owl-item > .item{} */
+#fcard3-1 .owl-carousel{}
+#fcard3-1 .owl-stage-outer{
+	width:100%; /* (fix) */
+}
+#fcard3-1 .owl-dots{ /* 도트(플러그인생성) */
+	display:none; /* ☆ */
+}
+/* 내용 */
+#fcard3-1 .item{}
+#fcard3-1 .item .w1{display:block;
+	position:relative;
+	overflow:hidden;
+}
+#fcard3-1 .item .a1{display:block;
+	color:#fff;
+}
+#fcard3-1 .item .f1{display:block;
+	position:relative;
+	padding:0 0 56.25%;
+	margin:0 auto;
+	text-align:center;
+}
+#fcard3-1 .item .f1p1{display:block;
+	position:absolute;left:0;right:0;top:0;bottom:0;
+	overflow:hidden;
+}
+#fcard3-1 .item .f1p1:before{content:'';display:block;
+	z-index:10;
+	position:absolute;left:0;right:0;top:0;bottom:0;
+	background:rgba(0,0,0, .6);
+	opacity:0;
+	transition:.2s;
+}
+#fcard3-1 .item .f1 img{display:block;
+	position:absolute;
+	width:100%;
+	height:auto;
+	min-height:100%;
+	margin:auto;
+	opacity:0;
+	transition:opacity .4s ease;
+}
+#fcard3-1 .owl-loaded .item .f1 img{ /* 이미지 모두 로드 */
+	opacity:1;
+}
+/* ☆ */
+#fcard3-1 .item .tg1{display:block;
+	overflow:hidden;
+	transition:.2s;
+}
+#fcard3-1 .item .t1{display:block;
+	position:relative;
+	margin:.75em 0 .25em;
+	color:#eee;
+	font-weight:500;
+	font-size:1.125em; /* (18/16) */
+	text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;overflow:hidden;
+}
+#fcard3-1 .item .ratings .t1{}
+#fcard3-1 .item .ratings .star5rating1{
+	margin:.5em .5em .5em 0;
+	vertical-align:middle;
+}
+#fcard3-1 .item .ratings .t2{
+	color:#888;
+	font-weight:500;
+	font-size:.875em;
+	vertical-align:middle;
+}
+#fcard3-1 .item .t2t1,
+#fcard3-1 .item .t2t2,
+#fcard3-1 .item .t2t3{
+	display:inline-block;
+	vertical-align:middle;
+}
+#fcard3-1 .item .tg2{}
+#fcard3-1 .item .tg2 .t2{display:block;
+	margin:.5em 1px;
+	color:#888;
+	font-weight:500;
+	font-size:.875em;
+}
+/* ☆ */
+#fcard3-1 .item .ic1.play{display:inline-block;
+	position:absolute;left:50%;top:50%;
+	width:24.176%; /* (66/273) */
+	padding:0 0 24.176%;
+	background:url(../../img/main/ic152a1c2play1.png) no-repeat center center / contain;
+	overflow:hidden;
+	text-indent:-9999px;
+	opacity:0;
+	transform:translate(-50%, -50%);
+	transition:.2s;
+}
+/* ☆ */
+#fcard3-1 .item .a1:hover .f1p1,
+#fcard3-1 .item .a1:focus .f1p1{
+	border:2px solid #ed2224;
+}
+#fcard3-1 .item .a1:hover .f1p1:before,
+#fcard3-1 .item .a1:focus .f1p1:before{
+ opacity:1;
+}
+#fcard3-1 .item .a1:hover .ic1.play,
+#fcard3-1 .item .a1:focus .ic1.play{
+	opacity:1;
+}
+#fcard3-1 .item .a1:hover .tg2,
+#fcard3-1 .item .a1:focus .tg2{
+	background:none;
+}
+/* 제어 */
+#fcard3-1 .mControl{display:block;
+	z-index:10;
+	position:relative;
+	width:60px;
+	margin:10px 0 10px auto;
+	overflow:hidden;
+}
+#fcard3-1 .mControl .m{
+	float:left;
+	position:relative;
+	width:30px;
+	height:30px;
+	border:0;
+	background:none;
+	transition:.2s;
+}
+#fcard3-1 .mControl .m .ic1{display:block;
+	position:absolute;left:50%;top:50%;
+	width:20px;height:20px;
+	margin:-10px;
+	background:url() no-repeat center center / contain;
+}
+#fcard3-1 .mControl .prev .ic1{
+	background-image:url(../images/main/ic20a1c0right1.png);
+	transform:rotate(180deg);
+}
+#fcard3-1 .mControl .next .ic1{background-image:url(../images/main/ic20a1c0right1.png);}
+
+#fcard3-1 .h1{
+	display:inline-block;
+	font-size:30px;
+}
+
+#fcard3-1 .hg1{
+	margin:0 0 44px;
+}
+#fcard3-1 .owl-carousel{
+	width:calc(100% - 40px);
+}
+#fcard3-1 .mControl{
+	position:absolute;right:0;top:0;
+	width:30px;
+	margin:200px -9px 0 0;
+}
