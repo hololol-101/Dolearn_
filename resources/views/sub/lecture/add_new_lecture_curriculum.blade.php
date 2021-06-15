@@ -1028,6 +1028,9 @@ function saveAndGoNextStep(nextStep) {
         }
     });
 
+    // 배열 첫 번째 요소 제거
+    bchapList.shift();
+
     // 소단원 목록을 json 형태로 변환
     $('#div_schap').find('.t1').each(function() {
         var data = new Object();

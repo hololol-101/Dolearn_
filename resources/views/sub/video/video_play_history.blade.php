@@ -6,6 +6,10 @@
  * ~20210205 | @m |
  */
 -->
+@php
+    $type = isset($_GET['type']) ? $_GET['type'] : '';
+@endphp
+
 @extends('master_sub')
 
 @section('title', '영상보관함 - 시청기록')
@@ -82,9 +86,9 @@
 <!-- cp1infomenu1 -->
 <div class="cp1infomenu1">
 	<div class="w1">
-		<select title="영상 필터" class="select">
-			<option value="">최근 시청 영상</option>
-			<option value="">좋아요 누른 영상</option>
+		<select title="영상 필터" class="select" id="select_filter">
+			<option value="" @if ($type == '') selected @endif>최근 시청 영상</option>
+			<option value="like" @if ($type == 'like') selected @endif>좋아요 누른 영상</option>
 		</select>
 	</div>
 </div>
@@ -113,122 +117,34 @@
 	</div>
 	<!-- owl-carousel -->
 	<div class="owl-carousel owl-theme">
-		<div class="item">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p101.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">엑셀 올인원! 엑셀 기초부터 일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p102.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">엑셀 올인원! 엑셀 기초부터 일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p103.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">엑셀 올인원! 엑셀 기초부터 일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p004.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">엑셀 올인원! 엑셀 기초부터 일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p005.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">엑셀 올인원! 엑셀 기초부터 일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p006.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">엑셀 올인원! 엑셀 기초부터 일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
+        @if (count($todayHistoryList) > 0)
+            @foreach ($todayHistoryList as $todayHistory)
+            <div class="item">
+                <div class="w1">
+                    <a href="{{ route('sub.video.video_detail', ['uid' => $todayHistory->video_id]) }}" class="a1">
+                        <div class="f1">
+                            <span class="f1p1">
+                                <img src="https://img.youtube.com/vi/{{ $todayHistory->video_id }}/mqdefault.jpg" alt="{{ $todayHistory->subject }}">
+                            </span>
+                            <i class="ic1 play">Play</i>
+                        </div>
+                        <div class="tg1">
+                            <strong class="t1">{{ $todayHistory->subject }}</strong>
+                        </div>
+                        <div class="tg2">
+                            <span class="t2">{{ $todayHistory->channel }}</span>
+                            <span class="t3">조회수 {{ $todayHistory->like_cnt }}회</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            @endforeach
+        @endif
 	</div>
 	<!-- /owl-carousel -->
+    @if (count($todayHistoryList) == 0)
+    <br><span>영상 정보가 없습니다.</span>
+    @endif
 </div>
 </div>
 <!-- /cp1fcard4 -->
@@ -254,246 +170,47 @@
 <div class="cp1fcard3">
 <div class="wrap1">
 	<!-- lst1 -->
-	<div class="lst1 even-grid evenmix-234 gap22px">
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p301.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">엑셀 올인원! 엑셀 기초부터 실무까지 일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p302.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p303.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p304.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p301.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">엑셀 올인원! 엑셀 기초부터 실무까지 일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p302.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p303.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p304.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p301.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">엑셀 올인원! 엑셀 기초부터 실무까지 일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p302.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p303.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p304.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<i class="ic1 play">Play</i>
-					</div>
-					<div class="tg1">
-						<strong class="t1">일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십</strong>
-					</div>
-					<div class="tg2">
-						<span class="t2">데이터에듀</span>
-						<span class="t3">조회수 1800회</span>
-					</div>
-				</a>
-			</div>
-		</div>
+	<div class="lst1 even-grid evenmix-234 gap22px" id="div_history_list">
+        @if (count($otherHistoryList))
+            @foreach ($otherHistoryList as $otherHistory)
+            <div class="item column">
+                <div class="w1">
+                    <a href="{{ route('sub.video.video_detail', ['uid' => $otherHistory->video_id]) }}" class="a1" history_idx="{{ $otherHistory->idx }}">
+                        <div class="f1">
+                            <span class="f1p1">
+                                <img src="https://img.youtube.com/vi/{{ $otherHistory->video_id }}/mqdefault.jpg" alt="{{ $otherHistory->subject }}">
+                            </span>
+                            <i class="ic1 play">Play</i>
+                        </div>
+                        <div class="tg1">
+                            <strong class="t1">{{ $otherHistory->subject }}</strong>
+                        </div>
+                        <div class="tg2">
+                            <span class="t2">{{ $otherHistory->channel }}</span>
+                            <span class="t3">조회수 {{ $otherHistory->like_cnt }}회</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            @endforeach
+        @else
+        <div class="item column">
+            <span>영상 정보가 없습니다.</span>
+        </div>
+        @endif
 	</div>
 	<!-- /lst1 -->
 
+    @if (count($otherHistoryList) > 7)
 	<!-- cp1more1 -->
-	<div class="cp1more1">
-		<a href="#★" class="more">
+	<div class="cp1more1" id="div_more_btn">
+		<a href="javascript:void(0);" class="more" id="more_history_btn">
 			<span class="t1">더보기</span>
 			<i class="ic1"></i>
 		</a>
 	</div>
 	<!-- /cp1more1 -->
+    @endif
 
 </div>
 </div>
@@ -503,21 +220,62 @@
 <script>/*<![CDATA[*/
 	$(function(){
 
-		/** ◇◆ 더보기클릭샘플. 20210205. @m
-		 * 이건 그냥 보여주기 샘플. 개발자 동작 처리 필요!
-		 */
-		(function(){
-			var $my = $('.cp1fcard3'),
-				$more = $('.more', $my),
-				$lst = $('.lst1', $my);
-			var html = $lst.html();
+        // 영상 더보기
+        $('#more_history_btn').on('click', function(){
+            var lastHistoryIdx = $('#div_history_list .a1').last().attr('history_idx');
+            var type = $('#select_filter').val();
 
-			$more.on('click', function(e){
-				e.preventDefault();
-				$lst.append($(html));
-			});
-		})();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                dataType: 'json',
+                url: "{{ route('sub.video.get_more_video_history') }}",
+                data: {
+                    'last_history_idx': lastHistoryIdx,
+                    'type': type
+                },
+                // contentType: false,
+                // processData: false,
+                success: (data) => {
+                    if (data.status == 'success') {
+                        // alert('done!');
 
+                        // 쿼리 확인
+                        // console.log(data.query);
+
+                        if (data.resData.length != 0) {
+                            // console.log(data.resData);
+
+                            $('#div_history_list').append(data.resData);
+
+                            // 조회된 영상 수가 8개 미만일 경우 더보기 버튼 숨김
+                            if (data.isShowMore) {
+                                $('#div_more_btn').show();
+                            } else {
+                                $('#div_more_btn').hide();
+                            }
+                        }
+
+                        // 조회된 영상이 없을 경우 더보기 버튼 숨김
+                        if (data.count == 0) {
+                            $('#div_more_btn').hide();
+                        }
+
+                    } else {
+                        alert('영상 목록을 조회하는 도중 문제가 발생했습니다.\n관리자에게 문의 바랍니다.');
+                        console.log('code: ' + data.code + '\nmessage: ' + data.msg);
+                    }
+                },
+                error: function(request, status, error) {
+                    console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
+                },
+                complete: function(data) {
+                    //
+                }
+            });
+        });
 	});
 /*]]>*/</script>
 
@@ -530,4 +288,21 @@
 <!-- /container -->
 </div>
 <!-- /#body -->
+@endsection
+
+@section('script')
+<script>
+$(function() {
+    $('#select_filter').change(function() {
+        var type = $(this).val();
+
+        if (type == 'like') {
+            location.href='{{ route('sub.video.video_play_history', ["type" => "like"]) }}';
+
+        } else {
+            location.href='{{ route('sub.video.video_play_history') }}';
+        }
+    });
+});
+</script>
 @endsection

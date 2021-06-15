@@ -65,7 +65,7 @@
 						<a href="javascript:void(0);"><span class="t1">all</span></a>
 					</li>
 					<li class="m1">
-						<a href="{{ route('sub.lecture.lecture_list', ['bcate_id' => 'DP000000']) }}"><span class="t1">개발 &amp; 프로그래밍</span></a>
+						<a href="{{ route('sub.lecture.lecture_list', ['bcate_id' => 'DP000000']) }}"><span class="t1">개발</span></a>
 						<div class="d3">
 							<ul>
 							<li class="m0 submain">
@@ -103,7 +103,7 @@
 						</div>
 					</li>
 					<li class="m3">
-						<a href="{{ route('sub.lecture.lecture_list', ['bcate_id' => 'SI000000']) }}"><span class="t1">자기계발</span></a>
+						<a href="{{ route('sub.lecture.lecture_list', ['bcate_id' => 'SI000000']) }}"><span class="t1">커리어</span></a>
 						<div class="d3">
 							<ul>
 							<li class="m0 submain">
@@ -119,7 +119,7 @@
 						</div>
 					</li>
 					<li class="m4">
-						<a href="{{ route('sub.lecture.lecture_list', ['bcate_id' => 'ES000000']) }}"><span class="t1">교육 및 학문</span></a>
+						<a href="{{ route('sub.lecture.lecture_list', ['bcate_id' => 'ES000000']) }}"><span class="t1">키즈</span></a>
 						<div class="d3">
 							<ul>
 							<li class="m0 submain">
@@ -152,7 +152,7 @@
 						<a href="javascript:void(0);"><span class="t1">all</span></a>
 					</li>
 					<li class="m1">
-						<a href="{{ route('sub.video.video_list', ['bcate_id' => 'DP000000']) }}"><span class="t1">개발 &amp; 프로그래밍</span></a>
+						<a href="{{ route('sub.video.video_list', ['bcate_id' => 'DP000000']) }}"><span class="t1">개발</span></a>
 						<div class="d3">
 							<ul>
 							<li class="m0 submain">
@@ -190,7 +190,7 @@
 						</div>
 					</li>
 					<li class="m3">
-						<a href="{{ route('sub.video.video_list', ['bcate_id' => 'SI000000']) }}"><span class="t1">자기계발</span></a>
+						<a href="{{ route('sub.video.video_list', ['bcate_id' => 'SI000000']) }}"><span class="t1">커리어</span></a>
 						<div class="d3">
 							<ul>
 							<li class="m0 submain">
@@ -206,7 +206,7 @@
 						</div>
 					</li>
 					<li class="m4">
-						<a href="{{ route('sub.video.video_list', ['bcate_id' => 'ES000000']) }}"><span class="t1">교육 및 학문</span></a>
+						<a href="{{ route('sub.video.video_list', ['bcate_id' => 'ES000000']) }}"><span class="t1">키즈</span></a>
 						<div class="d3">
 							<ul>
 							<li class="m0 submain">
@@ -570,7 +570,18 @@
             "{{ session()->put('alert', '회원가입이 완료되었습니다.\n로그인 페이지로 이동합니다.') }}"
         @endif
 
-});
+        var toDoWhenClosing = function() {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('account.logout') }}",
+                async: false
+            });
+            return false;
+        };
+        window.onbeforeunload = toDoWhenClosing();
+
+    });
+
 </script>
 
 </div>

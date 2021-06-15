@@ -51,7 +51,7 @@ class AccountController extends Controller{
     }
 
     public function signin(Request $request) {
-
+        session_start();
         if ($request->isMethod('post')) {
             $email=$request->post('email');
             $password=$request->post('password');
@@ -60,27 +60,47 @@ class AccountController extends Controller{
                 //로그인 확인
                 if(Auth::attempt(['email' => $email, 'password' => $password])&&Auth::user()->status!="withdraw"){
                     //TODO: IP확인  -> SESSION 확인
-                    if($_SERVER['REMOTE_ADDR']!=Auth::user()->last_conn_host){
+                    $sessions = DB::select('select session_id from sessions where types = "login" and email = ?', [$email]);
+
+                    if(count($sessions)>0 && $sessions[0]->session_id != session_id()){
                         return response()->json(array('status'=> "check"), 200);
                     }
+
+                    session()->forget(session_id());
+
                     DB::update('update users set last_conn_at = ?, last_conn_host = ? where email = ?',  [now(),  $_SERVER['REMOTE_ADDR'],$email]);
                     DB::insert('insert into signin_log (user_id, user_agent, signin_host, signin_at) values (?, ?, ?, ?)', [$email, $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR'], now()]);
+                    DB::insert('insert into sessions (session_id, types, email) values (?, ?, ?)', [session_id(), 'login', $email]);
                     return response()->json(array('status'=> "success"), 200);
                     }else{
                     return response()->json(array('status'=> "fail"), 200);
                     }
+
             }else{
-                Auth::attempt(['email' => $email, 'password' => $password]);
+                cookie('session', session_id());
+                session()->forget(session_id());
+
+                //다른 기기 로그아웃
+                DB::update('update sessions set types = "logout" where types = "login" and email = ?', [$email]);
+                DB::insert('insert into sessions (session_id, types, email) values (?, ?, ?)', [session_id(), 'login', $email]);
                 Auth::logoutOtherDevices($password);
+
+                //현재 기기 로그인
+                Auth::attempt(['email' => $email, 'password' => $password]);
+
+
                 DB::update('update users set last_conn_at = ?, last_conn_host = ? where email = ?',  [now(),  $_SERVER['REMOTE_ADDR'],$email]);
                 DB::insert('insert into signin_log (user_id, user_agent, signin_host, signin_at) values (?, ?, ?, ?)', [$email, $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR'], now()]);
                 return response()->json(array('status'=> "success"), 200);
             }
         }
+        session_destroy();
     }
 
     public function logout (Request $request) {
+        DB::update('update sessions set types = "logout" where types = "login" and email = ?', [Auth::user()->email]);
         Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/');
@@ -187,6 +207,7 @@ class AccountController extends Controller{
 
     public function changeStatus() {
         $query = DB::update('update users set withdraw_at = ?, status = "withdraw" where email = ?', [now(), Auth::user()->email]);
+        // session()->forget(Auth::user()->email);
         Auth::logout();
         if($query){
             return response()->json(array('msg'=> "success"), 200);

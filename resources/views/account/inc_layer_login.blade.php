@@ -152,7 +152,7 @@ function signin() {
                     location.reload(true);
                 }else if(response.status == "check"){
                     var confirmData = confirm("이미 다른 곳에서 접속중입니다. 다른 기기를 로그아웃 하시겠습니까?");
-                    if(confirmData){
+                    if(confirmData||window.event.keyCode == 13){
                         $.ajax({
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

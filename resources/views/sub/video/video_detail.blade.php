@@ -433,9 +433,11 @@
 			<h3 class="hb1 h1 fsB12">다른 유튜버의 유사한 영상</h3>
 			<div class="cp1tag1 type2 mgt0 mgb0">
 				<div class="tags">
-                    @foreach ($myVideoTagList as $tag)
-                    <a href="{{ route('sub.video.video_list', ['keyword' => $tag]) }}" class="a1">#{{ $tag }}</a>
-                    @endforeach
+                    @if (count($myVideoTagList) > 1)
+                        @foreach ($myVideoTagList as $tag)
+                        <a href="{{ route('sub.video.video_list', ['keyword' => $tag]) }}" class="a1">#{{ $tag }}</a>
+                        @endforeach
+                    @endif
 				</div>
 			</div>
 			<div class="mControl">

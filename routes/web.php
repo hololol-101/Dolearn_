@@ -155,6 +155,9 @@ Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
         // 시청 기록
         Route::get('video_play_history', [VideoController::class, 'videoPlayHistory'])->name('video_play_history');
 
+        // 시청 기록 더보기
+        Route::post('get_more_video_history', [VideoController::class, 'getMoreVideoHistory'])->name('get_more_video_history');
+
         // 영상 노트
         Route::get('video_note_list', [VideoController::class, 'videoNoteList'])->name('video_note_list');
 

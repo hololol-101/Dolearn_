@@ -344,7 +344,7 @@ class VideoController extends Controller{
         // --> 추천 영상(태그 포함)
         $query1 = 'SELECT uid, subject, channel, hit_cnt
                     FROM _youtube_fulldata_temp
-                    WHERE uid != "'.$videoDetail->uid.'"'.$where.'
+                    WHERE uid != "'.$videoDetail->uid.'" AND channel != "'.$videoDetail->channel.'"'.$where.'
                     ORDER BY idx DESC
                     LIMIT 10';
 
@@ -364,8 +364,117 @@ class VideoController extends Controller{
         return view('sub.video.video_detail', compact('videoDetail', 'dolearnTagList', 'youtubeTagList', 'similarVideoList', 'myVideoTagList', 'relationLectureList'));
     }
 
-    public function videoPlayHistory() {
-        return view('sub.video.video_play_history');
+    public function videoPlayHistory(Request $request) {
+        $type = $request->get('type', '');
+        $userId = Auth::user()->email;
+
+        $where = '';
+        $query = '';
+        $todayHistoryList = array();
+        $otherHistoryList = array();
+
+        // 좋아요 누른 영상 조회
+        if ($type != '') {
+            $where = ' AND his.like_yn = "Y"';
+        }
+
+        // 시청 기록 목록 조회
+        $query = 'SELECT his.*, vid.subject, vid.channel, vid.like_cnt
+                    FROM video_history his, _youtube_fulldata_temp vid
+                    WHERE his.video_id = vid.uid AND user_id = "'.$userId.'"'.$where.'
+                    ORDER BY his.recent_watched_at DESC';
+
+        $videoHistoryList = DB::select($query);
+
+        foreach($videoHistoryList as $videoHistory) {
+            // 오늘 시청 목록 배열 생성
+            if (date('Y-m-d', strtotime($videoHistory->recent_watched_at)) == date('Y-m-d', time())) {
+                array_push($todayHistoryList, $videoHistory);
+
+            // 그 외 시청 목록 배열 생성
+            } else {
+                array_push($otherHistoryList, $videoHistory);
+
+                if (count($otherHistoryList) == 8) {
+                    break;
+                }
+            }
+        }
+
+        return view('sub.video.video_play_history', compact('todayHistoryList', 'otherHistoryList'));
+    }
+
+    public function getMoreVideoHistory(Request $request) {
+        $lastHistoryIdx = $request->post('last_history_idx', '');
+        $type = $request->post('type', '');
+        $userId = Auth::user()->email;
+
+        $where = '';
+        $query = '';
+        $resData = '';
+
+        // 좋아요 누른 영상 조회
+        if ($type != '') {
+            $where = ' AND his.like_yn = "Y"';
+        }
+
+        // 시청 기록 목록 조회
+        $query = 'SELECT his.*, vid.subject, vid.channel, vid.like_cnt
+                    FROM video_history his, _youtube_fulldata_temp vid
+                    WHERE his.video_id = vid.uid AND user_id = "'.$userId.'" AND his.idx < '.$lastHistoryIdx.$where.'
+                    ORDER BY his.recent_watched_at DESC
+                    LIMIT 8';
+
+        try {
+            $videoHistoryList = DB::select($query);
+
+            foreach($videoHistoryList as $videoHistory) {
+                $resData .= '<div class="item column">';
+                $resData .=     '<div class="w1">';
+                $resData .=         '<a href="'.route('sub.video.video_detail', ['uid' => $videoHistory->video_id]).'" class="a1" history_idx="'.$videoHistory->idx.'">';
+                $resData .=             '<div class="f1">';
+                $resData .=                 '<span class="f1p1">';
+                $resData .=                     '<img src="https://img.youtube.com/vi/'.$videoHistory->video_id.'/mqdefault.jpg" alt="'.$videoHistory->subject.'">';
+                $resData .=                 '</span>';
+                $resData .=                 '<i class="ic1 play">Play</i>';
+                $resData .=             '</div>';
+                $resData .=             '<div class="tg1">';
+                $resData .=                 '<strong class="t1">'.$videoHistory->subject.'</strong>';
+                $resData .=             '</div>';
+                $resData .=             '<div class="tg2">';
+                $resData .=                 '<span class="t2">'.$videoHistory->channel.'</span>';
+                $resData .=                 '<span class="t3">조회수 '.$videoHistory->like_cnt.'회</span>';
+                $resData .=             '</div>';
+                $resData .=         '</a>';
+                $resData .=     '</div>';
+                $resData .= '</div>';
+            }
+
+            $result['status'] = 'success';
+
+            // 쿼리 확인
+            $result['query'] = $query;
+
+            // 조회된 영상 수
+            $result['count'] = count($videoHistoryList);
+
+            // 조회된 영상 수에 따라 버튼 숨김 여부 판단
+            if (count($videoHistoryList) >= 8) {
+                $result['isShowMore'] = true;
+            } else {
+                $result['isShowMore'] = false;
+            }
+
+        } catch(Exception $e) {
+            $result['status'] = 'fail';
+            $result['msg'] = $e->getMessage();
+            $result['code'] = $e->getCode();
+
+        } finally {
+            $result['resData'] = $resData;
+
+            return response()->json($result);
+        }
     }
 
     public function videoNoteList(Request $request) {
