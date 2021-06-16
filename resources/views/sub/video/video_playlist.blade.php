@@ -119,9 +119,9 @@
 		<li class="li1">
 			<div class="tg1">
 				<div class="t1">
-					<a href="@if ($playlistDirectory->video_cnt == 0) javascript:alert('해당 재생목록에 영상이 없습니다.'); @else {{ route('sub.video.video_playlist_detail', ['idx' => $playlistDirectory->idx]) }} @endif" class="a1">{{ $playlistDirectory->title }}</a>
+					<a href="@if ($playlistDirectory->video_sum == 0) javascript:alert('해당 재생목록에 영상이 없습니다.'); @else {{ route('sub.video.video_playlist_detail', ['idx' => $playlistDirectory->idx]) }} @endif" class="a1">{{ $playlistDirectory->title }}</a>
 				</div>
-				<span class="t2">총 영상 수 {{ $playlistDirectory->video_cnt }}개 &gt;</span>
+				<span class="t2">총 영상 수 {{ $playlistDirectory->video_sum }}개 &gt;</span>
 			</div>
 			<div class="eg1">
 				<a href="javascript:void(0);" class="a2 edit" directory_idx="{{ $playlistDirectory->idx }}"><i class="a2ic1"></i> <span class="a2t1">수정</span></a>
@@ -224,7 +224,7 @@
 <script>
 // 재생 목록 디렉터리 삭제
 function deletePlaylistDirectory(idx) {
-    if (confirm('해당 재생목록을 삭제하시겠습니까?\n재생목록에 포함된 영상도 전부 삭제됩니다.')) {
+    if (confirm('해당 재생목록을 삭제하시겠습니까?\n재생목록에 추가된 영상도 전부 삭제됩니다.')) {
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

@@ -480,7 +480,7 @@ class VideoController extends Controller{
     public function videoNoteList(Request $request) {
         $userId = Auth::user()->email;
 
-        // 강좌 안의 영상 노트(lecture_idx = ?)와 스마트 학습 영상 노트(lecture_idx = 0) union 쿼리
+        // 강좌의 영상 노트(lecture_idx = ?)와 스마트 학습 영상 노트(lecture_idx = 0) union 쿼리
         $query = 'SELECT note_idx, uid, subject, recent_learned_at, COUNT(note_idx) AS note_cnt
                     FROM (
                         (SELECT note.idx AS note_idx, vid.uid, vid.subject, note.content, mycur.lecture_idx AS mycur_lec_idx, note.lecture_idx AS note_lec_idx, mycur.recent_learned_at
@@ -515,7 +515,7 @@ class VideoController extends Controller{
         $videoId = $request->get('video_id', '');
         $userId = Auth::user()->email;
 
-        // 강좌 안의 영상 노트(lecture_idx = ?)와 스마트 학습 영상 노트(lecture_idx = 0) union 쿼리
+        // 강좌의 영상 노트(lecture_idx = ?)와 스마트 학습 영상 노트(lecture_idx = 0) union 쿼리
         $query = 'SELECT note_idx, video_id, subject, video_time, lecture_idx, title, content
                     FROM (
                         (SELECT note.idx AS note_idx, note.video_id, vid.subject, note.video_time, lec.idx AS lecture_idx, lec.title, note.content, note.writed_at
@@ -547,11 +547,15 @@ class VideoController extends Controller{
     public function videoPlaylist() {
         $userId = Auth::user()->email;
 
-        $query = 'SELECT *, SUM(video_cnt) AS video_cnt
+        // 재생목록 디렉터리 목록 조회(추가된 영상이 있는 재생목록과 없는 재생목록 union)
+        $query = 'SELECT *, SUM(video_cnt) AS video_sum
                     FROM (
                         (SELECT dir.*, COUNT(dir.idx) AS video_cnt
                         FROM playlist_directory dir, playlist_video vid
-                        WHERE dir.idx = vid.directory_idx AND dir.user_id = vid.user_id AND dir.user_id = "'.$userId.'" AND vid.status = "active"
+                        WHERE dir.idx = vid.directory_idx
+                            AND dir.user_id = vid.user_id
+                            AND dir.user_id = "'.$userId.'"
+                            AND vid.status = "active"
                         GROUP BY dir.idx)
                         UNION ALL
                         (SELECT *, 0 AS video_cnt
@@ -561,7 +565,6 @@ class VideoController extends Controller{
                     GROUP BY idx
                     ORDER BY created_at DESC';
 
-        // 재생목록 디렉터리 목록 조회
         $playlistDirectoryList = DB::select($query);
 
         return view('sub.video.video_playlist', compact('playlistDirectoryList'));
@@ -621,7 +624,7 @@ class VideoController extends Controller{
             // 재생목록 디렉터리 삭제
             DB::table('playlist_directory')->where('idx', $directoryIdx)->update(['status' => 'delete', 'deleted_at' => now()]);
 
-            // 해당 재생목록에 포함된 영상 정보 삭제
+            // 해당 재생목록에 추가된 영상 정보 삭제
             DB::table('playlist_video')->where('directory_idx', $directoryIdx)->update(['status' => 'delete', 'deleted_at' => now()]);
 
             $result['status'] = 'success';
@@ -636,7 +639,55 @@ class VideoController extends Controller{
         }
     }
 
-    public function videoPlaylistDetail() {
-        return view('sub.video.video_playlist_detail');
+    public function videoPlaylistDetail(Request $request) {
+        $directoryIdx = $request->get('idx', '');
+        $userId = Auth::user()->email;
+
+        // 재생목록 제목, 추가된 영상 수 조회
+        $query = 'SELECT dir.*, COUNT(dir.idx) AS video_cnt
+                    FROM playlist_directory dir, playlist_video vid
+                    WHERE dir.idx = vid.directory_idx
+                        AND dir.user_id = vid.user_id
+                        AND dir.user_id = "'.$userId.'" AND dir.idx = '.$directoryIdx.'
+                        AND vid.status = "active"
+                    ORDER BY dir.created_at DESC';
+
+        $playlistDirectoryInfo = DB::select($query);
+
+        if (count($playlistDirectoryInfo) == 1) {
+            $playlistDirectoryInfo = $playlistDirectoryInfo[0];
+        }
+
+        // 해당 재생목록에 추가된 영상 목록 조회
+        $query2 = 'SELECT pl.directory_idx, vid.uid, vid.subject, vid.channel, vid.hit_cnt, pl.order
+                    FROM playlist_video pl, _youtube_fulldata_temp vid
+                    WHERE pl.video_id = vid.uid
+                        AND pl.status = "active"
+                        AND pl.directory_idx = '.$directoryIdx.'
+                    GROUP BY vid.uid
+                    ORDER BY pl.order';
+
+        // 노트 수 삭제로 인한 쿼리 변경
+        // $query2 = 'SELECT *, SUM(note_cnt) AS note_sum
+        //             FROM (
+        //                 (SELECT pl.directory_idx, vid.uid, vid.subject, vid.channel, vid.hit_cnt, pl.order, COUNT(note.idx) AS note_cnt
+        //                 FROM playlist_video pl, _youtube_fulldata_temp vid, video_note note
+        //                 WHERE pl.video_id = vid.uid
+        //                     AND pl.video_id = note.video_id
+        //                     AND pl.user_id = note.writer_id
+        //                     AND pl.status = "active"
+        //                 GROUP BY vid.uid)
+        //                 UNION ALL
+        //                 (SELECT pl.directory_idx, vid.uid, vid.subject, vid.channel, vid.hit_cnt, pl.order, 0 AS note_cnt
+        //                 FROM playlist_video pl, _youtube_fulldata_temp vid
+        //                 WHERE pl.video_id = vid.uid
+        //                     AND pl.status = "active")) AS t
+        //             WHERE directory_idx = '.$directoryIdx.'
+        //             GROUP BY uid
+        //             ORDER BY `order`';
+
+        $playlistVideoList = DB::select($query2);
+
+        return view('sub.video.video_playlist_detail', compact('playlistDirectoryInfo', 'playlistVideoList'));
     }
 }

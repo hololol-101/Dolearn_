@@ -114,349 +114,49 @@
 <div class="cp1flist7">
 	<!-- lst1 -->
 	<ul class="lst1">
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">1</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							유튜버명
-						</div>
-						<div class="t2">
-							유튜버 소개글
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">채널 평점</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">YouTube 조회수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">두런 조회수</span>
-						<span class="t4">100</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">2</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							유튜버명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">채널 평점</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">YouTube 조회수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">두런 조회수</span>
-						<span class="t4">100</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">3</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							유튜버명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">채널 평점</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">YouTube 조회수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">두런 조회수</span>
-						<span class="t4">100</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">4</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							유튜버명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">채널 평점</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">YouTube 조회수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">두런 조회수</span>
-						<span class="t4">100</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">5</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							유튜버명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">채널 평점</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">YouTube 조회수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">두런 조회수</span>
-						<span class="t4">100</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">6</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							유튜버명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">채널 평점</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">YouTube 조회수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">두런 조회수</span>
-						<span class="t4">100</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">7</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							유튜버명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">채널 평점</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">YouTube 조회수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">두런 조회수</span>
-						<span class="t4">100</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">8</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							유튜버명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">채널 평점</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">YouTube 조회수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">두런 조회수</span>
-						<span class="t4">100</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">9</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							유튜버명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">채널 평점</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">YouTube 조회수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">두런 조회수</span>
-						<span class="t4">100</span>
-					</div>
-				</div>
-			</a>
-		</li>
+        @php
+            $cnt = 0;
+        @endphp
+        @foreach ( $youtuberList as $youtuber)
+            <li class="li1">
+                <a href="?#★" class="w1 a1">
+                    <div class="w1w1">
+                        <div class="w1w1w1">
+                            <b class="g1"><span class="g1t1">{{ ++$cnt }}</span><span class="g1t2">위</span></b>
+                        </div>
+                        <div class="w1w1w2">
+                            <div class="f1">
+                                <span class="f1p1">
+                                    <img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
+                                </span>
+                            </div>
+                        </div>
+                        <div class="w1w1w3">
+                            <div class="t1">
+                                유튜버명
+                            </div>
+                            <div class="t2">
+                                유튜버 소개글
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w1w2">
+                        <div class="w1w2w1">
+                            <span class="t3">채널 평점</span>
+                            <span class="t4">-</span>
+                        </div>
+                        <div class="w1w2w2">
+                            <span class="t3">YouTube 조회수</span>
+                            <span class="t4">100</span>
+                        </div>
+                        <div class="w1w2w3">
+                            <span class="t3">두런 조회수</span>
+                            <span class="t4">100</span>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        @endforeach
 	</ul>
 	<!-- /lst1 -->
 

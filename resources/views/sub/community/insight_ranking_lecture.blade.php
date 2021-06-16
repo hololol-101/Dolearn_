@@ -109,19 +109,20 @@
 	</select>
 </div>
 
-@php
-    $cnt = 1;
-@endphp
+
 <!-- cp1flist6 -->
 <div class="cp1flist6">
     <!-- lst1 -->
     <ul class="lst1">
+        @php
+            $cnt = 0;
+        @endphp
         @foreach ($lectureList as $lecture )
         <li class="li1">
             <a href="?#★" class="w1 a1">
                 <div class="w1w1">
                     <div class="w1w1w1">
-                        <b class="g1"><span class="g1t1">{{ $cnt++ }}</span><span class="g1t2">위</span></b>
+                        <b class="g1"><span class="g1t1">{{ ++$cnt }}</span><span class="g1t2">위</span></b>
                     </div>
                     <div class="w1w1w2">
                         <div class="f1">
@@ -220,13 +221,17 @@
                 url: "{{ route('sub.community.more_list') }}",
                 data: {
                     'type': 'lecture',
-                    'sort': $('.select').options[$('.select').selectedIndex].text,
-                    'cnr': '{{ $cnt }}'
+                    'sort': $('.select option:selected').text(),
+                    'cnt': $('.li1', $my).length
                 },
                 success: (data) => {
                     //TODO: TOTAL LECTURE < $cnt +5 more 버튼 비활성화
                     if(data.status == 'success'){
+
                         $('.lst1').append(data.html);
+                        if(data.totalData <=$('.li1', $my).length+1){
+                            $more.hide();
+                        }
                     }
                     else if(data.status == 'fail'){
                         alert('강좌 목록을 조회하는 도중 문제가 발생했습니다.\n관리자에게 문의 바랍니다.');
