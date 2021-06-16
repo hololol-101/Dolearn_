@@ -561,7 +561,7 @@ class VideoController extends Controller{
                     GROUP BY idx
                     ORDER BY created_at DESC';
 
-        // 재생목록 디렉토리 목록 조회
+        // 재생목록 디렉터리 목록 조회
         $playlistDirectoryList = DB::select($query);
 
         return view('sub.video.video_playlist', compact('playlistDirectoryList'));
@@ -572,7 +572,7 @@ class VideoController extends Controller{
         $userId = Auth::user()->email;
 
         try {
-            // 새 재생목록 디렉토리 생성
+            // 새 재생목록 디렉터리 생성
             DB::table('playlist_directory')->insert([
                 'user_id' => $userId,
                 'title' => $directoryTitle,
@@ -592,14 +592,33 @@ class VideoController extends Controller{
     }
 
     public function modifyPlaylistDirectory(Request $request) {
+        $directoryIdx = $request->post('directory_idx', '');
+        $directoryTitle = $request->post('directory_title', '');
 
+        try {
+            // 재생목록 디렉터리 업데이트
+            DB::table('playlist_directory')->where('idx', $directoryIdx)->update([
+                'title' => $directoryTitle,
+                'updated_at' => now()
+            ]);
+
+            $result['status'] = 'success';
+
+        } catch(Exception $e) {
+            $result['status'] = 'fail';
+            $result['msg'] = $e->getMessage();
+            $result['code'] = $e->getCode();
+
+        } finally {
+            return response()->json($result);
+        }
     }
 
     public function deletePlaylistDirectory(Request $request) {
         $directoryIdx = $request->post('directory_idx', '');
 
         try {
-            // 재생목록 디렉토리 삭제
+            // 재생목록 디렉터리 삭제
             DB::table('playlist_directory')->where('idx', $directoryIdx)->update(['status' => 'delete', 'deleted_at' => now()]);
 
             // 해당 재생목록에 포함된 영상 정보 삭제

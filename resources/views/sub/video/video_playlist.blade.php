@@ -124,7 +124,7 @@
 				<span class="t2">총 영상 수 {{ $playlistDirectory->video_cnt }}개 &gt;</span>
 			</div>
 			<div class="eg1">
-				<a href="javascript:void(0);" class="a2 edit"><i class="a2ic1"></i> <span class="a2t1">수정</span></a>
+				<a href="javascript:void(0);" class="a2 edit" directory_idx="{{ $playlistDirectory->idx }}"><i class="a2ic1"></i> <span class="a2t1">수정</span></a>
 				<a href="javascript:void(0);" class="a2 del" onclick="deletePlaylistDirectory('{{ $playlistDirectory->idx }}')"><i class="a2ic1"></i> <span class="a2t1">삭제</span></a>
 			</div>
 		</li>
@@ -146,6 +146,7 @@
 			// 수정 클릭
 			$bedit.on('click', function(e){
 				e.preventDefault();
+                var directoryIdx = $(this).attr('directory_idx');
 				var $item = $(this).closest('.li1');
 				$item.find('.tg1, .eg1').hide(); // 원래 내용 숨김
 				var html = '';
@@ -160,6 +161,7 @@
 				var $input = $('input.text', $item),
 					$bcancel = $('.a2.cancel', $item),
 					$bsave = $('.a2.save', $item);
+                $bsave.attr('directory_idx', directoryIdx);
 				$input.val( $item.find('.tg1>.t1').text().replace(/^\s*|\s*$/g, '') )[0].focus(); // 앞뒤공백제거 후 인풋막스 값 넣음
 				// 취소 클릭
 				$bcancel.on('click', function(e){
@@ -171,10 +173,39 @@
 					$item.find('.tg1>.t1').text( $input.val() ); // 수정한 값 넣음
 					$item.find('.tg1, .eg1').show(); // 원래 내용 보임
 					$item.find('.w1edit').remove(); // 수정 양식 제거
+
+                    var directoryIdx = $(this).attr('directory_idx');
+                    var directoryTitle = $(this).closest('.w1edit').find('.text').val();
+
+                    // 재생목록 디렉터리 수정
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'POST',
+                        dataType: 'json',
+                        url: "{{ route('sub.video.modify_playlist_directory') }}",
+                        // contentType: false,
+                        // processData: false,
+                        data: {
+                            'directory_idx': directoryIdx,
+                            'directory_title': directoryTitle
+                        },
+                        success: (response) => {
+                            if (response.status == 'success') {
+                                location.reload();
+
+                            } else {
+                                alert(response.msg);
+                            }
+                        },
+                        error: function(response) {
+                            console.log(response);
+                        }
+                    });
 				});
 			});
 		})();
-
 	});
 /*]]>*/</script>
 
@@ -191,7 +222,7 @@
 
 @section('script')
 <script>
-// 재생 목록 디렉토리 삭제
+// 재생 목록 디렉터리 삭제
 function deletePlaylistDirectory(idx) {
     if (confirm('해당 재생목록을 삭제하시겠습니까?\n재생목록에 포함된 영상도 전부 삭제됩니다.')) {
         $.ajax({

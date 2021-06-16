@@ -33,7 +33,7 @@
 <!-- /cp1layer1lightbox1 -->
 
 <script>
-// 새 재생목록 디렉토리 생성
+// 새 재생목록 디렉터리 생성
 function addPlaylistDirectory() {
     var directoryTitle = $('#directory_title').val();
 

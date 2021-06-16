@@ -139,20 +139,20 @@
                         </div>
                     </div>
                 </div>
-								<div class="w1w2">
-									<div class="w1w2w1">
-										<span class="t3">완강률</span>
-										<span class="t4">@if ($lecture->student_cnt != 0) {{ round(((int)$lecture->complete_cnt / $lecture->student_cnt) * 100, 0) }}% @else 0% @endif</span>
-									</div>
-									<div class="w1w2w2">
-										<span class="t3">강좌 평점</span>
-										<span class="t4">{{ $lecture->rating }}</span>
-									</div>
-									<div class="w1w2w3">
-										<span class="t3">수강자 수</span>
-										<span class="t4">{{ $lecture->student_cnt }}</span>
-									</div>
-								</div>
+				<div class="w1w2">
+					<div class="w1w2w1">
+						<span class="t3">완강률</span>
+						<span class="t4">@if ($lecture->student_cnt != 0) {{ round(((int)$lecture->complete_cnt / $lecture->student_cnt) * 100, 0) }}% @else 0% @endif</span>
+					</div>
+                    <div class="w1w2w2">
+                        <span class="t3">강좌 평점</span>
+						<span class="t4">{{ $lecture->rating }}</span>
+					</div>
+					<div class="w1w2w3">
+						<span class="t3">수강자 수</span>
+						<span class="t4">{{ $lecture->student_cnt }}</span>
+					</div>
+				</div>
             </a>
         </li>
         @endforeach
@@ -172,70 +172,72 @@
 <!-- /cp1flist6 -->
 <script>
     function handleOnChange(e){
-        alert(e.options[e.selectedIndex].text)
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'POST',
+            dataType: 'json',
+            url: "{{ route('sub.community.ranking') }}",
+            data: {
+                'type': 'lecture',
+                'sort': e.options[e.selectedIndex].text
+            },
+            success: (data) => {
+                if(data.status == 'success'){
+                    $('.lst1').empty().append(data.html);
+                }
+                else if(data.status == 'fail'){
+                    alert('강좌 목록을 조회하는 도중 문제가 발생했습니다.\n관리자에게 문의 바랍니다.');
+                    console.log('code: ' + data.code + '\nmessage: ' + data.msg);
+                }
+            },
+            error: function(request, status, error) {
+                console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
+            },
+        })
     }
 
 </script>
 
 <script>/*<![CDATA[*/
     $(function(){
+        //더보기 클릭
+        var $my = $('.cp1flist6'),
+            $more = $('.more', $my),
+            $lst = $('.lst1', $my);
 
-        /** ◇◆ 더보기클릭샘플. 20210315. @m
-            * 이건 그냥 보여주기 샘플. 개발자 동작 처리 필요!
-            */
-        (function(){
-            var $my = $('.cp1flist6'),
-                $more = $('.more', $my),
-                $lst = $('.lst1', $my);
-            var html = '';
-                html += '<li class="li1">';
-                html += '	<a href="?#★" class="w1 a1">';
-                html += '		<div class="w1w1">';
-                html += '			<div class="w1w1w1">';
-                html += '				<b class="g1"><span class="g1t1">-</span><!-- <span class="g1t2">위</span> --></b>'; // 10위 이상 표현하려면.. 디자인 크기 줄여야 한다.
-                html += '			</div>';
-                html += '			<div class="w1w1w2">';
-                html += '				<div class="f1">';
-                html += '					<span class="f1p1">';
-                html += '						<img src="{{ asset('assets/images/main/x1/x1p010.jpg') }}" alt="★대체텍스트필수" />';
-                html += '					</span>';
-                html += '				</div>';
-                html += '			</div>';
-                html += '			<div class="w1w1w3">';
-                html += '				<div class="t1">';
-                html += '					강좌제목일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십';
-                html += '				</div>';
-                html += '				<div class="t2">';
-                html += '					강사이름';
-                html += '				</div>';
-                html += '			</div>';
-                html += '		</div>';
-                html += '		<div class="w1w2">';
-                html += '			<div class="w1w2w1">';
-                html += '				<span class="t3">완강률</span>';
-                html += '				<span class="t4">98%</span>';
-                html += '			</div>';
-                html += '			<div class="w1w2w2">';
-                html += '				<span class="t3">수강생 수</span>';
-                html += '				<span class="t4">100</span>';
-                html += '			</div>';
-                html += '			<div class="w1w2w3">';
-                html += '				<span class="t3">게시일</span>';
-                html += '				<span class="t4">2021.03.15</span>';
-                html += '			</div>';
-                html += '		</div>';
-                html += '	</a>';
-                html += '</li>';
+        $more.on('click', function(e){
+            e.preventDefault();
 
-            $more.on('click', function(e){
-                e.preventDefault();
-                for(var i = 5; i--; ){
-                    $lst.append($(html));
-                }
-            });
-
-        })();
-
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                dataType: 'json',
+                url: "{{ route('sub.community.more_list') }}",
+                data: {
+                    'type': 'lecture',
+                    'sort': $('.select').options[$('.select').selectedIndex].text,
+                    'cnr': '{{ $cnt }}'
+                },
+                success: (data) => {
+                    //TODO: TOTAL LECTURE < $cnt +5 more 버튼 비활성화
+                    if(data.status == 'success'){
+                        $('.lst1').append(data.html);
+                    }
+                    else if(data.status == 'fail'){
+                        alert('강좌 목록을 조회하는 도중 문제가 발생했습니다.\n관리자에게 문의 바랍니다.');
+                        console.log('code: ' + data.code + '\nmessage: ' + data.msg);
+                    }
+                },
+                error: function(request, status, error) {
+                    console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
+                },
+            })
+        });
     });
 /*]]>*/</script>
 

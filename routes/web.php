@@ -167,13 +167,13 @@ Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
         // 재생 목록
         Route::get('video_playlist', [VideoController::class, 'videoPlaylist'])->name('video_playlist');
 
-        // 새 재생 목록 디렉토리 생성
+        // 새 재생 목록 디렉터리 생성
         Route::post('add_playlist_directory', [VideoController::class, 'addPlaylistDirectory'])->name('add_playlist_directory');
 
-        // 재생 목록 디렉토리 수정
+        // 재생 목록 디렉터리 수정
         Route::post('modify_playlist_directory', [VideoController::class, 'modifyPlaylistDirectory'])->name('modify_playlist_directory');
 
-        // 재생 목록 디렉토리 삭제
+        // 재생 목록 디렉터리 삭제
         Route::post('delete_playlist_directory', [VideoController::class, 'deletePlaylistDirectory'])->name('delete_playlist_directory');
 
         // 재생 목록 상세
@@ -197,6 +197,12 @@ Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
 
         // 인사이트 - 랭킹
         Route::get('ranking', [CommunityController::class, 'ranking'])->name('ranking');
+
+        // 인사이트 - 랭킹 정렬 변화
+        Route::post('ranking', [CommunityController::class, 'ranking'])->name('ranking');
+
+        // 인사이트 - 랭킹 더보기
+        Route::post('more_list', [CommunityController::class, 'moreList'])->name('more_list');
 
         // 서비스 문의
         Route::get('service_qna', [CommunityController::class, 'serviceQna'])->name('service_qna');

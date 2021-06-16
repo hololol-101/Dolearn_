@@ -51,58 +51,61 @@ class CommunityController extends Controller{
                     $lectureList = DB::select('SELECT l.*,COUNT(ml.status="complete") complete_cnt FROM lecture l LEFT JOIN my_lecture ml ON l.idx = ml.lecture_idx GROUP BY l.idx ORDER BY COUNT(ml.status="complete")/l.student_cnt  DESC LIMIT 9');
                 }else if($sort =='평점'){
                     $lectureList = DB::select('SELECT l.*,COUNT(ml.status="complete") complete_cnt FROM lecture l LEFT JOIN my_lecture ml ON l.idx = ml.lecture_idx GROUP BY l.idx ORDER BY l.rating DESC LIMIT 9');
-
                 }
-
-
-                foreach($lectureList as $lecture){
-                    $html .='<li class="li1">';
-                        $html .='<a href="?#★" class="w1 a1">';
-                            $html .='<div class="w1w1">';
-                                $html .='<div class="w1w1w1">';
-                                    $html .='<b class="g1"><span class="g1t1">'.$cnt++.'</span><span class="g1t2">위</span></b>';
+                try{
+                    foreach($lectureList as $lecture){
+                        $html .='<li class="li1">';
+                            $html .='<a href="?#★" class="w1 a1">';
+                                $html .='<div class="w1w1">';
+                                    $html .='<div class="w1w1w1">';
+                                        $html .='<b class="g1"><span class="g1t1">'.$cnt++.'</span><span class="g1t2">위</span></b>';
+                                    $html .='</div>';
+                                    $html .='<div class="w1w1w2">';
+                                        $html .='<div class="f1">';
+                                            $html .='<span class="f1p1">';
+                                                $html .='<img src="'.asset('storage/uploads/thumbnail/'.$lecture->save_thumbnail).'" alt="★대체텍스트필수" />';
+                                            $html .='</span>';
+                                        $html .='</div>';
+                                    $html .='</div>';
+                                    $html .='<div class="w1w1w3">';
+                                        $html .='<div class="t1">';
+                                            $html .=$lecture->title;
+                                        $html .='</div>';
+                                        $html .='<div class="t2">';
+                                            $html .=$lecture->owner_name;
+                                        $html .='</div>';
+                                    $html .='</div>';
                                 $html .='</div>';
-                                $html .='<div class="w1w1w2">';
-                                    $html .='<div class="f1">';
-                                        $html .='<span class="f1p1">';
-                                            $html .='<img src="'.asset('storage/uploads/thumbnail/'.$lecture->save_thumbnail).'" alt="★대체텍스트필수" />';
+                                $html .='<div class="w1w2">';
+                                    $html .='<div class="w1w2w1">';
+                                        $html .='<span class="t3">완강률</span>';
+                                        $html .='<span class="t4">';
+                                        if ($lecture->student_cnt != 0){
+                                            $html .=round(((int)$lecture->complete_cnt / $lecture->student_cnt) * 100, 0).'%';
+                                        } else{
+                                            $html .= '0%';
+                                        }
                                         $html .='</span>';
                                     $html .='</div>';
-                                $html .='</div>';
-                                $html .='<div class="w1w1w3">';
-                                    $html .='<div class="t1">';
-                                        $html .=$lecture->title;
+                                    $html .='<div class="w1w2w2">';
+                                        $html .='<span class="t3">강좌 평점</span>';
+                                        $html .='<span class="t4">'.$lecture->rating.'</span>';
                                     $html .='</div>';
-                                    $html .='<div class="t2">';
-                                        $html .=$lecture->owner_name;
-                                    $html .='</div>';
+                                    $html .='<div class="w1w2w3">';
+                                        $html .='<span class="t3">수강자 수</span>';
+                                        $html .='<span class="t4">'.$lecture->student_cnt.'</span>';
+                                    $html .=' </div>';
                                 $html .='</div>';
-                            $html .='</div>';
-                            $html .='<div class="w1w2">';
-                                $html .='<div class="w1w2w1">';
-                                    $html .='<span class="t3">완강률</span>';
-                                    $html .='<span class="t4">';
-                                    if ($lecture->student_cnt != 0){
-                                        $html .=round(((int)$lecture->complete_cnt / $lecture->student_cnt) * 100, 0).'%';
-                                    } else{
-                                        $html .= '0%';
-                                    }
-                                    $html .='</span>';
-                                $html .='</div>';
-                                $html .='<div class="w1w2w2">';
-                                    $html .='<span class="t3">강좌 평점</span>';
-                                    $html .='<span class="t4">'.$lecture->rating.'</span>';
-                                $html .='</div>';
-                                $html .='<div class="w1w2w3">';
-                                    $html .='<span class="t3">수강자 수</span>';
-                                    $html .='<span class="t4">'.$lecture->student_cnt.'</span>';
-                                $html .=' </div>';
-                            $html .='</div>';
-                        $html .='</a>';
-                    $html .='</li>';
+                            $html .='</a>';
+                        $html .='</li>';
+                    }
+                    $result['status'] = "success";
+                    $result['html'] = $html;
+                }catch(Exception $e){
+                    $result['status'] = 'fail';
+                    $result['msg'] = $e->getMessage();
+                    $result['code'] = $e->getCode();
                 }
-                $result['status'] = "success";
-                $result['html'] = $html;
                 return response()->json($result, 200);
             } else if ($type == 'instructor') {
                 return view('sub.community.insight_ranking_instructor');
@@ -163,5 +166,8 @@ class CommunityController extends Controller{
         $reviewList = DB::select($query);
 
         return view('sub.community.review_all', compact('reviewList'));
+    }
+    public function moreButton(){
+
     }
 }
