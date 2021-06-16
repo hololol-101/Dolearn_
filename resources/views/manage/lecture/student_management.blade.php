@@ -378,6 +378,7 @@ function selectStudent(selectType) {
                     $('#student_list').empty();
                     $('#no_result').empty().append('<br><span>현재 수강자가 없습니다.</span><br><br>');
                 } else {
+                    $('#no_result').empty();
                     $('#student_list').empty().append(data.resData);
                 }
 

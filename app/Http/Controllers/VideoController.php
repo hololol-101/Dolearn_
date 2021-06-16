@@ -545,7 +545,76 @@ class VideoController extends Controller{
     }
 
     public function videoPlaylist() {
-        return view('sub.video.video_playlist');
+        $userId = Auth::user()->email;
+
+        $query = 'SELECT *, SUM(video_cnt) AS video_cnt
+                    FROM (
+                        (SELECT dir.*, COUNT(dir.idx) AS video_cnt
+                        FROM playlist_directory dir, playlist_video vid
+                        WHERE dir.idx = vid.directory_idx AND dir.user_id = vid.user_id AND dir.user_id = "'.$userId.'" AND vid.status = "active"
+                        GROUP BY dir.idx)
+                        UNION ALL
+                        (SELECT *, 0 AS video_cnt
+                        FROM playlist_directory
+                        WHERE user_id = "instructor01@test.com")) AS t
+                    WHERE status = "active"
+                    GROUP BY idx
+                    ORDER BY created_at DESC';
+
+        // 재생목록 디렉토리 목록 조회
+        $playlistDirectoryList = DB::select($query);
+
+        return view('sub.video.video_playlist', compact('playlistDirectoryList'));
+    }
+
+    public function addPlaylistDirectory(Request $request) {
+        $directoryTitle = $request->post('directory_title', '');
+        $userId = Auth::user()->email;
+
+        try {
+            // 새 재생목록 디렉토리 생성
+            DB::table('playlist_directory')->insert([
+                'user_id' => $userId,
+                'title' => $directoryTitle,
+                'created_at' => now()
+            ]);
+
+            $result['status'] = 'success';
+
+        } catch(Exception $e) {
+            $result['status'] = 'fail';
+            $result['msg'] = $e->getMessage();
+            $result['code'] = $e->getCode();
+
+        } finally {
+            return response()->json($result);
+        }
+    }
+
+    public function modifyPlaylistDirectory(Request $request) {
+
+    }
+
+    public function deletePlaylistDirectory(Request $request) {
+        $directoryIdx = $request->post('directory_idx', '');
+
+        try {
+            // 재생목록 디렉토리 삭제
+            DB::table('playlist_directory')->where('idx', $directoryIdx)->update(['status' => 'delete', 'deleted_at' => now()]);
+
+            // 해당 재생목록에 포함된 영상 정보 삭제
+            DB::table('playlist_video')->where('directory_idx', $directoryIdx)->update(['status' => 'delete', 'deleted_at' => now()]);
+
+            $result['status'] = 'success';
+
+        } catch(Exception $e) {
+            $result['status'] = 'fail';
+            $result['msg'] = $e->getMessage();
+            $result['code'] = $e->getCode();
+
+        } finally {
+            return response()->json($result);
+        }
     }
 
     public function videoPlaylistDetail() {

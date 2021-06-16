@@ -42,8 +42,27 @@
             @endif
 			<div class="tg1">
 				<span class="t1">{{ $myQuestionInfo->writer_name }}</span>
-                {{-- TODO: --}}
-				<span class="t2">1달전</span>
+                @php
+                    // 지난 시간 계산 함수
+                    function format_date($time){
+                        $t=time()-$time;
+                        $f=array(
+                            '31536000'=>'년',
+                            '2592000'=>'개월',
+                            '604800'=>'주',
+                            '86400'=>'일',
+                            '3600'=>'시간',
+                            '60'=>'분',
+                            '1'=>'초'
+                        );
+                        foreach ($f as $k=>$v)    {
+                            if (0 !=$c=floor($t/(int)$k)) {
+                                return $c.$v.'전';
+                            }
+                        }
+                    }
+                @endphp
+				<span class="t2">{{ format_date(strtotime($myQuestionInfo->writed_at)) }}</span>
 			</div>
 			<div class="tg2">
 				{{ $myQuestionInfo->content }}

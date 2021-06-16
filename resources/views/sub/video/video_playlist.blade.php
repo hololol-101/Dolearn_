@@ -114,43 +114,21 @@
 
 <!-- cp1playlist2 -->
 <div class="cp1playlist2">
-	<ul class="lst1">
+    <ul class="lst1">
+        @foreach ($playlistDirectoryList as $playlistDirectory)
 		<li class="li1">
 			<div class="tg1">
 				<div class="t1">
-					<a href="{{ route('sub.video.video_playlist_detail', ['id' => '']) }}" class="a1">재생목록 제목 : 내가 만든 엑셀 공부 재생목록 01</a>
+					<a href="@if ($playlistDirectory->video_cnt == 0) javascript:alert('해당 재생목록에 영상이 없습니다.'); @else {{ route('sub.video.video_playlist_detail', ['idx' => $playlistDirectory->idx]) }} @endif" class="a1">{{ $playlistDirectory->title }}</a>
 				</div>
-				<span class="t2">총 영상 수 2개 &gt;</span>
+				<span class="t2">총 영상 수 {{ $playlistDirectory->video_cnt }}개 &gt;</span>
 			</div>
 			<div class="eg1">
-				<a href="#" class="a2 edit"><i class="a2ic1"></i> <span class="a2t1">수정</span></a>
-				<a href="#" class="a2 del"><i class="a2ic1"></i> <span class="a2t1">삭제</span></a>
+				<a href="javascript:void(0);" class="a2 edit"><i class="a2ic1"></i> <span class="a2t1">수정</span></a>
+				<a href="javascript:void(0);" class="a2 del" onclick="deletePlaylistDirectory('{{ $playlistDirectory->idx }}')"><i class="a2ic1"></i> <span class="a2t1">삭제</span></a>
 			</div>
 		</li>
-		<li class="li1">
-			<div class="tg1">
-				<div class="t1">
-                    <a href="{{ route('sub.video.video_playlist_detail', ['id' => '']) }}" class="a1">내가 만든 엑셀 공부 재생목록 02</a>
-				</div>
-				<span class="t2">총 영상 수 2개 &gt;</span>
-			</div>
-			<div class="eg1">
-				<a href="#" class="a2 edit"><i class="a2ic1"></i> <span class="a2t1">수정</span></a>
-				<a href="#" class="a2 del"><i class="a2ic1"></i> <span class="a2t1">삭제</span></a>
-			</div>
-		</li>
-		<li class="li1">
-			<div class="tg1">
-				<div class="t1">
-                    <a href="{{ route('sub.video.video_playlist_detail', ['id' => '']) }}" class="a1">일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십</a>
-				</div>
-				<span class="t2">총 영상 수 2개 &gt;</span>
-			</div>
-			<div class="eg1">
-				<a href="#" class="a2 edit"><i class="a2ic1"></i> <span class="a2t1">수정</span></a>
-				<a href="#" class="a2 del"><i class="a2ic1"></i> <span class="a2t1">삭제</span></a>
-			</div>
-		</li>
+        @endforeach
 	</ul>
 </div>
 <!-- /cp1playlist2 -->
@@ -174,13 +152,13 @@
 					html += '<div class="w1edit">';
 					html += '	<input type="text" value="" placeholder="제목을 입력해주세요. (50자 이하)" title="재생 목록 제목" class="text w100 mgb05em" />';
 					html += '	<div class="eg1">';
-					html += '		<a href="#" class="a2 calcel"><i class="a2ic1"></i> <span class="a2t1">취소</span></a>';
-					html += '		<a href="#" class="a2 save"><i class="a2ic1"></i> <span class="a2t1">저장</span></a>';
+					html += '		<a href="javascript:void(0);" class="a2 cancel"><i class="a2ic1"></i> <span class="a2t1">취소</span></a>';
+					html += '		<a href="javascript:void(0);" class="a2 save"><i class="a2ic1"></i> <span class="a2t1">저장</span></a>';
 					html += '	</div>';
 					html += '</div>';
 				$item.append($(html));
 				var $input = $('input.text', $item),
-					$bcancel = $('.a2.calcel', $item),
+					$bcancel = $('.a2.cancel', $item),
 					$bsave = $('.a2.save', $item);
 				$input.val( $item.find('.tg1>.t1').text().replace(/^\s*|\s*$/g, '') )[0].focus(); // 앞뒤공백제거 후 인풋막스 값 넣음
 				// 취소 클릭
@@ -209,4 +187,38 @@
 <!-- /container -->
 </div>
 <!-- /#body -->
+@endsection
+
+@section('script')
+<script>
+// 재생 목록 디렉토리 삭제
+function deletePlaylistDirectory(idx) {
+    if (confirm('해당 재생목록을 삭제하시겠습니까?\n재생목록에 포함된 영상도 전부 삭제됩니다.')) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'POST',
+            dataType: 'json',
+            url: "{{ route('sub.video.delete_playlist_directory') }}",
+            // contentType: false,
+            // processData: false,
+            data: {
+                'directory_idx': idx
+            },
+            success: (response) => {
+                if (response.status == 'success') {
+                    location.reload();
+
+                } else {
+                    alert(response.msg);
+                }
+            },
+            error: function(response) {
+                console.log(response);
+            }
+        });
+    }
+}
+</script>
 @endsection

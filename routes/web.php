@@ -167,6 +167,15 @@ Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
         // 재생 목록
         Route::get('video_playlist', [VideoController::class, 'videoPlaylist'])->name('video_playlist');
 
+        // 새 재생 목록 디렉토리 생성
+        Route::post('add_playlist_directory', [VideoController::class, 'addPlaylistDirectory'])->name('add_playlist_directory');
+
+        // 재생 목록 디렉토리 수정
+        Route::post('modify_playlist_directory', [VideoController::class, 'modifyPlaylistDirectory'])->name('modify_playlist_directory');
+
+        // 재생 목록 디렉토리 삭제
+        Route::post('delete_playlist_directory', [VideoController::class, 'deletePlaylistDirectory'])->name('delete_playlist_directory');
+
         // 재생 목록 상세
         Route::get('video_playlist_detail', [VideoController::class, 'videoPlaylistDetail'])->name('video_playlist_detail');
     });

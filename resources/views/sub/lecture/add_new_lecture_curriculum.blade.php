@@ -1029,7 +1029,7 @@ function saveAndGoNextStep(nextStep) {
     });
 
     // 배열 첫 번째 요소 제거
-    bchapList.shift();
+    // bchapList.shift();
 
     // 소단원 목록을 json 형태로 변환
     $('#div_schap').find('.t1').each(function() {
@@ -1245,6 +1245,11 @@ function addUrlToVideoList() {
         return false;
     }
 
+    if ($videoId == '') {
+        alert('영상 ID를 입력해주세요.');
+        return false;
+    }
+
     // URL에서 유튜브 영상 id 추출 후 DB에 있는지 확인  TODO: 없으면 유튜브 API로 분석 필요함
     $.ajax({
         headers: {
@@ -1279,7 +1284,11 @@ function addUrlToVideoList() {
                     analysis_yn: analysisYn
                 });
 
-                $_video.find('.t1').text('영상 ID : ' + data.videoTitle + ' (제목을 수정해주세요.)');
+                if (!data.exist) {
+                    $_video.find('.t1').text('미등록 영상 ID : ' + data.videoTitle + ' (제목을 수정해주세요.)');
+                } else {
+                    $_video.find('.t1').text(data.videoTitle);
+                }
                 $_video.appendTo('#div_video');
 
                 getMainVideoList();

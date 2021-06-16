@@ -34,7 +34,6 @@ class MainController extends Controller
 
             $learningLectureList = DB::select($query);
 
-
             if (count($learningLectureList) > 0) {
 
                 // 가장 최근에 학습한 강좌의 주제 목록

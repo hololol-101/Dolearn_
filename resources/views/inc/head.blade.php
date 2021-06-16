@@ -570,15 +570,6 @@
             "{{ session()->put('alert', '회원가입이 완료되었습니다.\n로그인 페이지로 이동합니다.') }}"
         @endif
 
-        var toDoWhenClosing = function() {
-            $.ajax({
-                type: "POST",
-                url: "{{ route('account.logout') }}",
-                async: false
-            });
-            return false;
-        };
-        window.onbeforeunload = toDoWhenClosing();
 
     });
 

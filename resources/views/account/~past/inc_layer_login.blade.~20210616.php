@@ -151,7 +151,34 @@ function signin() {
 
                 if(response.status == "success"){
                     location.reload(true);
-                }else{
+                }else if(response.status == "check"){
+                    var confirmData = confirm("이미 다른 곳에서 접속중입니다. 다른 기기를 로그아웃 하시겠습니까?");
+                    if(confirmData||window.event.keyCode == 13){
+                        $.ajax({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST',
+                            dataType: 'json',
+                            url: "{{ route('account.signin') }}",
+                            data: {
+                                'check': "okay",
+                                'email': email.val(),
+                                'password':password.val()
+                            },
+                            success: (response) => {
+                                if(response.status == "success")
+                                    location.reload(true);
+                                    //location.href='{{ route('main') }}';
+                            },
+                            error: function(response) {
+                                console.log(response);
+                            }
+                        })
+                    }
+
+                }
+                else{
                     alert("일치하는 회원 정보가 없습니다. 다시 로그인 해 주세요");
                     email.val('');
                     password.val('');

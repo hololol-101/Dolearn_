@@ -250,7 +250,7 @@
 									datasets: [{
 										label: '# of Votes',
                                         // TODO: 인증대기중인 수강자 수
-										data: [{{ $lectureInfo->student_cnt }}, {{ (int)$countLearningComplete }}, {{ $lectureInfo->student_cnt - (int)$countLearningComplete }}],
+										data: [{{ $lectureInfo->student_cnt - (int)$countLearningComplete }}, {{ (int)$countLearningComplete }}, 0],
 										backgroundColor: ['#74b7b2', '#4c78a9', '#f48f13'],
 										weight: 10,
 										circumference: 180
@@ -301,9 +301,9 @@
 			</div>
 			<div class="cont">
 				<ul class="lst1">
-					<li class="li1"><a class="a1"><span class="t1">엑셀 초급 강의 실시간 화상 강의 일시 공지</span> <span class="t2">2021/02/22 16:04</span></a></li>
-					<li class="li1"><a class="a1"><span class="t1">일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십</span> <span class="t2">2021/02/22 16:04</span></a></li>
-					<li class="li1"><a class="a1"><span class="t1">일이삼사오육칠팔구십</span> <span class="t2">2021/02/22 16:04</span></a></li>
+					<li class="li1"><a class="a1"><span class="t1">공지사항001</span> <span class="t2">2021/02/22 16:04</span></a></li>
+					<li class="li1"><a class="a1"><span class="t1">공지사항002</span> <span class="t2">2021/02/22 16:04</span></a></li>
+					<li class="li1"><a class="a1"><span class="t1">공지사항003</span> <span class="t2">2021/02/22 16:04</span></a></li>
 				</ul>
 			</div>
 		</div>

@@ -967,16 +967,18 @@ class LectureController extends Controller{
 
                 // 수정된 대단원 저장
                 foreach($bchapList as $key => $bchap) {
-                    DB::table('tempsave_b_chapter')->insert(array(
-                        'session_id' => $sessionId,
-                        'user_id' => $userId,
-                        'bcate_id' => $bcateId,
-                        'scate_id' => $scateId,
-                        'bchap_id' => $bchap->bchapId,
-                        'bchap_name' => $bchap->bchapName,
-                        'order' => $key,
-                        'saved_at' => now()
-                    ));
+                    if (isset($bchap->bchapId)) {
+                        DB::table('tempsave_b_chapter')->insert(array(
+                            'session_id' => $sessionId,
+                            'user_id' => $userId,
+                            'bcate_id' => $bcateId,
+                            'scate_id' => $scateId,
+                            'bchap_id' => $bchap->bchapId,
+                            'bchap_name' => $bchap->bchapName,
+                            'order' => $key,
+                            'saved_at' => now()
+                        ));
+                    }
                 }
 
                 // 수정된 소단원 저장
@@ -1001,7 +1003,8 @@ class LectureController extends Controller{
                         'user_id' => $userId,
                         'uid' => $video->videoId,
                         'title' => $video->videoTitle,
-                        'analysis_yn' => $video->analysisYn
+                        'analysis_yn' => $video->analysisYn,
+                        'saved_at' => now()
                     ));
                 }
 

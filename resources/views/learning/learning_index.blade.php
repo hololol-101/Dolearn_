@@ -59,7 +59,7 @@
                             <ul class="lst1">
                                 @foreach ($curriVideoList[$videoListIdx] as $video)
                                 <li class="li1 @if ($video->status == 'complete') check @endif">
-                                    <a href="javascript:void(0);" class="g1 tooltip1"><i class="g1p1"><img src="{{ asset('assets/images/lib/x3/x3p301.jpg') }}" alt="{{ $video->subject }}" class="w100 round" /></i><span class="g1t1 tooltip1c">{{ $video->channel }}</span></a>
+                                    <a href="javascript:void(0);" class="g1 tooltip1"><i class="g1p1">{{-- TODO: 채널 이미지로 교체 --}}<img src="{{ asset('assets/images/lib/x3/x3p301.jpg') }}" alt="{{ $video->subject }}" class="w100 round" /></i><span class="g1t1 tooltip1c">{{ $video->channel }}</span></a>
                                     @php
                                         $format = '';
                                         if (date("H", strtotime($video->video_len)) >= 1) {

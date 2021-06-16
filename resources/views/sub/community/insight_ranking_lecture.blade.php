@@ -102,360 +102,60 @@
 
 <div class="dpf jcsb aic">
 	<h2 class="hb1 h2">지금 핫한 강좌</h2>
-	<select class="select" title="선택옵션">
+	<select class="select" title="선택옵션" onchange="handleOnChange(this)">
 		<option value="">수강자 수</option>
 		<option value="">완강률</option>
 		<option value="">평점</option>
 	</select>
 </div>
 
-
+@php
+    $cnt = 1;
+@endphp
 <!-- cp1flist6 -->
 <div class="cp1flist6">
     <!-- lst1 -->
     <ul class="lst1">
+        @foreach ($lectureList as $lecture )
         <li class="li1">
             <a href="?#★" class="w1 a1">
                 <div class="w1w1">
                     <div class="w1w1w1">
-                        <b class="g1"><span class="g1t1">1</span><span class="g1t2">위</span></b>
+                        <b class="g1"><span class="g1t1">{{ $cnt++ }}</span><span class="g1t2">위</span></b>
                     </div>
                     <div class="w1w1w2">
                         <div class="f1">
                             <span class="f1p1">
-                                <img src="{{ asset('assets/images/main/x1/x1p001.jpg') }}" alt="★대체텍스트필수" />
+                                <img src="{{ asset('storage/uploads/thumbnail/'.$lecture->save_thumbnail) }}" alt="★대체텍스트필수" />
                             </span>
                         </div>
                     </div>
                     <div class="w1w1w3">
                         <div class="t1">
-                            강좌제목
+                            {{ $lecture->title }}
                         </div>
                         <div class="t2">
-                            강사이름
+                            {{ $lecture->owner_name }}
                         </div>
                     </div>
                 </div>
 								<div class="w1w2">
 									<div class="w1w2w1">
 										<span class="t3">완강률</span>
-										<span class="t4">98%</span>
+										<span class="t4">@if ($lecture->student_cnt != 0) {{ round(((int)$lecture->complete_cnt / $lecture->student_cnt) * 100, 0) }}% @else 0% @endif</span>
 									</div>
 									<div class="w1w2w2">
 										<span class="t3">강좌 평점</span>
-										<span class="t4">4.7</span>
+										<span class="t4">{{ $lecture->rating }}</span>
 									</div>
 									<div class="w1w2w3">
 										<span class="t3">수강자 수</span>
-										<span class="t4">1532</span>
+										<span class="t4">{{ $lecture->student_cnt }}</span>
 									</div>
 								</div>
             </a>
         </li>
-        <li class="li1">
-            <a href="?#★" class="w1 a1">
-                <div class="w1w1">
-                    <div class="w1w1w1">
-                        <b class="g1"><span class="g1t1">2</span><span class="g1t2">위</span></b>
-                    </div>
-                    <div class="w1w1w2">
-                        <div class="f1">
-                            <span class="f1p1">
-                                <img src="{{ asset('assets/images/main/x1/x1p002.jpg') }}" alt="★대체텍스트필수" />
-                            </span>
-                        </div>
-                    </div>
-                    <div class="w1w1w3">
-                        <div class="t1">
-                            강좌제목일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십
-                        </div>
-                        <div class="t2">
-                            강사이름
-                        </div>
-                    </div>
-                </div>
-								<div class="w1w2">
-									<div class="w1w2w1">
-										<span class="t3">완강률</span>
-										<span class="t4">98%</span>
-									</div>
-									<div class="w1w2w2">
-										<span class="t3">강좌 평점</span>
-										<span class="t4">4.7</span>
-									</div>
-									<div class="w1w2w3">
-										<span class="t3">수강자 수</span>
-										<span class="t4">1532</span>
-									</div>
-								</div>
-            </a>
-        </li>
-        <li class="li1">
-            <a href="?#★" class="w1 a1">
-                <div class="w1w1">
-                    <div class="w1w1w1">
-                        <b class="g1"><span class="g1t1">3</span><span class="g1t2">위</span></b>
-                    </div>
-                    <div class="w1w1w2">
-                        <div class="f1">
-                            <span class="f1p1">
-                                <img src="{{ asset('assets/images/main/x1/x1p003.jpg') }}" alt="★대체텍스트필수" />
-                            </span>
-                        </div>
-                    </div>
-                    <div class="w1w1w3">
-                        <div class="t1">
-                            강좌제목일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십
-                        </div>
-                        <div class="t2">
-                            강사이름
-                        </div>
-                    </div>
-                </div>
-								<div class="w1w2">
-									<div class="w1w2w1">
-										<span class="t3">완강률</span>
-										<span class="t4">98%</span>
-									</div>
-									<div class="w1w2w2">
-										<span class="t3">강좌 평점</span>
-										<span class="t4">4.7</span>
-									</div>
-									<div class="w1w2w3">
-										<span class="t3">수강자 수</span>
-										<span class="t4">1532</span>
-									</div>
-								</div>
-            </a>
-        </li>
-        <li class="li1">
-            <a href="?#★" class="w1 a1">
-                <div class="w1w1">
-                    <div class="w1w1w1">
-                        <b class="g1"><span class="g1t1">4</span><span class="g1t2">위</span></b>
-                    </div>
-                    <div class="w1w1w2">
-                        <div class="f1">
-                            <span class="f1p1">
-                                <img src="{{ asset('assets/images/main/x1/x1p004.jpg') }}" alt="★대체텍스트필수" />
-                            </span>
-                        </div>
-                    </div>
-                    <div class="w1w1w3">
-                        <div class="t1">
-                            강좌제목일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십
-                        </div>
-                        <div class="t2">
-                            강사이름
-                        </div>
-                    </div>
-                </div>
-								<div class="w1w2">
-									<div class="w1w2w1">
-										<span class="t3">완강률</span>
-										<span class="t4">98%</span>
-									</div>
-									<div class="w1w2w2">
-										<span class="t3">강좌 평점</span>
-										<span class="t4">4.7</span>
-									</div>
-									<div class="w1w2w3">
-										<span class="t3">수강자 수</span>
-										<span class="t4">1532</span>
-									</div>
-								</div>
-            </a>
-        </li>
-        <li class="li1">
-            <a href="?#★" class="w1 a1">
-                <div class="w1w1">
-                    <div class="w1w1w1">
-                        <b class="g1"><span class="g1t1">5</span><span class="g1t2">위</span></b>
-                    </div>
-                    <div class="w1w1w2">
-                        <div class="f1">
-                            <span class="f1p1">
-                                <img src="{{ asset('assets/images/main/x1/x1p005.jpg') }}" alt="★대체텍스트필수" />
-                            </span>
-                        </div>
-                    </div>
-                    <div class="w1w1w3">
-                        <div class="t1">
-                            강좌제목일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십
-                        </div>
-                        <div class="t2">
-                            강사이름
-                        </div>
-                    </div>
-                </div>
-								<div class="w1w2">
-									<div class="w1w2w1">
-										<span class="t3">완강률</span>
-										<span class="t4">98%</span>
-									</div>
-									<div class="w1w2w2">
-										<span class="t3">강좌 평점</span>
-										<span class="t4">4.7</span>
-									</div>
-									<div class="w1w2w3">
-										<span class="t3">수강자 수</span>
-										<span class="t4">1532</span>
-									</div>
-								</div>
-            </a>
-        </li>
-        <li class="li1">
-            <a href="?#★" class="w1 a1">
-                <div class="w1w1">
-                    <div class="w1w1w1">
-                        <b class="g1"><span class="g1t1">6</span><span class="g1t2">위</span></b>
-                    </div>
-                    <div class="w1w1w2">
-                        <div class="f1">
-                            <span class="f1p1">
-                                <img src="{{ asset('assets/images/main/x1/x1p006.jpg') }}" alt="★대체텍스트필수" />
-                            </span>
-                        </div>
-                    </div>
-                    <div class="w1w1w3">
-                        <div class="t1">
-                            강좌제목일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십
-                        </div>
-                        <div class="t2">
-                            강사이름
-                        </div>
-                    </div>
-                </div>
-								<div class="w1w2">
-									<div class="w1w2w1">
-										<span class="t3">완강률</span>
-										<span class="t4">98%</span>
-									</div>
-									<div class="w1w2w2">
-										<span class="t3">강좌 평점</span>
-										<span class="t4">4.7</span>
-									</div>
-									<div class="w1w2w3">
-										<span class="t3">수강자 수</span>
-										<span class="t4">1532</span>
-									</div>
-								</div>
-            </a>
-        </li>
-        <li class="li1">
-            <a href="?#★" class="w1 a1">
-                <div class="w1w1">
-                    <div class="w1w1w1">
-                        <b class="g1"><span class="g1t1">7</span><span class="g1t2">위</span></b>
-                    </div>
-                    <div class="w1w1w2">
-                        <div class="f1">
-                            <span class="f1p1">
-                                <img src="{{ asset('assets/images/main/x1/x1p007.jpg') }}" alt="★대체텍스트필수" />
-                            </span>
-                        </div>
-                    </div>
-                    <div class="w1w1w3">
-                        <div class="t1">
-                            강좌제목일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십
-                        </div>
-                        <div class="t2">
-                            강사이름
-                        </div>
-                    </div>
-                </div>
-								<div class="w1w2">
-									<div class="w1w2w1">
-										<span class="t3">완강률</span>
-										<span class="t4">98%</span>
-									</div>
-									<div class="w1w2w2">
-										<span class="t3">강좌 평점</span>
-										<span class="t4">4.7</span>
-									</div>
-									<div class="w1w2w3">
-										<span class="t3">수강자 수</span>
-										<span class="t4">1532</span>
-									</div>
-								</div>
-            </a>
-        </li>
-        <li class="li1">
-            <a href="?#★" class="w1 a1">
-                <div class="w1w1">
-                    <div class="w1w1w1">
-                        <b class="g1"><span class="g1t1">8</span><span class="g1t2">위</span></b>
-                    </div>
-                    <div class="w1w1w2">
-                        <div class="f1">
-                            <span class="f1p1">
-                                <img src="{{ asset('assets/images/main/x1/x1p008.jpg') }}" alt="★대체텍스트필수" />
-                            </span>
-                        </div>
-                    </div>
-                    <div class="w1w1w3">
-                        <div class="t1">
-                            강좌제목일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십
-                        </div>
-                        <div class="t2">
-                            강사이름
-                        </div>
-                    </div>
-                </div>
-								<div class="w1w2">
-									<div class="w1w2w1">
-										<span class="t3">완강률</span>
-										<span class="t4">98%</span>
-									</div>
-									<div class="w1w2w2">
-										<span class="t3">강좌 평점</span>
-										<span class="t4">4.7</span>
-									</div>
-									<div class="w1w2w3">
-										<span class="t3">수강자 수</span>
-										<span class="t4">1532</span>
-									</div>
-								</div>
-            </a>
-        </li>
-        <li class="li1">
-            <a href="?#★" class="w1 a1">
-                <div class="w1w1">
-                    <div class="w1w1w1">
-                        <b class="g1"><span class="g1t1">9</span><span class="g1t2">위</span></b>
-                    </div>
-                    <div class="w1w1w2">
-                        <div class="f1">
-                            <span class="f1p1">
-                                <img src="{{ asset('assets/images/main/x1/x1p009.jpg') }}" alt="★대체텍스트필수" />
-                            </span>
-                        </div>
-                    </div>
-                    <div class="w1w1w3">
-                        <div class="t1">
-                            강좌제목일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십
-                        </div>
-                        <div class="t2">
-                            강사이름
-                        </div>
-                    </div>
-                </div>
-								<div class="w1w2">
-									<div class="w1w2w1">
-										<span class="t3">완강률</span>
-										<span class="t4">98%</span>
-									</div>
-									<div class="w1w2w2">
-										<span class="t3">강좌 평점</span>
-										<span class="t4">4.7</span>
-									</div>
-									<div class="w1w2w3">
-										<span class="t3">수강자 수</span>
-										<span class="t4">1532</span>
-									</div>
-								</div>
-            </a>
-        </li>
+        @endforeach
     </ul>
     <!-- /lst1 -->
 
@@ -470,7 +170,12 @@
 
 </div>
 <!-- /cp1flist6 -->
+<script>
+    function handleOnChange(e){
+        alert(e.options[e.selectedIndex].text)
+    }
 
+</script>
 
 <script>/*<![CDATA[*/
     $(function(){
