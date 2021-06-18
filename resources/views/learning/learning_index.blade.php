@@ -170,7 +170,6 @@
                 if (data.status == 'success') {
                     // alert('done!');
                     alert('후기 등록이 완료되었습니다.\n정성스런 후기 남겨주셔서 감사합니다.');
-                    $('a[href*="#layer1review1"]').triggerHandler('click');
 
                 } else if (data.status = 'exist') {
                     alert('이미 후기를 남겨주셨네요!\n후기는 한 번만 등록 가능합니다.');
@@ -179,6 +178,9 @@
                     alert('후기 등록에 실패했습니다.\n관리자에게 문의 바랍니다.');
                     // console.log('code: ' + data.code + '\nmessage: ' + data.msg);
                 }
+
+                $('#review_content').text('');
+                $('a[href*="#layer1review1"]').triggerHandler('click');
             },
             error: function(request, status, error) {
                 //

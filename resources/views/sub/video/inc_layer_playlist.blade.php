@@ -15,28 +15,20 @@
 					<!-- cp1playlist1 -->
 					<div class="cp1playlist1">
 						<ul class="lst1">
-						<li class="li1">
-							<span class="tg1">
-								<input type="checkbox" name="★1checkbox0" id="★1checkbox0e0" /> <label for="★1checkbox0e0">재생목록 01</label>
-							</span>
-							<span class="st1">저장됨</span>
-						</li>
-						<li class="li1 on">
-							<span class="tg1">
-								<input type="checkbox" name="★1checkbox0" id="★1checkbox0e1" checked="checked" /> <label for="★1checkbox0e1">재생목록 02</label>
-							</span>
-							<span class="st1">저장됨</span>
-						</li>
-						<li class="li1">
-							<span class="tg1">
-								<input type="checkbox" name="★1checkbox0" id="★1checkbox0e2" /> <label for="★1checkbox0e2">재생목록 일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십</label>
-							</span>
-							<span class="st1">저장됨</span>
-						</li>
+                            @if (isset($playlistDirectoryList))
+                                @foreach ($playlistDirectoryList as $playlistDirectory)
+                                <li class="li1" directory_idx="{{ $playlistDirectory->idx }}">
+                                    <span class="tg1">
+                                        <input type="checkbox" name="★1checkbox0"/> <label for="★1checkbox0e0">{{ $playlistDirectory->title }}</label>
+                                    </span>
+                                    <span class="st1">저장됨</span>
+                                </li>
+                                @endforeach
+                            @endif
 						</ul>
-
+                        <input type="hidden" id="playlist_video_id" value="">
 						<div class="makelist toggle1s1">
-							<a href="#" class="button block primary toggle-b">+ 새 목록 만들기</a>
+							<a href="javascript:void(0);" class="button block primary toggle-b">+ 새 목록 만들기</a>
 							<div class="toggle-c">
 								<strong class="tt1">새 목록 만들기</strong>
 								<input type="text" value="제목을 입력해주세요. (50자 이하)" placeholder="제목을 입력해주세요. (50자 이하)" title="재생 목록 제목" onfocus="if( this.value == this.defaultValue ) this.value=''; this.select();" onblur="if( this.value=='' ) this.value=this.defaultValue;" class="text">
@@ -102,13 +94,73 @@
 			e.preventDefault();
 			e.stopPropagation();
 			var $cb = $('input[type="checkbox"]', this);
-			console.log( $cb.prop('checked') );
+			// console.log( $cb.prop('checked') );
+
+            var videoId = $('#playlist_video_id').val();
+            var directoryIdx = $(this).attr('directory_idx');
+
 			if( $cb.prop('checked') ){
 				$cb.prop({'checked':''});
 				$(this).removeClass('on');
+
+                // 재생 목록에서 영상 삭제
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    url: "{{ route('learning.delete_video') }}",
+                    // contentType: false,
+                    // processData: false,
+                    data: {
+                        'video_id': videoId,
+                        'directory_idx': directoryIdx
+                    },
+                    success: (response) => {
+                        if (response.status == 'success') {
+
+                        } else if (response.status == 'exist') {
+                            alert('이미 재생목록에 추가된 영상입니다.');
+
+                        } else {
+                            alert(response.msg);
+                        }
+                    },
+                    error: function(response) {
+                        console.log(response);
+                    }
+                });
+
 			}else{
 				$cb.prop({'checked':'checked'});
 				$(this).addClass('on');
+
+                // 재생 목록에 영상 추가
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    url: "{{ route('learning.add_video') }}",
+                    // contentType: false,
+                    // processData: false,
+                    data: {
+                        'video_id': videoId,
+                        'directory_idx': directoryIdx
+                    },
+                    success: (response) => {
+                        if (response.status == 'success') {
+
+                        } else {
+                            alert(response.msg);
+                        }
+                    },
+                    error: function(response) {
+                        console.log(response);
+                    }
+                });
 			}
 		});
 	})('.cp1playlist1 .li1');

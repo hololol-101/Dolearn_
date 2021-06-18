@@ -115,20 +115,24 @@
 <!-- cp1playlist2 -->
 <div class="cp1playlist2">
     <ul class="lst1">
-        @foreach ($playlistDirectoryList as $playlistDirectory)
-		<li class="li1">
-			<div class="tg1">
-				<div class="t1">
-					<a href="@if ($playlistDirectory->video_sum == 0) javascript:alert('해당 재생목록에 영상이 없습니다.'); @else {{ route('sub.video.video_playlist_detail', ['idx' => $playlistDirectory->idx]) }} @endif" class="a1">{{ $playlistDirectory->title }}</a>
-				</div>
-				<span class="t2">총 영상 수 {{ $playlistDirectory->video_sum }}개 &gt;</span>
-			</div>
-			<div class="eg1">
-				<a href="javascript:void(0);" class="a2 edit" directory_idx="{{ $playlistDirectory->idx }}"><i class="a2ic1"></i> <span class="a2t1">수정</span></a>
-				<a href="javascript:void(0);" class="a2 del" onclick="deletePlaylistDirectory('{{ $playlistDirectory->idx }}')"><i class="a2ic1"></i> <span class="a2t1">삭제</span></a>
-			</div>
-		</li>
-        @endforeach
+        @if (count($playlistDirectoryList))
+            @foreach ($playlistDirectoryList as $playlistDirectory)
+            <li class="li1">
+                <div class="tg1">
+                    <div class="t1">
+                        <a href="@if ($playlistDirectory->video_sum == 0) javascript:alert('해당 재생목록에 영상이 없습니다.'); @else {{ route('sub.video.video_playlist_detail', ['idx' => $playlistDirectory->idx]) }} @endif" class="a1">{{ $playlistDirectory->title }}</a>
+                    </div>
+                    <span class="t2">총 영상 수 {{ $playlistDirectory->video_sum }}개 &gt;</span>
+                </div>
+                <div class="eg1">
+                    <a href="javascript:void(0);" class="a2 edit" directory_idx="{{ $playlistDirectory->idx }}"><i class="a2ic1"></i> <span class="a2t1">수정</span></a>
+                    <a href="javascript:void(0);" class="a2 del" onclick="deletePlaylistDirectory('{{ $playlistDirectory->idx }}')"><i class="a2ic1"></i> <span class="a2t1">삭제</span></a>
+                </div>
+            </li>
+            @endforeach
+        @else
+        <br><br><span>재생목록이 없습니다.</span>
+        @endif
 	</ul>
 </div>
 <!-- /cp1playlist2 -->

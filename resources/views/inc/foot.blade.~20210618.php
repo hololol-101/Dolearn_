@@ -12,17 +12,15 @@
 <div id="fn1">
 	<ul>
 	<li><a href="{{ route('etc.introduce') }}">두런소개</a></li>
-	<li><a href="{{ route('etc.terms') }}">이용약관</a></li>
-	<li><a href="{{ route('etc.privacy') }}">개인정보처리방침</a></li>
-	<!-- <li><a href="?#★">학습자 가이드</a></li> -->
-	<li><a href="?#★">강사 가이드</a></li>
-	<li><a href="?#★">유튜버 가이드</a></li>
-	<!-- <li><a href="{{ route('sub.community.notice') }}">공지시항</a></li>
+	<li><a href="{{ route('sub.community.notice') }}">공지시항</a></li>
 	<li><a href="{{ route('sub.community.service_qna') }}">서비스문의</a></li>
+	<li><a href="{{ route('etc.privacy') }}"><b class="em">개인정보처리방침</b></a></li>
+	<li><a href="{{ route('etc.terms') }}">이용약관</a></li>
 	<li><a href="{{ route('sub.community.trend') }}">인사이트</a></li>
-	<li><a href="{{ route('etc.instructor_application') }}">강사계정신청하기</a></li> -->
+	<li><a href="{{ route('etc.instructor_application') }}">강사계정신청하기</a></li>
 	</ul>
 </div>
+
 <!-- /fn1 -->
 
 
@@ -63,8 +61,7 @@
 </div>
 <!-- /author1 -->
 
-<!-- <p id="foot_logo"><a><img src="{{ asset('assets/images/inc/foot_logo.png') }}" alt="DoLearn (유튜브강좌 추천서비스)" /></a></p> -->
-
+<p id="foot_logo"><a><img src="{{ asset('assets/images/inc/foot_logo.png') }}" alt="DoLearn (유튜브강좌 추천서비스)" /></a></p>
 <a href="#container" title="현재 페이지 상단으로 이동" id="gotop1"><i class="ic1"></i> <span class="t1">TOP</span></a>
 
 </div>

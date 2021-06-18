@@ -26,7 +26,8 @@ class DashboardController extends Controller{
         }
 
         if ($role == 'student') {
-            return view('sub.dashboard.dashboard_student', compact('role', 'userName', 'interest_arr'));
+            $lectureNumber = DB::select('select count(case when status = "complete" then 1 end) complete_lecture, count(*) all_lecture FROM my_lecture WHERE user_id = ?',[Auth::user()->email])[0];
+            return view('sub.dashboard.dashboard_student', compact('role', 'userName', 'interest_arr', 'lectureNumber'));
 
         } else if ($role == 'instructor') {
             return view('sub.dashboard.dashboard_instructor', compact('role', 'userName'));

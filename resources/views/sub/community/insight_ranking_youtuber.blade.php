@@ -103,8 +103,8 @@
 <div class="dpf jcsb aic">
 	<h2 class="hb1 h2">지금 뜨는 유튜버</h2>
 	<select class="select" title="선택옵션">
-		<option value="">두런 조회수</option>
 		<option value="">유튜브 조회수</option>
+        <option value="">두런 조회수</option>
 		<option value="">평점</option>
 	</select>
 </div>
@@ -119,7 +119,7 @@
         @endphp
         @foreach ( $youtuberList as $youtuber)
             <li class="li1">
-                <a href="?#★" class="w1 a1">
+                <a href="{{ route('etc.user_introduction', ['type'=>'youtuber', 'user_idx'=>$youtuber->id]) }}" class="w1 a1">
                     <div class="w1w1">
                         <div class="w1w1w1">
                             <b class="g1"><span class="g1t1">{{ ++$cnt }}</span><span class="g1t2">위</span></b>
@@ -127,16 +127,20 @@
                         <div class="w1w1w2">
                             <div class="f1">
                                 <span class="f1p1">
-                                    <img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
+                                    @if ($youtuber->save_profile_image!='')
+                                        <img src="{{ asset('storage/uploads/profile/'.$youtuber->save_profile_image) }}" alt="이미지 없음" />
+                                    @else
+                                        <img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
+                                    @endif
                                 </span>
                             </div>
                         </div>
                         <div class="w1w1w3">
                             <div class="t1">
-                                유튜버명
+                                {{ $youtuber->nickname }}
                             </div>
                             <div class="t2">
-                                유튜버 소개글
+                                {{ $youtuber->introduction }}
                             </div>
                         </div>
                     </div>
@@ -147,11 +151,11 @@
                         </div>
                         <div class="w1w2w2">
                             <span class="t3">YouTube 조회수</span>
-                            <span class="t4">100</span>
+                            <span class="t4">@if (strlen($youtuber->sum_hit)>4){{ number_format($youtuber->sum_hit/10000, 1) }} 만 @else {{ number_format($youtuber->sum_hit/10000, 1) }} @endif </span>
                         </div>
                         <div class="w1w2w3">
                             <span class="t3">두런 조회수</span>
-                            <span class="t4">100</span>
+                            <span class="t4">-</span>
                         </div>
                     </div>
                 </a>
@@ -175,62 +179,77 @@
 
 <script>/*<![CDATA[*/
 	$(function(){
+        //더보기 클릭
 
-		/** ◇◆ 더보기클릭샘플. 20210315. @m
-		 * 이건 그냥 보여주기 샘플. 개발자 동작 처리 필요!
-		 */
-		(function(){
-			var $my = $('.cp1flist7'),
-				$more = $('.more', $my),
-				$lst = $('.lst1', $my);
-			var html = '';
-				html += '<li class="li1">';
-				html += '	<a href="?#★" class="w1 a1">';
-				html += '		<div class="w1w1">';
-				html += '			<div class="w1w1w1">';
-				html += '				<b class="g1"><span class="g1t1">-</span><!-- <span class="g1t2">위</span> --></b>';
-				html += '			</div>';
-				html += '			<div class="w1w1w2">';
-				html += '				<div class="f1">';
-				html += '					<span class="f1p1">';
-				html += '						<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />';
-				html += '					</span>';
-				html += '				</div>';
-				html += '			</div>';
-				html += '			<div class="w1w1w3">';
-				html += '				<div class="t1">';
-				html += '					유튜버명';
-				html += '				</div>';
-				html += '				<div class="t2">';
-				html += '					일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십';
-				html += '				</div>';
-				html += '			</div>';
-				html += '		</div>';
-				html += '		<div class="w1w2">';
-				html += '			<div class="w1w2w1">';
-				html += '				<span class="t3">강좌 적용 횟수</span>';
-				html += '				<span class="t4">100</span>';
-				html += '			</div>';
-				html += '			<div class="w1w2w2">';
-				html += '				<span class="t3">영상 조회 수</span>';
-				html += '				<span class="t4">100</span>';
-				html += '			</div>';
-				html += '			<div class="w1w2w3">';
-				html += '				<span class="t3">좋아요 수</span>';
-				html += '				<span class="t4">100</span>';
-				html += '			</div>';
-				html += '		</div>';
-				html += '	</a>';
-				html += '</li>';
+		var $my = $('.cp1flist7'),
+			$more = $('.more', $my),
+			$lst = $('.lst1', $my);
 
-			$more.on('click', function(e){
-				e.preventDefault();
-				for(var i = 5; i--; ){
-					$lst.append($(html));
-				}
-			});
+        $('.select').on("change", function(){
+            $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    url: "{{ route('sub.community.ranking') }}",
+                    data: {
+                        'type': 'youtuber',
+                        'sort':  $('.select option:selected').text(),
+                    },
+                    success: (data) => {
+                        if(data.status == 'success'){
+                            $('.lst1').empty().append(data.html);
+                        }
+                        else if(data.status == 'fail'){
+                            alert('강사 목록을 조회하는 도중 문제가 발생했습니다.\n관리자에게 문의 바랍니다.');
+                            console.log('code: ' + data.code + '\nmessage: ' + data.msg);
+                        }
+                        if({{ $totalCnt }} <=$('.li1', $my).length){
+                                $more.hide();
+                        }else{
+                            $more.show();
+                        }
+                    },
+                    error: function(request, status, error) {
+                        console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
+                    },
+                })
+        })
 
-		})();
+        $more.on('click', function(e){
+			e.preventDefault();
+			$.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                dataType: 'json',
+                url: "{{ route('sub.community.ranking') }}",
+                data: {
+                    'type': 'youtuber',
+                    'sort': $('.select option:selected').text(),
+                    'cnt': $('.li1', $my).length
+                },
+                success: (data) => {
+                    if(data.status == 'success'){
+                        $('.lst1').append(data.html);
+                    }
+                    else if(data.status == 'fail'){
+                        alert('강사 목록을 조회하는 도중 문제가 발생했습니다.\n관리자에게 문의 바랍니다.');
+                        console.log('code: ' + data.code + '\nmessage: ' + data.msg);
+                    }
+                    //TODO: TOTAL LECTURE < $cnt +5 more 버튼 비활성화
+                    if({{ $totalCnt }} <=$('.li1', $my).length){
+                        $more.hide();
+                    }
+                },
+                error: function(request, status, error) {
+                    console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
+                },
+            })
+		});
+
 
 	});
 /*]]>*/</script>

@@ -16,7 +16,7 @@
         </div>
         <div class="tar">
             {{-- <a href="#layer1playlist1" class="button primary small fsS1 toggle" data-send-focus="that">+ 재생목록</a> --}}
-            <a href="#layer1playlist1" class="button primary small fsS1 toggle" data-send-focus="that">+ 재생목록</a>
+            <a href="#layer1playlist1" class="button primary small fsS1 toggle popup_add_video" data-id="{{ $recommandVideo->uid }}">+ 재생목록</a>
         </div>
     </div>
     <!-- /cp2video1 -->
@@ -30,3 +30,16 @@
 
 <!-- (레이어팝업) -->
 @include('sub.video.inc_layer_playlist')
+
+<script>
+$(function() {
+    setTimeout(function() {
+        // 재생목록 추가 레이어 팝업창 띄움
+        $('.popup_add_video').click(function() {
+            var videoId = $(this).data('id');
+
+            $('#playlist_video_id').val(videoId);
+        });
+    }, 100);
+});
+</script>

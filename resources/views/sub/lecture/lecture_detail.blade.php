@@ -271,6 +271,7 @@ function courseApplication() {
 
 // 리뷰 더보기
 function getMoreReview() {
+    var lectureIdx = '{{ $_GET['idx'] }}';
     var lastReviewIdx = $('#review_list .w1').last().attr('review_idx');
 
     $.ajax({
@@ -281,6 +282,7 @@ function getMoreReview() {
         dataType: 'json',
         url: '{{ route('sub.lecture.get_more_review') }}',
         data: {
+            'lecture_idx': lectureIdx,
             'last_review_idx': lastReviewIdx
         },
         // contentType: false,

@@ -497,13 +497,14 @@ class LectureController extends Controller{
     }
 
     public function getMoreReview(Request $request) {
-        $lastReviewIdx = $request->post('last_review_idx');
+        $lectureIdx = $request->post('lecture_idx', '');
+        $lastReviewIdx = $request->post('last_review_idx', '');
         $query = '';
         $resData = '';
 
         try {
             // 수강 후기 조회
-            $query = 'SELECT rev.*, usr.save_profile_image FROM lecture_review rev, users usr WHERE rev.writer_id = usr.email AND rev.idx < '.$lastReviewIdx.' ORDER BY rev.writed_at DESC LIMIT 3';
+            $query = 'SELECT rev.*, usr.save_profile_image FROM lecture_review rev, users usr WHERE rev.writer_id = usr.email AND lecture_idx = '.$lectureIdx.' AND rev.idx < '.$lastReviewIdx.' ORDER BY rev.writed_at DESC LIMIT 3';
 
             $reviewList = DB::select($query);
 

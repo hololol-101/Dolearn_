@@ -28,7 +28,9 @@
 <link rel="stylesheet" type="text/css" href="<?=$commonPath?>/share/css/sub.css?<?=time()?>" />
 <link rel="stylesheet" type="text/css" href="<?=$commonPath?>/share/css/lib.css?<?=time()?>" />
 <link rel="stylesheet" type="text/css" href="<?=$commonPath?>/share/css/lib2.css?<?=time()?>" />
+
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/mycustom.css') }}" />
+
 
 <!-- ☆ -->
 <script src="<?=$commonPath?>/share/vendor/hammer.min.js"></script>

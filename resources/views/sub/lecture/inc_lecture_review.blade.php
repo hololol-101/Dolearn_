@@ -65,7 +65,7 @@ function format_date($time){
                     @if ($review->save_profile_image == '')
                     <img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
                     @else
-                    <img src="{{ asset('assets/images/lib/'.$review->save_profile_image) }}" alt="{{ $review->save_profile_image }}" />
+                    <img src="{{ asset('storage/uploads/profile/'.$review->save_profile_image) }}" alt="{{ $review->save_profile_image }}" />
                     @endif
                 </span>
             </div>
@@ -99,7 +99,7 @@ function format_date($time){
 </div>
 <!-- /cp1review1 -->
 
-
+@if (count($reviewList) > 2)
 <!-- cp1more1 -->
 <div class="cp1more1">
     <a href="javascript:void(0);" class="more" id="more_review_btn" onclick="getMoreReview()">
@@ -108,6 +108,7 @@ function format_date($time){
     </a>
 </div>
 <!-- /cp1more1 -->
+@endif
 
 
 <script>/*<![CDATA[*/

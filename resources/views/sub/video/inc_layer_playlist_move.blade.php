@@ -15,20 +15,15 @@
 					<!-- cp1playlist1 -->
 					<div class="cp1playlist1">
 						<ul class="lst1">
-						<li class="li1">
-							<input type="checkbox" name="★1checkbox0" id="★1checkbox0e0" />
-							<label for="★1checkbox0e0">엑셀 시험 01</label>
-						</li>
-						<li class="li1">
-							<input type="checkbox" name="★1checkbox0" id="★1checkbox0e1" />
-							<label for="★1checkbox0e1">재생목록 02</label>
-						</li>
-						<li class="li1">
-							<input type="checkbox" name="★1checkbox0" id="★1checkbox0e2" />
-							<label for="★1checkbox0e2">재생목록 일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십</label>
-						</li>
+                            @foreach ($playlistDirectoryList as $playlistDirectory)
+                            <li class="li1">
+                                <input type="checkbox" name="check_playlist" directory_idx="{{ $playlistDirectory->idx }}"/>
+                                <label for="★1checkbox0e0">{{ $playlistDirectory->title }}</label>
+                            </li>
+                            @endforeach
 						</ul>
-						<button type="submit" class="button primary block">이동하기</button>
+                        <input type="hidden" id="playlist_video_idx" value="">
+						<button type="submit" class="button primary block" onclick="movePlaylist()">이동하기</button>
 					</div>
 					<!-- /cp1playlist1 -->
 				</div>
@@ -41,3 +36,43 @@
 	</div>
 </div>
 <!-- /cp1layer1lightbox1 -->
+
+<script>
+function movePlaylist() {
+    var checkedPlaylistIdxList = [];
+    var playlistVideoIdx = $('#playlist_video_idx').val();
+
+    if ($('input[name=check_playlist]:checked').length > 1) {
+        alert('재생 목록을 하나만 선택해주세요.');
+        return false;
+    }
+
+    var checkedPlaylistIdx = $('input[name=check_playlist]:checked').attr('directory_idx');
+
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'POST',
+        dataType: 'json',
+        url: "{{ route('sub.video.move_playlist') }}",
+        // contentType: false,
+        // processData: false,
+        data: {
+            'playlist_video_idx': playlistVideoIdx,
+            'checked_playlist_idx': checkedPlaylistIdx
+        },
+        success: (response) => {
+            if (response.status == 'success') {
+                location.reload();
+
+            } else {
+                alert(response.msg);
+            }
+        },
+        error: function(response) {
+            console.log(response);
+        }
+    });
+}
+</script>

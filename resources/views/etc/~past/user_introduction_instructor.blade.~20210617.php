@@ -41,7 +41,7 @@
 				<strong class="t1">{{ $userInfo->nickname }}</strong>
 			</div>
 			<div class="tg2">
-                <pre>{{ $userInfo->introduction }}</pre>
+                {{ $userInfo->introduction }}
 				{{-- 강사의 경력 및 자기소개가 표시됩니다.<br /> --}}
 
 				{{-- <div class="t2">학력 및 활동</div>
@@ -68,7 +68,7 @@
 	<div class="cont">
 		<div class="item">
 			<strong class="t1">
-				<span class="vat">{{ $instructorInfo->lecture_num }}</span>
+				<span class="vat">4</span>
 			</strong>
 			<span class="t2">
 				강좌 수
@@ -76,7 +76,7 @@
 		</div>
 		<div class="item">
 			<strong class="t1">
-				<span class="vat">{{ $instructorInfo->total_student }}</span>
+				<span class="vat">1,001</span>
 			</strong>
 			<span class="t2">
 				수강생 수
@@ -84,15 +84,14 @@
 		</div>
 		<div class="item">
 			<strong class="t1">
-                <span class="vat">@if ($instructorInfo->score_avg!='-') {{number_format( $instructorInfo->score_avg, 1) }} @else {{ $instructorInfo->score_avg }} @endif</span>
+				<span class="vat">4.21</span>
 			</strong>
 			<span class="t2">
 				총 평점
 			</span>
 		</div>
 		<div class="item">
-            {{-- TODO:응답률 계산 --}}
-			<strong class="t1">-</strong>
+			<strong class="t1">70%</strong>
 			<span class="t2">
 				<span class="vam">응답률</span>
 				<span class="bi1 dpib fsS1 vam">
@@ -157,64 +156,12 @@
         <div>운영 중인 강좌가 없습니다.</div>
         @endif
 	</div>
-
-    @if($totalLectureCnt>4)
-        <!-- cp1more1 -->
-    <div class="cp1more1">
-        <a href="#★" class="more">
-            <span class="t1">더보기</span>
-            <i class="ic1"></i>
-        </a>
-    </div>
-    <!-- /cp1more1 -->
-    @endif
-    <!-- /lst1 -->
-
+	<!-- /lst1 -->
 </div>
-<script>
-$(function(){
-    var $my = $('.cp1fcard1'),
-            $more = $('.more', $my),
-            $lst = $('.lst1', $my);
-
-    $more.on('click', function(e){
-            e.preventDefault();
-
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                type: 'POST',
-                dataType: 'json',
-                url: "{{ route('etc.user_introduction') }}",
-                data: {
-                    'type': 'instructor',
-                    'cnt': $('.item', $my).length,
-                    'user_idx': {{ $userInfo->id }}
-                },
-                success: (data) => {
-                    if(data.status == 'success'){
-                        $lst.append(data.html);
-                    }
-                    else if(data.status == 'fail'){
-                        alert('강좌 목록을 조회하는 도중 문제가 발생했습니다.\n관리자에게 문의 바랍니다.');
-                        console.log('code: ' + data.code + '\nmessage: ' + data.msg);
-                    }
-                    //TODO: TOTAL LECTURE < $cnt +5 more 버튼 비활성화
-                    if({{ $totalLectureCnt }} <=$('.item', $my).length){
-                            $more.hide();
-                    }
-                },
-                error: function(request, status, error) {
-                    console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
-                },
-            })
-        });
-})
-</script>
-
 </div>
 <!-- /cp1fcard1 -->
+
+
 </div>
 <!-- /container -->
 </div>

@@ -18,7 +18,7 @@
     <div class="cp2lecture1note1" note_idx={{ $videoNote->idx }}>
         <div class="tg1">
             {{-- TODO: 영상 시간은 플레이어 이벤트 발생시에만 가져올 수 있음. API 검토 필요 --}}
-            <span class="t1"><i class="t1ic1"></i> <span class="t1t1">02 : 22</span></span>
+            <span class="t1"><i class="t1ic1"></i> <span class="t1t1">-- : --</span></span>
         </div>
         <div class="tg2">
             <div class="t2">

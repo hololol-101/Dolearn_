@@ -178,6 +178,12 @@ Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
 
         // 재생 목록 상세
         Route::get('video_playlist_detail', [VideoController::class, 'videoPlaylistDetail'])->name('video_playlist_detail');
+
+        // 재생 목록 영상 삭제
+        Route::post('delete_playlist_video', [VideoController::class, 'deletePlaylistVideo'])->name('delete_playlist_video');
+
+        // 재생 목록 이동
+        Route::post('move_playlist', [VideoController::class, 'movePlaylist'])->name('move_playlist');
     });
 
     // 커뮤니티
@@ -200,9 +206,6 @@ Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
 
         // 인사이트 - 랭킹 정렬 변화
         Route::post('ranking', [CommunityController::class, 'ranking'])->name('ranking');
-
-        // 인사이트 - 랭킹 더보기
-        Route::post('more_list', [CommunityController::class, 'moreList'])->name('more_list');
 
         // 서비스 문의
         Route::get('service_qna', [CommunityController::class, 'serviceQna'])->name('service_qna');
@@ -334,6 +337,12 @@ Route::group(['prefix'=>'learning', 'as'=>'learning.'], function() {
 
     // 추천 영상
     Route::get('recommand', [LearningController::class, 'recommand'])->name('recommand');
+
+    // 재생 목록에 영상 추가
+    Route::post('add_video', [LearningController::class, 'addVideo'])->name('add_video');
+
+    // 재생 목록에서 영상 삭제
+    Route::post('delete_video', [LearningController::class, 'deleteVideo'])->name('delete_video');
 
     // 구매 하기
     Route::get('purchase', [LearningController::class, 'purchase'])->name('purchase');
@@ -490,6 +499,9 @@ Route::group(['prefix'=>'payment', 'as'=>'payment.'], function() {
 // 기타
 Route::group(['prefix'=>'etc', 'as'=>'etc.'], function() {
 
+    // 두런 소개
+    Route::get('introduce', [EtcController::class, 'introduce'])->name('introduce');
+
     // 이용약관
     Route::get('terms', [EtcController::class, 'terms'])->name('terms');
 
@@ -504,6 +516,9 @@ Route::group(['prefix'=>'etc', 'as'=>'etc.'], function() {
 
     // 강사/유튜버 소개
     Route::get('user_introduction', [EtcController::class, 'userIntroduction'])->name('user_introduction');
+
+    // 강사/유튜버 ajax
+    Route::post('user_introduction', [EtcController::class, 'userIntroduction'])->name('user_introduction');
 
     // 제안하기
     Route::get('propose', [EtcController::class, 'propose'])->name('propose');

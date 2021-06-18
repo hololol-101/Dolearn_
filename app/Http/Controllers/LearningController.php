@@ -297,6 +297,7 @@ class LearningController extends Controller{
                     WHERE lecture_idx = '.$lectureIdx.'
                         AND video_id = "'.$videoId.'"
                         AND public_yn = "Y"
+                        AND status = "active"
                         OR idx IN (
                             SELECT idx
                             FROM my_question
@@ -306,7 +307,6 @@ class LearningController extends Controller{
                                 AND public_yn = "N"
                                 AND status = "active"
                         )
-                        AND status = "active"
                     ORDER BY writed_at DESC';
 
         $questionList = DB::select($query);
@@ -462,6 +462,7 @@ class LearningController extends Controller{
 
     public function recommand(Request $request) {
         $videoId = $request->get('uid', '');
+        $userId = Auth::user()->email;
 
         // 해당 영상의 태그 조회
         $videoDetail = DB::select('SELECT uid, hashtag FROM _youtube_fulldata_temp WHERE uid = "'.$videoId.'"');
@@ -499,7 +500,72 @@ class LearningController extends Controller{
 
         $recommandVideoList = DB::select($query);
 
-        return view('learning.learning_recommand', compact('recommandVideoList'));
+        // 재생목록 조회
+        $playlistDirectoryList = DB::select('SELECT * FROM playlist_directory WHERE user_id = "'.$userId.'" AND status = "active"');
+
+        return view('learning.learning_recommand', compact('recommandVideoList', 'playlistDirectoryList'));
+    }
+
+    public function addVideo(Request $request) {
+        $videoId = $request->post('video_id', '');
+        $directoryIdx = $request->post('directory_idx', '');
+        $userId = Auth::user()->email;
+
+        try {
+            // 기존에 추가된 영상인지 조회
+            $existVideo = DB::select('SELECT * FROM playlist_video WHERE directory_idx = '.$directoryIdx.' AND user_id = "'.$userId.'" AND video_id = "'.$videoId.'" AND status="active"');
+
+            if (count($existVideo) > 0) {
+                $result['status'] = 'exist';
+
+            } else {
+                // 재생 목록에 영상 추가
+                DB::table('playlist_video')->insert(array(
+                    'directory_idx' => $directoryIdx,
+                    'user_id' => $userId,
+                    'video_id' => $videoId,
+                    'created_at' => now()
+                ));
+
+                $result['status'] = 'success';
+            }
+
+        } catch(Exception $e) {
+            $result['status'] = 'fail';
+            $result['msg'] = $e->getMessage();
+            $result['code'] = $e->getCode();
+
+        } finally {
+            return response()->json($result);
+        }
+    }
+
+    public function deleteVideo(Request $request) {
+        $videoId = $request->post('video_id', '');
+        $directoryIdx = $request->post('directory_idx', '');
+        $userId = Auth::user()->email;
+
+        try {
+            // 재생 목록에서 영상 삭제
+            // DB::table('playlist_video')->where('directory_idx', $directoryIdx)->where('user_id', $userId)->where('video_id', $videoId)->delete();
+            DB::table('playlist_video')->where('directory_idx', $directoryIdx)
+                                        ->where('user_id', $userId)
+                                        ->where('video_id', $videoId)
+                                        ->where('status', 'active')->update(array(
+                'updated_at' => now(),
+                'status' => 'delete'
+            ));
+
+            $result['status'] = 'success';
+
+        } catch(Exception $e) {
+            $result['status'] = 'fail';
+            $result['msg'] = $e->getMessage();
+            $result['code'] = $e->getCode();
+
+        } finally {
+            return response()->json($result);
+        }
     }
 
     public function purchase() {

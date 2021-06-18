@@ -102,7 +102,7 @@
 
 <div class="dpf jcsb aic">
 	<h2 class="hb1 h2">지금 핫한 강좌</h2>
-	<select class="select" title="선택옵션" onchange="handleOnChange(this)">
+	<select class="select" title="선택옵션">
 		<option value="">수강자 수</option>
 		<option value="">완강률</option>
 		<option value="">평점</option>
@@ -119,7 +119,7 @@
         @endphp
         @foreach ($lectureList as $lecture )
         <li class="li1">
-            <a href="?#★" class="w1 a1">
+            <a href="{{ route('sub.lecture.lecture_detail', ['idx' => $lecture->idx]) }}" class="w1 a1">
                 <div class="w1w1">
                     <div class="w1w1w1">
                         <b class="g1"><span class="g1t1">{{ ++$cnt }}</span><span class="g1t2">위</span></b>
@@ -171,36 +171,6 @@
 
 </div>
 <!-- /cp1flist6 -->
-<script>
-    function handleOnChange(e){
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'POST',
-            dataType: 'json',
-            url: "{{ route('sub.community.ranking') }}",
-            data: {
-                'type': 'lecture',
-                'sort': e.options[e.selectedIndex].text
-            },
-            success: (data) => {
-                if(data.status == 'success'){
-                    $('.lst1').empty().append(data.html);
-                }
-                else if(data.status == 'fail'){
-                    alert('강좌 목록을 조회하는 도중 문제가 발생했습니다.\n관리자에게 문의 바랍니다.');
-                    console.log('code: ' + data.code + '\nmessage: ' + data.msg);
-                }
-            },
-            error: function(request, status, error) {
-                console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
-            },
-        })
-    }
-
-</script>
 
 <script>/*<![CDATA[*/
     $(function(){
@@ -209,6 +179,37 @@
             $more = $('.more', $my),
             $lst = $('.lst1', $my);
 
+        $('.select').on("change", function(){
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                dataType: 'json',
+                url: "{{ route('sub.community.ranking') }}",
+                data: {
+                    'type': 'lecture',
+                    'sort': $('.select option:selected').text(),
+                },
+                success: (data) => {
+                    if(data.status == 'success'){
+                        $('.lst1').empty().append(data.html);
+                    }
+                    else if(data.status == 'fail'){
+                        alert('강좌 목록을 조회하는 도중 문제가 발생했습니다.\n관리자에게 문의 바랍니다.');
+                        console.log('code: ' + data.code + '\nmessage: ' + data.msg);
+                    }
+                    if({{ $totalCnt }} <=$('.li1', $my).length){
+                            $more.hide();
+                    }else{
+                        $more.show();
+                    }
+                },
+                error: function(request, status, error) {
+                    console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
+                },
+            })
+        })
         $more.on('click', function(e){
             e.preventDefault();
 
@@ -218,24 +219,25 @@
                 },
                 type: 'POST',
                 dataType: 'json',
-                url: "{{ route('sub.community.more_list') }}",
+                url: "{{ route('sub.community.ranking') }}",
                 data: {
                     'type': 'lecture',
                     'sort': $('.select option:selected').text(),
                     'cnt': $('.li1', $my).length
                 },
                 success: (data) => {
-                    //TODO: TOTAL LECTURE < $cnt +5 more 버튼 비활성화
-                    if(data.status == 'success'){
+                    console.log( $('.li1', $my).length)
 
+                    if(data.status == 'success'){
                         $('.lst1').append(data.html);
-                        if(data.totalData <=$('.li1', $my).length+1){
-                            $more.hide();
-                        }
                     }
                     else if(data.status == 'fail'){
                         alert('강좌 목록을 조회하는 도중 문제가 발생했습니다.\n관리자에게 문의 바랍니다.');
                         console.log('code: ' + data.code + '\nmessage: ' + data.msg);
+                    }
+                    //TODO: TOTAL LECTURE < $cnt +5 more 버튼 비활성화
+                    if({{ $totalCnt }} <=$('.li1', $my).length){
+                            $more.hide();
                     }
                 },
                 error: function(request, status, error) {

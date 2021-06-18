@@ -100,11 +100,11 @@
 			</div>
 			<div class="cont">
 				<div class="item">
-					<strong class="t1">09</strong>
+					<strong class="t1">{{ $lectureNumber->all_lecture }}</strong>
 					<span class="t2">수강강좌</span>
 				</div>
 				<div class="item">
-					<strong class="t1">05</strong>
+					<strong class="t1">{{ $lectureNumber->complete_lecture }}</strong>
 					<span class="t2">완료 강좌 수</span>
 				</div>
 				<div class="item">

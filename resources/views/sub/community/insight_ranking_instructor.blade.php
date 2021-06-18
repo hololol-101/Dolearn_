@@ -102,9 +102,9 @@
 
 <div class="dpf jcsb aic">
 	<h2 class="hb1 h2">지금 뜨는 강사</h2>
-	<select class="select" title="선택옵션">
+	<select class="select" title="선택옵션" >
 		<option value="">수강자 수</option>
-		<option value="">응답률</option>
+		{{-- <option value="">응답률</option> --}}
 		<option value="">평점</option>
 	</select>
 </div>
@@ -114,349 +114,55 @@
 <div class="cp1flist7">
 	<!-- lst1 -->
 	<ul class="lst1">
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">1</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							강사명
-						</div>
-						<div class="t2">
-							강사 소개글
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">강좌 평점</span>
-						<span class="t4">4.7</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">수강자 수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">응답률</span>
-						<span class="t4">90%</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">2</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							강사명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">강좌 평점</span>
-						<span class="t4">4.7</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">수강자 수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">응답률</span>
-						<span class="t4">90%</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">3</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							강사명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">강좌 평점</span>
-						<span class="t4">4.7</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">수강자 수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">응답률</span>
-						<span class="t4">90%</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">4</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							강사명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">강좌 평점</span>
-						<span class="t4">4.7</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">수강자 수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">응답률</span>
-						<span class="t4">90%</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">5</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							강사명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">강좌 평점</span>
-						<span class="t4">4.7</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">수강자 수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">응답률</span>
-						<span class="t4">90%</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">6</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							강사명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">강좌 평점</span>
-						<span class="t4">4.7</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">수강자 수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">응답률</span>
-						<span class="t4">90%</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">7</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							강사명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">강좌 평점</span>
-						<span class="t4">4.7</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">수강자 수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">응답률</span>
-						<span class="t4">90%</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">8</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							강사명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">강좌 평점</span>
-						<span class="t4">4.7</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">수강자 수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">응답률</span>
-						<span class="t4">90%</span>
-					</div>
-				</div>
-			</a>
-		</li>
-		<li class="li1">
-			<a href="?#★" class="w1 a1">
-				<div class="w1w1">
-					<div class="w1w1w1">
-						<b class="g1"><span class="g1t1">9</span><span class="g1t2">위</span></b>
-					</div>
-					<div class="w1w1w2">
-						<div class="f1">
-							<span class="f1p1">
-								<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-							</span>
-						</div>
-					</div>
-					<div class="w1w1w3">
-						<div class="t1">
-							강사명
-						</div>
-						<div class="t2">
-							일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-						</div>
-					</div>
-				</div>
-				<div class="w1w2">
-					<div class="w1w2w1">
-						<span class="t3">강좌 평점</span>
-						<span class="t4">4.7</span>
-					</div>
-					<div class="w1w2w2">
-						<span class="t3">수강자 수</span>
-						<span class="t4">100</span>
-					</div>
-					<div class="w1w2w3">
-						<span class="t3">응답률</span>
-						<span class="t4">90%</span>
-					</div>
-				</div>
-			</a>
-		</li>
+        @php
+            $cnt = 0;
+        @endphp
+        @foreach ($instructorList as $instructor)
+            <li class="li1">
+                <a href="{{ route('etc.user_introduction', ['type'=>'instructor', 'user_idx'=>$instructor->id]) }}" class="w1 a1">
+                    <div class="w1w1">
+                        <div class="w1w1w1">
+                            <b class="g1"><span class="g1t1">{{ ++$cnt }}</span></span><span class="g1t2">위</span></b>
+                        </div>
+                        <div class="w1w1w2">
+                            <div class="f1">
+                                <span class="f1p1">
+                                    @if($instructor->save_profile_image=='')
+                                        <img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
+                                    @else
+                                        <img src="{{ asset('storage/uploads/profile/'.$instructor->save_profile_image) }}" alt="이미지 없음" />
+                                    @endif
+                                </span>
+                            </div>
+                        </div>
+                        <div class="w1w1w3">
+                            <div class="t1">
+                                {{ $instructor->nickname }}
+                            </div>
+                            <div class="t2">
+                                {{ $instructor->introduction }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w1w2">
+                        <div class="w1w2w1">
+                            <span class="t3">강좌 평점</span>
+                            <span class="t4">@if ($instructor->score_avg!=''){{ number_format($instructor->score_avg, 1) }} @else - @endif</span>
+                        </div>
+                        <div class="w1w2w2">
+                            <span class="t3">수강자 수</span>
+                            <span class="t4">@if($instructor->total_student!=''){{ $instructor->total_student }}@else 0 @endif</span>
+                        </div>
+                        <div class="w1w2w3">
+                            <span class="t3">응답률</span>
+                            <span class="t4">-</span>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        @endforeach
+
+
 	</ul>
 	<!-- /lst1 -->
 
@@ -473,64 +179,82 @@
 <!-- /cp1flist7 -->
 
 
+
 <script>/*<![CDATA[*/
 	$(function(){
+        //더보기 클릭
+		var $my = $('.cp1flist7'),
+			$more = $('.more', $my),
+			$lst = $('.lst1', $my);
 
-		/** ◇◆ 더보기클릭샘플. 20210315. @m
-		 * 이건 그냥 보여주기 샘플. 개발자 동작 처리 필요!
-		 */
-		(function(){
-			var $my = $('.cp1flist7'),
-				$more = $('.more', $my),
-				$lst = $('.lst1', $my);
-			var html = '';
-				html += '<li class="li1">';
-				html += '	<a href="?#★" class="w1 a1">';
-				html += '		<div class="w1w1">';
-				html += '			<div class="w1w1w1">';
-				html += '				<b class="g1"><span class="g1t1">-</span><!-- <span class="g1t2">위</span> --></b>';
-				html += '			</div>';
-				html += '			<div class="w1w1w2">';
-				html += '				<div class="f1">';
-				html += '					<span class="f1p1">';
-				html += '						<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />';
-				html += '					</span>';
-				html += '				</div>';
-				html += '			</div>';
-				html += '			<div class="w1w1w3">';
-				html += '				<div class="t1">';
-				html += '					강사명';
-				html += '				</div>';
-				html += '				<div class="t2">';
-				html += '					일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십';
-				html += '				</div>';
-				html += '			</div>';
-				html += '		</div>';
-				html += '		<div class="w1w2">';
-				html += '			<div class="w1w2w1">';
-				html += '				<span class="t3">강좌 평균 평점</span>';
-				html += '				<span class="t4">4.7</span>';
-				html += '			</div>';
-				html += '			<div class="w1w2w2">';
-				html += '				<span class="t3">수강자 수</span>';
-				html += '				<span class="t4">100</span>';
-				html += '			</div>';
-				html += '			<div class="w1w2w3">';
-				html += '				<span class="t3">강좌 수</span>';
-				html += '				<span class="t4">100</span>';
-				html += '			</div>';
-				html += '		</div>';
-				html += '	</a>';
-				html += '</li>';
+        $('.select').on("change", function(){
+            $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    url: "{{ route('sub.community.ranking') }}",
+                    data: {
+                        'type': 'instructor',
+                        'sort':  $('.select option:selected').text(),
+                    },
+                    success: (data) => {
+                        if(data.status == 'success'){
+                            $('.lst1').empty().append(data.html);
+                        }
+                        else if(data.status == 'fail'){
+                            alert('강사 목록을 조회하는 도중 문제가 발생했습니다.\n관리자에게 문의 바랍니다.');
+                            console.log('code: ' + data.code + '\nmessage: ' + data.msg);
+                        }
+                        if({{ $totalCnt }} <=$('.li1', $my).length){
+                                $more.hide();
+                        }else{
+                            $more.show();
+                        }
+                    },
+                    error: function(request, status, error) {
+                        console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
+                    },
+                })
+            })
 
-			$more.on('click', function(e){
-				e.preventDefault();
-				for(var i = 5; i--; ){
-					$lst.append($(html));
-				}
-			});
+		$more.on('click', function(e){
+			e.preventDefault();
+			$.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                dataType: 'json',
+                url: "{{ route('sub.community.ranking') }}",
+                data: {
+                    'type': 'instructor',
+                    'sort': $('.select option:selected').text(),
+                    'cnt': $('.li1', $my).length
+                },
+                success: (data) => {
 
-		})();
+                    console.log(data.type);
+                    console.log( $('.li1', $my).length)
+
+                    if(data.status == 'success'){
+                        $('.lst1').append(data.html);
+                    }
+                    else if(data.status == 'fail'){
+                        alert('강사 목록을 조회하는 도중 문제가 발생했습니다.\n관리자에게 문의 바랍니다.');
+                        console.log('code: ' + data.code + '\nmessage: ' + data.msg);
+                    }
+                    //TODO: TOTAL LECTURE < $cnt +5 more 버튼 비활성화
+                    if({{ $totalCnt }} <=$('.li1', $my).length){
+                        $more.hide();
+                    }
+                },
+                error: function(request, status, error) {
+                    console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
+                },
+            })
+		});
 
 	});
 /*]]>*/</script>

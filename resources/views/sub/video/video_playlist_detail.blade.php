@@ -21,7 +21,7 @@
 <!-- cp1row1 -->
 <div class="cp1row1">
 	<div class="column1">
-		<a href="javascript:history.back();" class="cp1b1back1"><i class="ic1"></i><span class="t1">돌아가기</span></a>
+		<a href="{{ route('sub.video.video_playlist') }}" class="cp1b1back1"><i class="ic1"></i><span class="t1">돌아가기</span></a>
 	</div>
 	<div class="column2">
 	</div>
@@ -44,19 +44,18 @@
 					<b class="b1 next"><span class="b1t1">다음</span></b>
 				</div>
 				<div class="w1w1">
-					<a href="?#★" class="a1">
+					<a href="{{ route('learning2.main', ['uid' => $playlistVideo->uid]) }}" class="a1">
 						<div class="a1w1">
-								<div class="f1">
-									<span class="f1p1">
-										<img src="https://img.youtube.com/vi/{{ $playlistVideo->uid }}/mqdefault.jpg" alt="{{ $playlistVideo->subject }}">
-									</span>
-								</div>
+                            <div class="f1">
+                                <span class="f1p1">
+                                    <img src="https://img.youtube.com/vi/{{ $playlistVideo->uid }}/mqdefault.jpg" alt="{{ $playlistVideo->subject }}">
+                                </span>
+                            </div>
 						</div>
 						<div class="a1w2">
 							<div class="t1">
 								{{ $playlistVideo->subject }}
 							</div>
-                            {{-- 노트 수 삭제 --}}
 							{{-- <span class="t2">
 								노트 {{ $playlistVideo->note_sum }}개
 							</span> --}}
@@ -68,8 +67,8 @@
 				</div>
 				<div class="w1w2">
 					<div class="eg1">
-						<a href="#layer1playlist1move1" class="a2 toggle" data-send-focus="that"><i class="a2ic1"></i> <span class="a2t1">목록이동</span></a>
-						<a href="javascript:void(0);" class="a2 del"><i class="a2ic1"></i> <span class="a2t1">삭제</span></a>
+						<a href="#layer1playlist1move1" class="a2 toggle popup_move_playlist" data-idx="{{ $playlistVideo->idx }}"><i class="a2ic1"></i> <span class="a2t1">목록이동</span></a>
+						<a href="javascript:void(0);" class="a2 del" onclick="deletePlaylistVideo('{{ $playlistVideo->idx }}')"><i class="a2ic1"></i> <span class="a2t1">삭제</span></a>
 					</div>
 				</div>
 			</div>
@@ -221,4 +220,47 @@
 <!-- /container -->
 </div>
 <!-- /#body -->
+@endsection
+
+@section('script')
+<script>
+$(function() {
+    // 재생목록 이동 레이어 팝업창 띄움
+    $('.popup_move_playlist').click(function() {
+        var playlistVideoIdx = $(this).data('idx');
+
+        $('#playlist_video_idx').val(playlistVideoIdx);
+    });
+});
+
+// 재생 목록 영상 삭제
+function deletePlaylistVideo(idx) {
+    if (confirm('해당 영상을 삭제하시겠습니까?')) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'POST',
+            dataType: 'json',
+            url: "{{ route('sub.video.delete_playlist_video') }}",
+            // contentType: false,
+            // processData: false,
+            data: {
+                'playlist_video_idx': idx
+            },
+            success: (response) => {
+                if (response.status == 'success') {
+                    location.reload();
+
+                } else {
+                    alert(response.msg);
+                }
+            },
+            error: function(response) {
+                console.log(response);
+            }
+        });
+    }
+}
+</script>
 @endsection
