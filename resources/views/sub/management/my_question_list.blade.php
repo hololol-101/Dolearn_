@@ -7,26 +7,7 @@
  * 20210406 | @m | 요구반영
  */
 -->
-@php
-// 지난 시간 계산
-function format_date($time){
-    $t=time()-$time;
-    $f=array(
-        '31536000'=>'년',
-        '2592000'=>'개월',
-        '604800'=>'주',
-        '86400'=>'일',
-        '3600'=>'시간',
-        '60'=>'분',
-        '1'=>'초'
-    );
-    foreach ($f as $k=>$v)    {
-        if (0 !=$c=floor($t/(int)$k)) {
-            return $c.$v.' 전';
-        }
-    }
-}
-@endphp
+
 
 @extends('master_sub')
 
@@ -158,7 +139,7 @@ function format_date($time){
                         @endif
                         <div class="tg1">
                             <span class="t1">{{ $myQuestion->writer_name }}</span>
-                            <span class="t2">{{ format_date(strtotime($myQuestion->writed_at)) }}</span>
+                            <span class="t2">{{ format_date($myQuestion->writed_at) }}</span>
                         </div>
                         <div class="tg2">
                             {{-- TODO: --}}

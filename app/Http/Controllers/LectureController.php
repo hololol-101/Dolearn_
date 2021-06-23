@@ -596,7 +596,7 @@ class LectureController extends Controller{
 
     public function courseApplication(Request $request) {
         $idx = $request->post('lecture_idx', '');
-
+        $lectureName = $request->post('lecture_name', '');
         $userId = Auth::user()->email;
 
         try {
@@ -641,6 +641,17 @@ class LectureController extends Controller{
             // 강좌 테이블에 수강자 +1
             DB::update('UPDATE lecture SET student_cnt = IFNULL(student_cnt, 0) + 1 WHERE idx = ?', [$idx]);
 
+            // 알림 추가
+            DB::table('notification')->insert(array(
+                'target_id'=>$userId,
+                'title' =>'수강강좌: '.$lectureName,
+                'content' => '새로운 강의가 추가되었습니다.',
+                'created_at'=> now(),
+                'program_name'=>'lecture',
+                'status'=>'active',
+                'route'=>'learning.main',
+                'route_idx'=>$idx,
+            ));
             $result['status'] = 'success';
 
         } catch(Exception $e) {

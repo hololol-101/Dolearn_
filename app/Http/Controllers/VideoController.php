@@ -385,7 +385,6 @@ class VideoController extends Controller{
                     ORDER BY his.recent_watched_at DESC';
 
         $videoHistoryList = DB::select($query);
-
         foreach($videoHistoryList as $videoHistory) {
             // 오늘 시청 목록 배열 생성
             if (date('Y-m-d', strtotime($videoHistory->recent_watched_at)) == date('Y-m-d', time())) {

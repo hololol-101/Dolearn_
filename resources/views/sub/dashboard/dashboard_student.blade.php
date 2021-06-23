@@ -45,7 +45,7 @@
 		<div id="lnb1c">
 			<ul>
 			<li><a href="{{ route('sub.dashboard.dashboard_main', ['role' => 'student']) }}">대시보드</a></li>
-			<li><a href="{{ route('sub.dashboard.my_notification_list', ['role' => 'student']) }}">내 알림</a></li>
+			<li><a href="{{ route('notification.my_notification_list', ['role' => 'student']) }}">내 알림</a></li>
 			</ul>
 		</div>
 		<!-- /lnb1c -->
@@ -108,7 +108,7 @@
 					<span class="t2">완료 강좌 수</span>
 				</div>
 				<div class="item">
-					<strong class="t1">00</strong>
+					<strong class="t1">{{ $nonReadNotification }}</strong>
 					<span class="t2">읽지 않은 알림</span>
 				</div>
 			</div>
@@ -299,28 +299,34 @@
 			<div class="hg1">
 				<h3 class="h1">최근 학습 강좌</h3>
 			</div>
-			<div class="cont">
-				<ul class="lst1">
+            @if($lastShowLecture!=[])
+                <div class="cont">
+                    <ul class="lst1">
+                        {{-- TODO: 임시 idx 값 --}}
+                        <li class="li1"><a href="{{ route('learning.main', ['idx' => $lastShowLecture->idx ]) }}" class="a1"><span class="t1">{{ $lastShowLecture->title }}</span> <span class="t2">{{ format_date($lastShowLecture->recent_learned_at) }}</span></a></li>
+                    </ul>
+                    <div class="gg1">
+                        <div class="t1">
+                            <span class="t1t1">진도율</span>
+                            <span class="t1t2">{{ $lastShowLecture->completeLecture }}강</span> <i class="sep">/</i> <span class="t1t3">{{ $lastShowLecture->totalLecture }}강</span>
+                            <span class="t1t4">{{ round($lastShowLecture->completeLecture/$lastShowLecture->totalLecture*100) }}%</span>
+                        </div>
+                        <div class="g1">
+                            <i class="g1b1" style="width:{{ round($lastShowLecture->completeLecture/$lastShowLecture->totalLecture*100) }}%;"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fg1">
+                    <a href="{{ route('sub.management.learning_lecture_list') }}" class="a2"><span class="a2t1">내 모든강좌 &gt;</span></a>
                     {{-- TODO: 임시 idx 값 --}}
-					<li class="li1"><a href="{{ route('learning.main', ['idx' => '17']) }}" class="a1"><span class="t1">데이터분석과 텍스트마이닝</span> <span class="t2">3일전</span></a></li>
-				</ul>
-				<div class="gg1">
-					<div class="t1">
-						<span class="t1t1">진도율</span>
-						<span class="t1t2">22강</span> <i class="sep">/</i> <span class="t1t3">30강</span>
-						<span class="t1t4">75%</span>
-					</div>
-					<div class="g1">
-						<i class="g1b1" style="width:75%;"></i>
-					</div>
-				</div>
-			</div>
-			<div class="fg1">
-				<a href="{{ route('sub.management.learning_lecture_list') }}" class="a2"><span class="a2t1">내 모든강좌 &gt;</span></a>
-                {{-- TODO: 임시 idx 값 --}}
-				<a href="{{ route('learning.main', ['idx' => '17']) }}" class="a2 cvf"><span class="a2t1">이어서 학습하기 &gt;</span></a>
-			</div>
-		</div>
+                    <a href="{{ route('learning.main',['idx' => $lastShowLecture->idx ]) }}" class="a2 cvf"><span class="a2t1">이어서 학습하기 &gt;</span></a>
+                </div>
+            @else
+                <div>최근 학습한 강좌가 없습니다.</div>
+            @endif
+
+        </div>
 		<!-- /cp1dash1recent1 -->
 	</div>
 	<div class="column">
@@ -330,13 +336,19 @@
 				<h3 class="h1">최근 시청 영상</h3>
 				<a href="{{ route('sub.video.video_play_history', ['role' => 'student']) }}" class="a3"><span class="a3t1">내 시청기록 &gt;</span></a>
 			</div>
-			<div class="cont">
-				<ul class="lst1">
-                    {{-- TODO: 임시 uid 값 --}}
-					<li class="li1"><a href="javascript:void(0);" class="a1"><span class="t1">03.빅데이터의 개념</span> <span class="t2">방금</span></a></li>
-					<li class="li1"><a href="javascript:void(0);" class="a1"><span class="t1">02.빅데이터의 등장(2/2)</span> <span class="t2">2일전</span></a></li>
-					<li class="li1"><a href="javascript:void(0);" class="a1"><span class="t1">01.빅데이터의 등장(1/2)</span> <span class="t2">3일전</span></a></li>
-				</ul>
+            <div class="cont">
+                @if (count($lastShowVideo)>0)
+                    <ul class="lst1">
+                        {{-- TODO: 임시 uid 값 --}}
+                        @foreach ($lastShowVideo as $video)
+                        <li class="li1"><a href="{{ route('sub.video.video_detail', ['uid' => $video->video_id]) }}" class="a1"><span class="t1">{{ $video->subject }}</span> <span class="t2">{{ format_date($video->recent_watched_at) }}</span></a></li>
+                        @endforeach
+
+                    </ul>
+                @else
+                    <div>영상정보가 없습니다.</div>
+                @endif
+
 			</div>
 		</div>
 		<!-- /cp1dash1recent1 -->
@@ -349,11 +361,15 @@
 				<a href="{{ route('sub.management.my_question_list') }}" class="a3"><span class="a3t1">전체보기 &gt;</span></a>
 			</div>
 			<div class="cont">
-				<ul class="lst1">
-					<li class="li1"><a href="javascript:void(0);" class="a1"><span class="t1">Q. 텍스트 마이닝이란 무엇인가요?</span> <span class="t2">방금</span></a></li>
-					<li class="li1"><a href="javascript:void(0);" class="a1"><span class="t1">Q. 데이터 분석 방법에는 어떤 것들이 있나요?</span> <span class="t2">방금</span></a></li>
-					<li class="li1"><a href="javascript:void(0);" class="a1"><span class="t1">Q. 빅데이터란 무엇인가요?</span> <span class="t2">3일전</span></a></li>
-				</ul>
+                @if (count($lastNonSolvedComment)>0)
+                    <ul class="lst1">
+                        @foreach ($lastNonSolvedComment as $question)
+                        <li class="li1"><a href="{{ route('sub.management.my_question_detail', ['idx'=>$question->idx]) }}" class="a1"><span class="t1">Q. {{ $question->title }}</span> <span class="t2">{{ format_date($question->writed_at) }}</span></a></li>
+                        @endforeach
+                    </ul>
+                @else
+                    <div>질문 내역이 없습니다.</div>
+                @endif
 			</div>
 		</div>
 		<!-- /cp1dash1recent1 -->
@@ -366,11 +382,16 @@
 				<a href="{{ route('sub.video.video_note_list') }}" class="a3"><span class="a3t1">전체보기 &gt;</span></a>
 			</div>
 			<div class="cont">
-				<ul class="lst1">
-					<li class="li1"><a href="javascript:void(0);" class="a1"><span class="t1">영상 노트 제목 1</span> <span class="t2">방금</span></a></li>
-					<li class="li1"><a href="javascript:void(0);" class="a1"><span class="t1">영상 노트 제목 2</span> <span class="t2">1일전</span></a></li>
-					<li class="li1"><a href="javascript:void(0);" class="a1"><span class="t1">영상 노트 제목 3</span> <span class="t2">2일전</span></a></li>
-				</ul>
+                @if (count($lastVideoNote)>0)
+                    <ul class="lst1">
+                        @foreach ( $lastVideoNote as $note )
+                        <li class="li1"><a href="{{ route('sub.video.video_note_detail', ['video_id'=>$note->video_id]) }}" class="a1"><span class="t1">{{ $note->content }}</span> <span class="t2">{{ format_date($note->writed_at) }}</span></a></li>
+                        @endforeach
+                    </ul>
+                @else
+                    <div>작성된 영상 노트가 없습니다.</div>
+                @endif
+
 			</div>
 		</div>
 		<!-- /cp1dash1recent1 -->

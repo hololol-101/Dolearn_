@@ -380,7 +380,7 @@
 							</div>
 						</a></li>
 						</ul>
-						<a href="{{ route('sub.dashboard.my_notification_list') }}" class="b2">모든 알림 보기</a>
+						<a href="{{ route('notification.my_notification_list') }}" class="b2">모든 알림 보기</a>
 					</div>
 				</div>
 			</div>
@@ -408,7 +408,7 @@
 						<li class="li1"><a href="javascript:void(0);" class="a2">
 							<div class="f1">
 								<span class="f1p1"><img src="{{ asset('assets/images/inc/noimg1.png') }}" alt="★대체텍스트필수" /></span>
-							</div>
+							</div>s
 							<div class="tg1">
 								<span class="t1">강좌명이 표시됩니다.</span>
 								<span class="t2">11,000원</span>
@@ -435,7 +435,7 @@
 				<div class="cont">
 					<div class="w1">
 						<a href="#gn1c3" class="b1 close"><i class="b1ic1"></i> <span class="b1t1 blind">미니 프로필 창 닫기</span></a>
-						<a href="{{ route('sub.dashboard.my_notification_list') }}" class="a1 notice"><i class="a1ic1"></i> <span class="a1t1 blind">알림</span> <b class="a1t2">4</b></a>
+						<a href="{{ route('notification.my_notification_list') }}" class="a1 notice"><i class="a1ic1"></i> <span class="a1t1 blind">알림</span> <b class="a1t2">4</b></a>
 						{{-- TODO: 2차 --}}
                         {{-- <a href="{{ route('payment.purchase_info') }}" class="a1 cart"><i class="a1ic1"></i> <span class="a1t1 blind">장바구니</span> <b class="a1t2">2</b></a> --}}
 					</div>

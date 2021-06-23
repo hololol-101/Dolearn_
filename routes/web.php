@@ -20,6 +20,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\YouTubeAPIController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -544,6 +545,26 @@ Route::group(['prefix'=>'youtube', 'as'=>'youtube.'], function() {
 
     //유튜브 회원 로그인
     Route::get('signin_youtube', [YouTubeAPIController::class, 'signinYoutube'])->name('signin_youtube');
+
+});
+Route::group(['prefix'=>'notification', 'as'=>'notification.'], function(){
+
+    // 알림 생성
+    Route::post('store', [NotificationController::class, 'store'])->name('store');
+
+    // 알림 삭제
+    Route::get('delete', [NotificationController::class, 'delete'])->name('delete');
+
+    //읽은 알림 삭제
+    Route::get('delete_read_notification', [NotificationController::class, 'deleteReadNotification'])->name('delete_read_notification');
+
+    // 알림 읽음 표시
+    Route::get('read', [NotificationController::class, 'read'])->name('read');
+
+    // 알림 생성
+    Route::get('my_notification_list', [NotificationController::class, 'myNotificationList'])->name('my_notification_list');
+
+    //
 
 });
 

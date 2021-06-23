@@ -51,20 +51,14 @@
 			</div>
 			<div class="w1w2">
 				<div class="tt1">
-					2020 소비자가 뽑은 한국소비자만족지수 교육부분에 1위
+					{{ $boardView->subject }}
 				</div>
 				<div class="tg1">
-					<span class="t1">데이터에듀</span>
-					<span class="t2">1시간전</span>
+					<span class="t1">{{ $boardView->name }}</span>
+					<span class="t2">{{ date('Y.m.d',$boardView->regdate) }}</span>
 				</div>
 				<div class="tg2">
-					빅데이터 교육 No.1, 데이터에듀가<br />
-					2020 소비자가 뽑은 한국소비자만족지수 교육부분에 1위를 수상했습니다.<br />
-					<br />
-					여러분의 성원에 감사드리며,<br />
-					더욱더 발전하는 데이터에듀가 되기 위해 최선을 다하겠습니다.<br />
-					<br />
-					https://news.naver.com/main/read.nhn?mode=LSD&mid=sec&sid1=004&oid=050&aid=0000055489<br />
+                    {!! $boardView->content !!}
 				</div>
 				<div class="eg1">
 					<a href="#★" class="cp1like1"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">0</span></a>

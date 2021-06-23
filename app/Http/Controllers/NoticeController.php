@@ -35,10 +35,10 @@ class NoticeController extends Controller
         $endPage = $totalPage;
         } // 페이지 그룹이 마지막일 때 마지막 페이지 번호
 
-        if($request->input('del')==1) {
-            Notice::where('id', $request->input('delId'))
-            ->update(['memo'=>'삭제된글입니다.']);
-        } // 삭제요청
+        //if($request->input('del')==1) {
+        //    Notice::where('id', $request->input('delId'))
+        //    ->update(['memo'=>'삭제된글입니다.']);
+       // } // 삭제요청
 
         $boardList = Notice::orderby('pos')->orderby('thread')->skip($startNum)->take($writeList)->get();
         // 테이블에서 가져온 DB 뷰에서 사용 할 수 있는 변수에 저장.

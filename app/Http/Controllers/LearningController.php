@@ -12,7 +12,6 @@ class LearningController extends Controller{
         $lectureIdx = $request->get('idx', '');
 
         $lectureDetail = DB::select('SELECT cur.idx, cur.new_video_title, vid.channel, vid.like_cnt, cur.video_id, cur.comment FROM lecture lec, curriculum cur, _youtube_fulldata_temp vid WHERE lec.idx = cur.lecture_idx AND cur.video_id = vid.uid AND lec.idx = '.$lectureIdx.' AND cur.status="active" ORDER BY cur.idx LIMIT 1');
-
         if (count($lectureDetail) > 0) {
             $lectureDetail = $lectureDetail[0];
         }
@@ -424,7 +423,7 @@ class LearningController extends Controller{
 
         try {
             // 질문 등록
-            DB::table('my_question')->insert(array(
+            $qnaIdx = DB::table('my_question')->insertGetId(array(
                 'lecture_idx' => $lectureIdx,
                 'video_id' => $videoId,
                 'writer_id' => $userId,
@@ -434,7 +433,18 @@ class LearningController extends Controller{
                 'public_yn' => $publicYn,
                 'writed_at' => now()
             ));
+            $lectureName = DB::table('lecture')->where('idx',$lectureIdx)->get()[0]->title;
 
+            DB::table('notification')->insert(array(
+                'target_id'=>$userId,
+                'title' =>'수강강좌: '.$lectureName,
+                'content' => '질문등록이 완료되었습니다..',
+                'created_at'=> now(),
+                'program_name'=>'lectureQna',
+                'status'=>'active',
+                'route'=>"sub.management.my_question_detail",
+                'route_idx'=> $qnaIdx
+            ));
             $result['status'] = 'success';
 
         } catch(Exception $e) {
@@ -548,13 +558,15 @@ class LearningController extends Controller{
         try {
             // 재생 목록에서 영상 삭제
             // DB::table('playlist_video')->where('directory_idx', $directoryIdx)->where('user_id', $userId)->where('video_id', $videoId)->delete();
-            DB::table('playlist_video')->where('directory_idx', $directoryIdx)
-                                        ->where('user_id', $userId)
-                                        ->where('video_id', $videoId)
-                                        ->where('status', 'active')->update(array(
-                'updated_at' => now(),
-                'status' => 'delete'
-            ));
+            DB::table('playlist_video')
+                ->where('directory_idx', $directoryIdx)
+                ->where('user_id', $userId)
+                ->where('video_id', $videoId)
+                ->where('status', 'active')
+                    ->update(array(
+                        'deleted_at' => now(),
+                        'status' => 'delete'
+                    ));
 
             $result['status'] = 'success';
 

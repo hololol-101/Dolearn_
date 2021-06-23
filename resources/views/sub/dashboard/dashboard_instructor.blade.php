@@ -45,7 +45,7 @@
 		<div id="lnb1c">
 			<ul>
 			<li><a href="{{ route('sub.dashboard.dashboard_main', ['role' => 'instructor']) }}">대시보드</a></li>
-			<li><a href="{{ route('sub.dashboard.my_notification_list', ['role' => 'instructor']) }}">내 알림</a></li>
+			<li><a href="{{ route('notification.my_notification_list', ['role' => 'instructor']) }}">내 알림</a></li>
 			</ul>
 		</div>
 		<!-- /lnb1c -->
@@ -128,7 +128,11 @@
 			<ul class="dl1">
 				<li class="di1">
 					<div class="dt1"><span class="t1">강좌 <span class="dpib">평점</span></span></div>
-					<div class="dd1"><span class="t2">4.25</span></div>
+                    @if ($lectureInfo->score_avg)
+                    <div class="dd1"><span class="t2">{{ $lectureInfo->score_avg }}</span></div>
+                    @else
+                    <div class="dd1"><span class="t2">0</span></div>
+                    @endif
 				</li>
 				<li class="di1">
 					<div class="dt1">
@@ -145,11 +149,15 @@
 				</li>
 				<li class="di1">
 					<div class="dt1"><span class="t1">수강자</span></div>
-					<div class="dd1"><span class="t2">1,001</span></div>
+                    @if (isset($lectureInfo->student_cnt))
+                    <div class="dd1"><span class="t2">{{ $lectureInfo->student_cnt }}</span></div>
+                    @else
+                    <div class="dd1"><span class="t2">0</span></div>
+                    @endif
 				</li>
 				<li class="di1">
 					<div class="dt1"><span class="t1">강좌수</span></div>
-					<div class="dd1"><span class="t2">7</span></div>
+					<div class="dd1"><span class="t2">{{ $lectureInfo->lecture_cnt }}</span></div>
 				</li>
 			</ul>
 		</div>

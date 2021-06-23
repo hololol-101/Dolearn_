@@ -119,9 +119,8 @@
                     },
                     success: (response) => {
                         if (response.status == 'success') {
-
-                        } else if (response.status == 'exist') {
-                            alert('이미 재생목록에 추가된 영상입니다.');
+                            console.log('del ok');
+                            $(this).find('.st1').text('삭제됨');
 
                         } else {
                             alert(response.msg);
@@ -134,7 +133,6 @@
 
 			}else{
 				$cb.prop({'checked':'checked'});
-				$(this).addClass('on');
 
                 // 재생 목록에 영상 추가
                 $.ajax({
@@ -152,6 +150,10 @@
                     },
                     success: (response) => {
                         if (response.status == 'success') {
+                            $(this).addClass('on');
+
+                        } else if (response.status == 'exist') {
+                            alert('이미 재생목록에 추가된 영상입니다.');
 
                         } else {
                             alert(response.msg);

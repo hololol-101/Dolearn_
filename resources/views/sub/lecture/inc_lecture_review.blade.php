@@ -1,24 +1,3 @@
-@php
-// 지난 시간 계산
-function format_date($time){
-    $t=time()-$time;
-    $f=array(
-        '31536000'=>'년',
-        '2592000'=>'개월',
-        '604800'=>'주',
-        '86400'=>'일',
-        '3600'=>'시간',
-        '60'=>'분',
-        '1'=>'초'
-    );
-    foreach ($f as $k=>$v)    {
-        if (0 !=$c=floor($t/(int)$k)) {
-            return $c.$v.' 전';
-        }
-    }
-}
-@endphp
-
 <hr class="bdt1px mgt3em mgb2em" />
 
 <h3 class="hb1 h1 tac">수강후기</h3>

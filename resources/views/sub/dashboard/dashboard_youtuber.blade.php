@@ -45,7 +45,7 @@
 		<div id="lnb1c">
 			<ul>
 			<li><a href="{{ route('sub.dashboard.dashboard_main', ['role' => 'youtuber']) }}">대시보드</a></li>
-			<li><a href="{{ route('sub.dashboard.my_notification_list', ['role' => 'youtuber']) }}">내 알림</a></li>
+			<li><a href="{{ route('notification.my_notification_list', ['role' => 'youtuber']) }}">내 알림</a></li>
 			</ul>
 		</div>
 		<!-- /lnb1c -->
@@ -101,15 +101,15 @@
 			</div>
 			<div class="cont">
 				<div class="item">
-					<strong class="t1">09</strong>
+					<strong class="t1">{{ $totalVideoNum }}</strong>
 					<span class="t2">내 영상 수</span>
 				</div>
 				<div class="item">
-					<strong class="t1">05</strong>
+					<strong class="t1">{{ $relationLectureNum }}</strong>
 					<span class="t2">연관 강좌 수</span>
 				</div>
 				<div class="item">
-					<strong class="t1">00</strong>
+					<strong class="t1">{{ $nonReadNotification }}</strong>
 					<span class="t2">읽지 않은 알림</span>
 				</div>
 			</div>
@@ -301,7 +301,7 @@
 	</div>
 	<div class="small-12 large-6 column">
 
-
+        {{-- TODO: 두런 조회수  --}}
 		<!-- cp1dash1flist1 -->
 		<div class="cp1dash1flist1">
 			<div class="hg1">
@@ -382,7 +382,7 @@
 	</div>
 	<div class="small-12 large-6 column">
 
-
+    {{-- TODO: YOUTUBE API 필요 --}}
 	<!-- cp1dash1flist1 -->
     <div class="cp1dash1flist1">
         <div class="hg1">
@@ -465,34 +465,38 @@
 	<div class="small-12 medium-6 column">
 
 
+
 		<!-- cp1dash1recent1 -->
 		<div class="cp1dash1recent1">
 			<div class="hg1">
 				<h3 class="h1">최근 학습 강좌</h3>
 			</div>
+            @if (count($lastShowLecture)>0)
 			<div class="cont">
-				<ul class="lst1">
-                    {{-- TODO: 임시 idx 값 --}}
-					<li class="li1"><a href="{{ route('learning.main', ['idx' => '17']) }}" class="a1"><span class="t1">데이터분석과 텍스트마이닝</span> <span class="t2">3일전</span></a></li>
-				</ul>
-				<div class="gg1">
-					<div class="t1">
-						<span class="t1t1">진도율</span>
-						<span class="t1t2">22강</span> <i class="sep">/</i> <span class="t1t3">30강</span>
-						<span class="t1t4">75%</span>
-					</div>
-					<div class="g1">
-						<i class="g1b1" style="width:75%;"></i>
-					</div>
-				</div>
+                    <ul class="lst1">
+                        <li class="li1"><a href="{{ route('learning.main', ['idx' => $lastShowLecture->idx ]) }}" class="a1"><span class="t1">>{{ $lastShowLecture->title }}</span> <span class="t2">{{ format_date($lastShowLecture->recent_learned_at) }}</span></a></li>
+                    </ul>
+                    <div class="gg1">
+                        <div class="t1">
+                            <span class="t1t1">진도율</span>
+                            <span class="t1t2">{{ $lastShowLecture->completeLecture }}강</span> <i class="sep">/</i> <span class="t1t3">{{ $lastShowLecture->totalLecture }}강</span>
+                            <span class="t1t4">{{ round($lastShowLecture->completeLecture/$lastShowLecture->totalLecture*100) }}%</span>
+                        </div>
+                        <div class="g1">
+                            <i class="g1b1" style="width:{{ round($lastShowLecture->completeLecture/$lastShowLecture->totalLecture*100) }}%;"></i>
+                        </div>
+                    </div>
 			</div>
 			<div class="fg1">
 				<a href="{{ route('manage.instructor.operation_lecture') }}" class="a2"><span class="a2t1">내 모든강좌 &gt;</span></a>
                 {{-- TODO: 임시 idx 값 --}}
-				<a href="{{ route('learning.main', ['idx' => '17']) }}" class="a2 cvf"><span class="a2t1">이어서 학습하기 &gt;</span></a>
+				<a href="{{ route('learning.main', ['idx' => $lastShowLecture->idx]) }}" class="a2 cvf"><span class="a2t1">이어서 학습하기 &gt;</span></a>
 			</div>
-		</div>
-		<!-- /cp1dash1recent1 -->
+            @else
+            <div>최근 학습 강좌가 없습니다.</div>
+            @endif
+        </div>
+        <!-- /cp1dash1recent1 -->
 
 
 	</div>
@@ -501,16 +505,20 @@
 
 		<!-- cp1dash1recent1 -->
 		<div class="cp1dash1recent1">
-			<div class="hg1">
+            <div class="hg1">
 				<h3 class="h1">최근 시청 영상</h3>
 				<a href="{{ route('sub.video.video_play_history', ['role' => 'youtuber']) }}" class="a3"><span class="a3t1">내 시청기록 &gt;</span></a>
 			</div>
 			<div class="cont">
 				<ul class="lst1">
-					<li class="li1"><a href="javascript:void(0);" class="a1"><span class="t1">03.빅데이터의 개념</span> <span class="t2">방금</span></a></li>
-					<li class="li1"><a href="javascript:void(0);" class="a1"><span class="t1">02.빅데이터의 등장(2/2)</span> <span class="t2">2일전</span></a></li>
-					<li class="li1"><a href="javascript:void(0);" class="a1"><span class="t1">01.빅데이터의 등장(1/2)</span> <span class="t2">3일전</span></a></li>
-				</ul>
+                    @if(count($lastShowVideo)>0)
+                        @foreach ($lastShowVideo as $video)
+                        <li class="li1"><a href="{{ route('sub.video.video_detail', ['uid' => $video->video_id]) }}" class="a1"><span class="t1">{{ $video->subject }}</span> <span class="t2">{{ format_date($video->recent_watched_at) }}</span></a></li>
+                        @endforeach
+                    @else
+                        <div>영상 정보가 없습니다.</div>
+                    @endif
+                </ul>
 			</div>
 		</div>
 		<!-- /cp1dash1recent1 -->

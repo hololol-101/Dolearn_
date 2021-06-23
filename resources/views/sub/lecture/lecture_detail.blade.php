@@ -134,7 +134,8 @@
 			<ul class="cp1dl1">
                 <li class="di1">
                     <span class="dt1">강사명</span> <span class="sep">:</span>
-                    <span class="dd1"><a href="{{ route('etc.user_introduction', ['type' => $instructorInfo->role, 'user_idx' => $instructorInfo->id]) }}" class="a1">{{ $lectureDetail->owner_name }}</a></span>
+                    <span class="dd1">
+                        <a href="{{ route('etc.user_introduction', ['type' => $instructorInfo->role, 'user_idx' => $instructorInfo->id]) }}" class="a1">{{ $lectureDetail->owner_name }}</a></span>
                 </li>
                 <li class="di1">
                     <span class="dt1">난이도</span> <span class="sep">:</span>
@@ -244,7 +245,8 @@ function courseApplication() {
         dataType: 'json',
         url: '{{ route('sub.lecture.course_application') }}',
         data: {
-            'lecture_idx': '{{ $_GET['idx'] }}'
+            'lecture_idx': '{{ $_GET['idx'] }}',
+            'lecture_name': '{{ $lectureDetail->title }}'
         },
         // contentType: false,
         // processData: false,

@@ -7,7 +7,6 @@
 <!-- /aside_head -->
 <!-- aside_content -->
 <div id="aside_content" class="fscroll1-xy">
-
 {{-- 비공개 질문 작성 가능 여부에 따른 분기 --}}
 @if ($secretQuestionYn == 'Y')
 <a href="javascript:void(0);" class="cp2switch1 switch toggle" id="switch_public" onclick="switchPublic()">
@@ -82,7 +81,6 @@ function saveQna() {
         $('#qna_content').focus();
         return false;
     }
-
     $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

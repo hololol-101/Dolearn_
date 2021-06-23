@@ -164,8 +164,12 @@
 				<div class="st1">
 					<span class="st1t1 like">@if ($likeCnt >= 10000) {{ round(($likeCnt / 10000), 1) }}만 @else {{ $likeCnt }} @endif</span> <span class="sep">/</span> <span class="st1t1 hate">@if ($hateCnt >= 10000) {{ round(($hateCnt / 10000), 1) }}만 @else {{ $hateCnt }} @endif</span>
 				</div>
-				<strong class="t1">{{ round(($likeCnt / ($likeCnt + $hateCnt)) * 100) }}%</strong>
-				<span class="t2">
+                @if($likeCnt + $hateCnt !=0)
+                <strong class="t1">{{ round(($likeCnt / ($likeCnt + $hateCnt)) * 100) }}%</strong>
+                @else
+                <strong class="t1">0%</strong>
+                @endif
+                <span class="t2">
 					<span class="vam">좋아요 비율</span>
 					<span class="bi1 dpib fsS1 vam">
 						<a href="#?" class="li1 tooltip1 ct">

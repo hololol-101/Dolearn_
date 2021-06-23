@@ -5,14 +5,110 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Exception;
+use App\Notice; // model 클래스 상속
 
 class CommunityController extends Controller{
-    public function notice() {
-        return view('sub.community.notice');
+    public function notice(Request $request) {
+        // 공지사항
+        $pageNum     = $request->input('page');
+        // view에서 넘어온 현재페이지의 파라미터 값.
+        $pageNum     = (isset($pageNum)?$pageNum:1);
+        // 페이지 번호가 없으면 1, 있다면 그대로 사용
+        $startNum    = ($pageNum-1)*10;
+        // 페이지 내 첫 게시글 번호
+        $writeList    = 10;
+        // 한 페이지당 표시될 글 갯수
+        $pageNumList = 10;
+        // 전체 페이지 중 표시될 페이지 갯수
+        $pageGroup   = ceil($pageNum/$pageNumList);
+        // 페이지 그룹 번호
+        $startPage   = (($pageGroup-1)*$pageNumList)+1;
+        // 페이지 그룹 내 첫 페이지 번호
+        $endPage     = $startPage + $pageNumList-1;
+        // 페이지 그룹 내 마지막 페이지 번호
+        
+        $totalCount  = Notice::where('depth', '=', '0')
+            ->where('public_yn', '=', 'Y')
+            ->where('notice_yn', '!=', 'Y')            
+            ->count();
+        // 전체 게시글 갯수
+        
+        $totalPage   = ceil($totalCount/$writeList);
+        // 전체 페이지 갯수
+        if($endPage >= $totalPage) {
+        $endPage = $totalPage;
+        } // 페이지 그룹이 마지막일 때 마지막 페이지 번호
+
+        //if($request->input('del')==1) {
+        //    Notice::where('id', $request->input('delId'))
+        //    ->update(['memo'=>'삭제된글입니다.']);
+       // } // 삭제요청
+
+       if ( $pageNum == 1 ) { // 첫번째 페이지만 출력
+       // 필독 리스트
+            $totalCount_notice  = Notice::where('depth', '=', '0')
+                ->where('public_yn', '=', 'Y')
+                ->where('notice_yn', '=', 'Y')
+                ->count();
+            // 필독 게시글 갯수
+            $boardList_notice = Notice::where('depth', '=', '0')
+                ->where('public_yn', '=', 'Y')
+                ->where('notice_yn', '=', 'Y')            
+                ->orderby('pos')
+                ->orderby('thread')
+                ->skip($startNum)
+                ->take($writeList)
+                ->get();
+                
+            //$writeList = $writeList - $totalCount_notice;
+            //$writeList = ( $writeList < 0 ) ? 1 : $writeList;
+       } else {
+           $boardList_notice = array();
+       }
+               
+        // 공지 게시물
+        $boardList = Notice::where('depth', '=', '0')
+            ->where('public_yn', '=', 'Y')
+            ->where('notice_yn', '!=', 'Y')
+            ->orderby('pos')
+            ->orderby('thread')
+            ->skip($startNum)
+            ->take($writeList)
+            ->get();
+            
+        // 테이블에서 가져온 DB 뷰에서 사용 할 수 있는 변수에 저장.
+        
+        $pageIndex = getPageIndex($totalCount, $pageNumList, $writeList, $pageNum);
+        // 게시판 page nav
+      
+        return view('sub.community.notice', [
+            'totalCount'=>$totalCount,
+            'boardList'=>$boardList,
+            'boardList_notice'=>$boardList_notice,
+            'pageNum'=>$pageNum,
+            'startPage'=>$startPage,
+            'endPage'=>$endPage,
+            'totalPage'=>$totalPage,
+            'pageIndex'=>$pageIndex
+            ]);
+            // 요청된 정보 처리 후 결과 되돌려줌      
     }
 
-    public function noticeDetail() {
-        return view('sub.community.notice_detail');
+    public function noticeDetail(Request $request) {
+        
+        $pIdx = $request->input('pidx');
+
+    // ** 전달 된 $ id별로 게시물 세부 정보 가져 오기 * / 
+    // $post = Notice::where([ 'idx' => $id])-> first ();      
+        // read count+1
+        //Notice::where('idx', $pIdx)->update(['views'=>Notice::raw('views+1')]);
+        Notice::find($pIdx)->increment('views'); // 선언된 pk
+        
+        // Read
+        $read = Notice::where(['idx' => $pIdx])->first();    
+
+        return view('sub.community.notice_detail', ['boardView' => $read]);
+        
     }
 
     public function trend() {
