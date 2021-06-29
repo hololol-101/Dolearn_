@@ -16,10 +16,10 @@
 
 
 						<!-- cp1tabs1 -->
-						<div id="cp1tabs1a1" class="cp1tabs1 mgt1em mgb2em">
+						<div id="cp1tabs1" class="cp1tabs1 mgt1em mgb2em">
 							<ul>
-							<li class="m1 column"><a href="#cp1tabs1a1pane1"><span class="t1">일반회원</span><i class="ic1"></i></a></li>
-							<li class="m2 column"><a href="#cp1tabs1a1pane2"><span class="t1">유튜브회원</span><i class="ic1"></i></a></li>
+							<li class="m1 column"><a href="#cp1tabs1pane1"><span class="t1">일반회원</span><i class="ic1"></i></a></li>
+							<li class="m2 column"><a href="#cp1tabs1pane2"><span class="t1">유튜브회원</span><i class="ic1"></i></a></li>
 							</ul>
 						</div>
 						<!-- /cp1tabs1 -->
@@ -28,9 +28,9 @@
 						</p>
 
                         <!-- cp1tabs1cont -->
-						<div id="cp1tabs1a1cont" class="cp1tabs1cont">
+						<div id="cp1tabs1cont" class="cp1tabs1cont">
 						<!-- cp1tabs1pane -->
-						<div id="cp1tabs1a1pane1" class="cp1tabs1pane">
+						<div id="cp1tabs1pane1" class="cp1tabs1pane">
 
 
 							<!-- form -->
@@ -72,7 +72,7 @@
 						</div>
 						<!-- /cp1tabs1pane -->
 						<!-- cp1tabs1pane -->
-						<div id="cp1tabs1a1pane2" class="cp1tabs1pane">
+						<div id="cp1tabs1pane2" class="cp1tabs1pane">
 
 
 							<a href="{{ route('youtube.signin_youtube') }}"  rel="noopener" title="새 창" class="button primary block mgt2em mgb4em">구글로 로그인 하기</a>
@@ -89,8 +89,8 @@
 						<!-- /cp1tabs1cont -->
 						<script>/*<![CDATA[*/
 							// 20210202.
-							makeShow('#cp1tabs1a1', '#cp1tabs1a1pane1');
-							makeActive('#cp1tabs1a1', '.m1');
+							makeShow('#cp1tabs1', '#cp1tabs1pane1');
+							makeActive('#cp1tabs1', '.m1');
 						/*]]>*/</script>
 
 					</div>

@@ -25,40 +25,40 @@ if ( !function_exists("isNull") ) {
             else return false;
         } else {
             if ( is_null($data) or $data == "" ) return true;
-            else return false;
+            else return false;            
         }
     }
 }
 
 if ( !function_exists("StringCut") ) {
-    function StringCut($msg,$cut_size){
+    function StringCut($msg,$cut_size){ 
         $temp_str = mb_strimwidth($msg,0,$cut_size,'..','utf-8');
-        return $temp_str;
-    }
+        return $temp_str; 
+    } 
 }
 
 if ( !function_exists("input_text") ) {
     function input_text($body, $key) { // 1 : html 금지 2: html 제거
 
         $body = addslashes($body);
-        //$body = eregi_replace("'","''",$body);
-
+        //$body = eregi_replace("'","''",$body);        
+    
         if ( $key == 1 ) $body = htmlspecialchars(chop($body));
         if ( $key == 2 ) $body = strip_tags($body);
-
+    
     return $body;
     }
 }
 
 if ( !function_exists("output_text") ) {
     function output_text($body, $key) { // 1 : BR 테그 적용
-
+    
         $body = stripslashes($body);
         //$body = eregi_replace("''","'",$body);
-
+    
         if ( $key == 1 ) $body = nl2br($body);
         if ( $key == 2 ) $body = htmlspecialchars($body);
-
+        
     return $body;
     }
 }
@@ -73,7 +73,7 @@ function LoginFilter($pay) {
     $String = str_replace("<","",$String);
     $String = str_replace(">","",$String);
     $String = str_replace("..","",$String);
-
+    
     return $String;
 }
 }
@@ -181,26 +181,26 @@ if ( !function_exists("getPageIndex") ) { // 게시판 페이징
             }
         }
         $QUERY_STRING=$temp;
-
+        
 
         /****************************************
          CREATE PAGE INDEX HTML CODE
          HTML코드 생성
          ***************************************/
         ##PREVIOUS BLOCK
-
+      
             $pageIndex['htmlCode'] = '<div class="pagination" title="페이지 수 매기기">
         <span class="control">
             <span class="m first"><a href="'.$_SERVER['REDIRECT_URL'].'?'.$QUERY_STRING.'&page=1" title="처음 페이지"><i class="ic">처음</i></a></span>';
-
+        
         if($pageIndex['currentPage'] > $pageIndex['pagePerBlock'])
         {
             $pageIndex['htmlCode'].= '<span class="m prev"><a href="'.$_SERVER['REDIRECT_URL'].'?'.$QUERY_STRING.'&page='.( ($pageIndex['currentBlock']-2)*$pageIndex['pagePerBlock']+1).' title="이전 페이지"><i class="ic">이전</i></a></span>';
         }else{
             $pageIndex['htmlCode'].= '<span class="m prev"><a title="이전 페이지 없음"><i class="ic">이전</i></a></span>';
         }
-
-
+        
+        
         ##PAGE INDEX
         $pageIndex['htmlCode'] .= '<span class="pages">';
         for($i=$pageIndex['firstPage']; $i<=$pageIndex['lastPage']; $i++)
@@ -232,31 +232,11 @@ if ( !function_exists("getPageIndex") ) { // 게시판 페이징
         }else{
             $pageIndex['htmlCode'].='<span class="m next"><a title="다음 페이지 없음"><i class="ic">다음</i></a></span>';
         }
-
+        
         $pageIndex['htmlCode'] .= '<span class="m last"><a href="'.$_SERVER['REDIRECT_URL'].'?'.$QUERY_STRING.'&page='.$pageIndex['totalPage'].'" title="마지막 페이지"><i class="ic">마지막</i></a></span></div>';
 
         ##RETURN PAGE INDEX ARRAY
         return $pageIndex;
 
     }//END METHOD
-}
-if(!function_exists("format_date")){
-    // 지난 시간 계산 알고리즘
-    function format_date($time){
-        $t=time()-strtotime($time);
-        $f=array(
-            '31536000'=>'년',
-            '2592000'=>'개월',
-            '604800'=>'주',
-            '86400'=>'일',
-            '3600'=>'시간',
-            '60'=>'분',
-            '1'=>'초'
-        );
-        foreach ($f as $k=>$v)    {
-            if (0 !=$c=floor($t/(int)$k)) {
-                return $c.$v.'전';
-            }
-        }
-    }
-}
+}    

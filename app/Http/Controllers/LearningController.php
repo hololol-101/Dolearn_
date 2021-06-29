@@ -433,18 +433,14 @@ class LearningController extends Controller{
                 'public_yn' => $publicYn,
                 'writed_at' => now()
             ));
-            $lectureName = DB::table('lecture')->where('idx',$lectureIdx)->get()[0]->title;
+            $lectureInfo = DB::table('lecture')->where('idx',$lectureIdx)->get()[0];
 
-            DB::table('notification')->insert(array(
-                'target_id'=>$userId,
-                'title' =>'수강강좌: '.$lectureName,
-                'content' => '질문등록이 완료되었습니다..',
-                'created_at'=> now(),
-                'program_name'=>'lectureQna',
-                'status'=>'active',
-                'route'=>"sub.management.my_question_detail",
-                'route_idx'=> $qnaIdx
-            ));
+            createNotification('learning',$userId, $lectureInfo->title, '질문등록이 완료되었습니다..','/sub/management/my_question_detail?idx='.$qnaIdx.'');
+            // 학생 알림 추가
+
+            createNotification('lecture',$lectureInfo->owner_id, $lectureInfo->title, '내 강좌에 미해결 질문이 등록되었습니다..', $lectureIdx.'');
+            // 강좌 미해결 알림 추가
+
             $result['status'] = 'success';
 
         } catch(Exception $e) {

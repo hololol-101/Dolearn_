@@ -62,6 +62,7 @@ class AccountController extends Controller{
 
                 DB::update('update users set last_conn_at = ?, last_conn_host = ? where email = ?',  [now(),  $_SERVER['REMOTE_ADDR'],$email]);
                 DB::insert('insert into signin_log (user_id, user_agent, signin_host, signin_at) values (?, ?, ?, ?)', [$email, $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR'], now()]);
+
                 return response()->json(array('status'=> "success"), 200);
             }else{
                 return response()->json(array('status'=> "fail"), 200);
@@ -71,7 +72,6 @@ class AccountController extends Controller{
 
     public function logout (Request $request) {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/');

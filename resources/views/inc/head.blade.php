@@ -338,47 +338,16 @@
 <div id="gn1">
 	<div class="mns1">
 		<div class="mn1 notice">
-			<a href="#gn1c1" class="a1 toggle"><i class="a1ic1"></i> <span class="a1t1 blind">알림</span> <b class="a1t2">4</b></a>
+            <a href="#gn1c1" class="a1 toggle" onclick = "getList()"><i class="a1ic1"></i> <span class="a1t1 blind">알림</span> <b class="a1t2"></b></a>
 			<div id="gn1c1" class="gn1c">
 				<div class="cont">
 					<div class="w1">
 						<a href="#gn1c1" class="b1 close"><i class="b1ic1"></i> <span class="b1t1 blind">미니 알림 창 닫기</span></a>
-						<strong class="tt1">읽지 않은 알림 4개</strong>
+                        <strong class="tt1">읽지 않은 알림 0개</strong>
 					</div>
 					<div class="w2">
 						<ul class="lst1">
-						<li class="li1"><a href="{{ route('sub.community.notice_detail', ['idx' => '']) }}" class="a2">
-							<span class="g1 s1">공지</span>
-							<div class="tg1">
-								<span class="t1">[두런 소식] 2020.12.22 서비스 장애 개선</span>
-								<span class="t2">두런 공지</span>
-								<span class="t3">10일전</span>
-							</div>
-						</a></li>
-						<li class="li1"><a href="{{ route('sub.community.notice_detail', ['idx' => '']) }}" class="a2">
-							<span class="g1 s2">학습</span>
-							<div class="tg1">
-								<span class="t1">과제 제출이 완료되었습니다.</span>
-								<span class="t2">수강강좌 제목 01</span>
-								<span class="t3">10일전</span>
-							</div>
-						</a></li>
-						<li class="li1"><a href="{{ route('sub.community.notice_detail', ['idx' => '']) }}" class="a2">
-							<span class="g1 s2">학습</span>
-							<div class="tg1">
-								<span class="t1">새로운 강의가 추가 되었습니다.</span>
-								<span class="t2">수강강좌 제목 01</span>
-								<span class="t3">10일전</span>
-							</div>
-						</a></li>
-						<li class="li1"><a href="{{ route('sub.community.notice_detail', ['idx' => '']) }}" class="a2">
-							<span class="g1 s2">학습</span>
-							<div class="tg1">
-								<span class="t1">질문등록이 완료되었습니다.</span>
-								<span class="t2">수강강좌 제목 01</span>
-								<span class="t3">10일전</span>
-							</div>
-						</a></li>
+
 						</ul>
 						<a href="{{ route('notification.my_notification_list') }}" class="b2">모든 알림 보기</a>
 					</div>
@@ -488,6 +457,25 @@
 </div>
 <!-- gn1 -->
 <script>
+    function getList(){
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'GET',
+            dataType: 'json',
+            url: "{{ route('notification.notification_list') }}",
+            success: (data) => {
+                $('.notice .lst1').empty().append(data.html);
+                $('.notice .tt1').text('읽지 않은 알림 '+data.notReadNotice+'개');
+            },
+        });
+    }
+</script>
+
+
+<script>
     $(document).ready(function(){
         img = $(".w2 .tt1");
 
@@ -547,6 +535,21 @@
 </div>
 
 <script>
+    @if (Auth::check())
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'GET',
+        dataType: 'json',
+        url: "{{ route('notification.non_read_notification') }}",
+        success: (data) => {
+            $('.notice .a1t2').text(data.nonReadCount);
+        },
+    });
+
+    @endif
+
     $(function(){
         @if (Session::has('alert'))
             alert('{{ session()->get("alert") }}');
@@ -570,8 +573,9 @@
             "{{ session()->put('alert', '회원가입이 완료되었습니다.\n로그인 페이지로 이동합니다.') }}"
         @endif
 
-
+        //알람 정보 조회
     });
+
 
 </script>
 

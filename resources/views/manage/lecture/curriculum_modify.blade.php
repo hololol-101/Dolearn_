@@ -166,7 +166,8 @@ if ($isFree != '') {
                             <div class="item" style="cursor:pointer">
                                 <div class="control move" title="끌어서 놓기로 순서 이동"></div>
                                 <div class="tg1">
-                                    <span class="t1 form-static1" bchap_id="{{ $videoInfo->bchap_id }}" schap_id="{{ $videoInfo->schap_id }}" video_id="{{ $videoInfo->uid }}" analysis_yn="{{ $videoInfo->analysis_yn }}" preview_yn="{{ $videoInfo->preview_yn }}">{{ $videoInfo->new_video_title }}</span>
+                                    <span class="t1 form-static1" bchap_id="{{ $videoInfo->bchap_id }}" schap_id="{{ $videoInfo->schap_id }}" video_id="{{ $videoInfo->uid }}" preview_yn="{{ $videoInfo->preview_yn }}">{{ $videoInfo->new_video_title }}</span>
+                                    {{-- <span class="t1 form-static1" bchap_id="{{ $videoInfo->bchap_id }}" schap_id="{{ $videoInfo->schap_id }}" video_id="{{ $videoInfo->uid }}" analysis_yn="{{ $videoInfo->analysis_yn }}" preview_yn="{{ $videoInfo->preview_yn }}">{{ $videoInfo->new_video_title }}</span> --}}
                                 </div>
                                 <div class="eg1">
                                     @if ($videoInfo->preview_yn == 'Y')

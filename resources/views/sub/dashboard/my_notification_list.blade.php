@@ -108,7 +108,7 @@
                 <li class="li1">
                     <div class="w1">
 
-                        <a href="{{ route('notification.read', ['idx'=>$notification->idx, 'route'=>$notification->route, 'route_idx'=>$notification->route_idx]) }}" class="w1w1 a1">
+                        <a href="{{ route('notification.read', ['idx'=>$notification->idx, 'route'=>$notification->route]) }}" class="w1w1 a1">
                             @if($notification->status =="active")
                                 <i class="new">새 글</i>
                             @endif
@@ -119,7 +119,7 @@
                         </script>
                         <div class="w1w2">
                             <span class="t3">{{ format_date($notification->created_at) }}</span>
-                            <a href="?#" class="a2">삭제</a>
+                            <a href="{{ route('notification.delete', ['idx'=>$notification->idx]) }}" class="a2">삭제</a>
                         </div>
                     </div>
                 </li>

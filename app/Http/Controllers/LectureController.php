@@ -641,17 +641,9 @@ class LectureController extends Controller{
             // 강좌 테이블에 수강자 +1
             DB::update('UPDATE lecture SET student_cnt = IFNULL(student_cnt, 0) + 1 WHERE idx = ?', [$idx]);
 
+            createNotification('learning', $userId, $lectureName,'새로운 강의가 추가되었습니다.', '/learning/main?idx='.$idx);
             // 알림 추가
-            DB::table('notification')->insert(array(
-                'target_id'=>$userId,
-                'title' =>'수강강좌: '.$lectureName,
-                'content' => '새로운 강의가 추가되었습니다.',
-                'created_at'=> now(),
-                'program_name'=>'lecture',
-                'status'=>'active',
-                'route'=>'learning.main',
-                'route_idx'=>$idx,
-            ));
+
             $result['status'] = 'success';
 
         } catch(Exception $e) {
@@ -1229,7 +1221,7 @@ class LectureController extends Controller{
             $tempCurriculumList = DB::table('tempsave_curriculum')->where('session_id', $sessionId)->where('user_id', $userId)->get();
 
             // 실제 강좌 데이터 저장
-            DB::table('lecture')->insert(array(
+            $idx = DB::table('lecture')->insertGetId(array(
                 'bcate_id' => $tempLectureInfo->main_bcate_id,
                 'scate_id' => $tempLectureInfo->main_scate_id,
                 'sub_bcate_id' => $tempLectureInfo->sub_bcate_id,
@@ -1299,7 +1291,7 @@ class LectureController extends Controller{
                     DB::table('_youtube_fulldata_temp')->insert(array(
                         'uid' => $tempVideo->uid,
                         'subject' => $tempVideo->title,
-                        'analysis_yn' => $tempVideo->analysis_yn
+                        //'analysis_yn' => $tempVideo->analysis_yn
                     ));
                 }
             }
@@ -1320,6 +1312,9 @@ class LectureController extends Controller{
                     'created_at' => now()
                 ));
             }
+
+            createNotification('lecture', $userId, $tempLectureInfo->title,'강좌가 개설되었습니다..', $idx);
+            // 강좌 생성 알림 추가
 
             // 기존 임시 저장된 데이터 모두 삭제
             DB::table('tempsave_add_lecture')->where('session_id', $sessionId)->where('user_id', $userId)->delete();

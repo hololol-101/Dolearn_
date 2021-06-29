@@ -471,7 +471,7 @@
 			<div class="hg1">
 				<h3 class="h1">최근 학습 강좌</h3>
 			</div>
-            @if (count($lastShowLecture)>0)
+            @if ($lastShowLecture!=[])
 			<div class="cont">
                     <ul class="lst1">
                         <li class="li1"><a href="{{ route('learning.main', ['idx' => $lastShowLecture->idx ]) }}" class="a1"><span class="t1">>{{ $lastShowLecture->title }}</span> <span class="t2">{{ format_date($lastShowLecture->recent_learned_at) }}</span></a></li>

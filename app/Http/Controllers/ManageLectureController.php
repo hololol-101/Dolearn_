@@ -45,7 +45,9 @@ class ManageLectureController extends Controller {
         }
 
         // 임시 저장된 추가 주제 목록 조회 후 배열로 저장
-        $lectureTagList = explode('|', $lectureInfo->tags);
+        if ( !empty($lectureInfo->tags) ) {
+            $lectureTagList = explode('|', $lectureInfo->tags);
+        } else $lectureTagList = array();
 
         // 강좌 영상 수 조회
         $countVideo = DB::select('SELECT count(*) cnt FROM curriculum WHERE lecture_idx ='.$idx.' AND status = "active"');
@@ -176,6 +178,9 @@ class ManageLectureController extends Controller {
                 'updated_at' => now()
             ));
 
+            createNotification('lecture', Auth::user()->email, $title,'강좌가 업데이트되었습니다.',$idx);
+            // 강좌 수정 알림 추가
+
             $result['status'] = 'success';
 
         } catch(Exception $e) {
@@ -243,7 +248,8 @@ class ManageLectureController extends Controller {
         if (count($curriculumResult) > 0) {
             $bchapterList = DB::table('b_chapter')->where('lecture_idx', $idx)->where('status', 'active')->orderBy('order')->get();
             $schapterList = DB::table('s_chapter')->where('lecture_idx', $idx)->where('status', 'active')->orderBy('order')->get();
-            $videoInfoList = DB::select('SELECT curri.bchap_id, curri.schap_id, curri.preview_yn, curri.new_video_title, video.analysis_yn, video.uid FROM curriculum curri, _youtube_fulldata_temp video WHERE curri.video_id = video.uid AND curri.lecture_idx = "'.$idx.'" AND curri.status = "active"');
+            $videoInfoList = DB::select('SELECT curri.bchap_id, curri.schap_id, curri.preview_yn, curri.new_video_title,video.uid FROM curriculum curri, _youtube_fulldata_temp video WHERE curri.video_id = video.uid AND curri.lecture_idx = "'.$idx.'" AND curri.status = "active"');
+            // $videoInfoList = DB::select('SELECT curri.bchap_id, curri.schap_id, curri.preview_yn, curri.new_video_title, video.analysis_yn, video.uid FROM curriculum curri, _youtube_fulldata_temp video WHERE curri.video_id = video.uid AND curri.lecture_idx = "'.$idx.'" AND curri.status = "active"');
         }
 
         return view('manage.lecture.curriculum', compact('lectureInfo', 'bchapterList', 'schapterList', 'videoInfoList'));
@@ -316,7 +322,8 @@ class ManageLectureController extends Controller {
             $curriculumInfo = $curriculumInfo[0];
             $bchapterList = DB::table('b_chapter')->where('lecture_idx', $idx)->where('status', 'active')->orderBy('order')->get();
             $schapterList = DB::table('s_chapter')->where('lecture_idx', $idx)->where('status', 'active')->orderBy('order')->get();
-            $videoInfoList = DB::select('SELECT curri.bchap_id, curri.schap_id, curri.preview_yn, video.analysis_yn, video.uid, curri.new_video_title FROM curriculum curri, _youtube_fulldata_temp video WHERE curri.video_id = video.uid AND curri.lecture_idx = "'.$idx.'" AND curri.status = "active"');
+            // $videoInfoList = DB::select('SELECT curri.bchap_id, curri.schap_id, curri.preview_yn, video.analysis_yn, video.uid, curri.new_video_title FROM curriculum curri, _youtube_fulldata_temp video WHERE curri.video_id = video.uid AND curri.lecture_idx = "'.$idx.'" AND curri.status = "active"');
+            $videoInfoList = DB::select('SELECT curri.bchap_id, curri.schap_id, curri.preview_yn, video.uid, curri.new_video_title FROM curriculum curri, _youtube_fulldata_temp video WHERE curri.video_id = video.uid AND curri.lecture_idx = "'.$idx.'" AND curri.status = "active"');
 
             // 유료 강좌일 경우 추천 영상 목록 조회 안함
             if ($isFree == 'Y') {
@@ -391,14 +398,14 @@ class ManageLectureController extends Controller {
             }
 
             // 기존에 등록되지 않은 분석이 필요한 영상 정보 저장
-            foreach($videoList as $video) {
-                if ($video->analysisYn == 'N')
-                DB::table('_youtube_fulldata_temp')->insert(array(
-                    'uid' => $video->videoId,
-                    'subject' => $video->videoTitle,
-                    'analysis_yn' => $video->analysisYn
-                ));
-            }
+            // foreach($videoList as $video) {
+            //     if ($video->analysisYn == 'N')
+            //     DB::table('_youtube_fulldata_temp')->insert(array(
+            //         'uid' => $video->videoId,
+            //         'subject' => $video->videoTitle,
+            //         'analysis_yn' => $video->analysisYn
+            //     ));
+            // }
 
             // 수정된 커리큘럼 저장
             foreach($videoList as $video) {
@@ -419,6 +426,11 @@ class ManageLectureController extends Controller {
                         'created_at' => now()
                     ));
             }
+            $title = DB::select('select title from lecture where idx = ?', [$lectureIdx])[0]->title;
+            createNotification('lecture', Auth::user()->email, $title,'강좌가 업데이트되었습니다.', $lectureIdx);
+            // 강좌 수정 알림 추가
+
+
             $result['status'] = 'success';
 
         } catch(Exception $e) {

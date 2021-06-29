@@ -226,6 +226,7 @@ function addNewLectureFinal() {
         // contentType: false,
         // processData: false,
         success: (data) => {
+            console.log(data)
             if (data.status == 'success') {
                 // alert('done!');
                 alert('강좌 생성이 완료되었습니다.');

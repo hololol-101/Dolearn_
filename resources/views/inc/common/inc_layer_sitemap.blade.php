@@ -16,7 +16,7 @@ $role = Auth::user()->role;
 				<div class="d2">
 					<ul>
 					<li class="m1"><a href="{{ route('sub.dashboard.dashboard_main') }}"><span class="t1">대시보드</span></a></li>
-					<li class="m2"><a href="{{ route('sub.dashboard.my_notification_list') }}"><span class="t1">내 알림</span></a></li>
+					<li class="m2"><a href="{{ route('notification.my_notification_list') }}"><span class="t1">내 알림</span></a></li>
 
                     @if ($role == 'instructor')
                     <li class="m3"><a href="{{ route('sub.lecture.add_new_lecture') }}" class="s1"><span class="t1">+ 새 강좌 만들기</span></a></li>

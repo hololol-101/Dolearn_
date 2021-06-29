@@ -46,7 +46,8 @@
             "database/factories"
         ],
         "files" : [
-            "app/func.php"
+            "app/func.php",
+            "app/globalFunction.php"
         ]
     },
     "autoload-dev": {

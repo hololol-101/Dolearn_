@@ -21,6 +21,8 @@ use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\YouTubeAPIController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\CommentController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -87,6 +89,15 @@ Route::group(['prefix'=>'account', 'as'=>'account.'], function() {
 
 // 서브 기능
 Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
+
+    //  댓글
+    Route::group(['prefix'=>'comment', 'as'=>'comment.'], function() {
+        //댓글 가져오기
+        Route::get('index', [CommentController::class, 'index'])->name('index');
+
+        //댓글 등록
+        Route::post('create', [CommentController::class, 'create'])->name('create');
+    });
 
     // 게시판
     Route::group(['prefix'=>'bbs', 'as'=>'bbs.'], function() {
@@ -562,9 +573,14 @@ Route::group(['prefix'=>'notification', 'as'=>'notification.'], function(){
     Route::get('read', [NotificationController::class, 'read'])->name('read');
 
     // 알림 생성
-    Route::get('my_notification_list', [NotificationController::class, 'myNotificationList'])->name('my_notification_list');
+    Route::get('my_notification_list', [NotificationController::class, 'myNotificationList'])->name('my_notification_list')->middleware('auth');
 
-    //
+    // 알림 생성
+    Route::get('notification_list', [NotificationController::class, 'notificationList'])->name('notification_list');
+
+    //안읽은 알림 수
+    Route::get('non_read_notification', [NotificationController::class, 'nonReadNotification'])->name('non_read_notification');
+
 
 });
 
