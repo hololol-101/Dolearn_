@@ -91,36 +91,14 @@
 <!-- cp1tabs1 -->
 <div id="cp1tabs1" class="cp1tabs1 mgt1em mgb3em">
 	<ul>
-        <li class="m1 column on"><a href="javascript:void(0);" class="qna_tab" tab_type="all" style="min-width:4em;" onclick="clickTab(this)"><span class="t1">전체</span><i class="ic1"></i></a></li>
-        <li class="m2 column"><a href="javascript:void(0);" class="qna_tab" tab_type="basic" style="min-width:4em;" onclick="clickTab(this)"><span class="t1">일반</span><i class="ic1"></i></a></li>
-        <li class="m3 column"><a href="javascript:void(0);" class="qna_tab" tab_type="instructor" style="min-width:4em;" onclick="clickTab(this)"><span class="t1">강사</span><i class="ic1"></i></a></li>
-        <li class="m4 column"><a href="javascript:void(0);" class="qna_tab" tab_type="student" style="min-width:4em;" onclick="clickTab(this)"><span class="t1">수강자</span><i class="ic1"></i></a></li>
-        <li class="m5 column"><a href="javascript:void(0);" class="qna_tab" tab_type="pay" style="min-width:4em;" onclick="clickTab(this)"><span class="t1">결제</span><i class="ic1"></i></a></li>
+        <li class="m1 column on"><a href="javascript:void(0);" class="qna_tab" tab_type="all" style="min-width:4em;" ><span class="t1">전체</span><i class="ic1"></i></a></li>
+        <li class="m2 column"><a href="javascript:void(0);" class="qna_tab" tab_type="basic" style="min-width:4em;" ><span class="t1">일반</span><i class="ic1"></i></a></li>
+        <li class="m3 column"><a href="javascript:void(0);" class="qna_tab" tab_type="instructor" style="min-width:4em;" ><span class="t1">강사</span><i class="ic1"></i></a></li>
+        <li class="m4 column"><a href="javascript:void(0);" class="qna_tab" tab_type="student" style="min-width:4em;""><span class="t1">수강자</span><i class="ic1"></i></a></li>
+        <li class="m5 column"><a href="javascript:void(0);" class="qna_tab" tab_type="pay" style="min-width:4em;" ><span class="t1">결제</span><i class="ic1"></i></a></li>
 	</ul>
 </div>
 <!-- /cp1tabs1 -->
-<script>
-    function clickTab(obj){
-        my=$(obj);
-        my.parents().siblings().removeClass('on');
-        my.parent().addClass('on');
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'POST',
-            dataType: 'json',
-            url: '{{ route('serviceinquiry.faq_index') }}',
-            data: {
-                'type': my.attr('tab_type')
-            },
-            success: (data) => {
-                $('#qna_list').empty();
-                $('#qna_list').append(data.html);
-            },
-        });
-    }
-</script>
 
 <!-- cp1qna1 -->
 <div class="cp1qna1" id="qna_list">
@@ -265,7 +243,6 @@ $(function() {
                 'type': tabType
             },
             success: (data) => {
-                console.log(data)
                 if (data.status == 'success') {
 
                     if (data.html.length != 0) {
