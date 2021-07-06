@@ -60,7 +60,7 @@
 <p class="right">
     <a href="{{ route('serviceinquiry.faq_edit',['idx'=>$faqlist->idx]) }}" class="button">수정</a>
     <a href="{{ route('serviceinquiry.faq_delete',['idx'=>$faqlist->idx]) }}" class="button">삭제</a>
-    <a href="{{ url()->previous() }}" class="button">목록</a>
+    <a href="{{ route('serviceinquiry.faq_index') }}" class="button">목록</a>
 </p>
 </div>
 <!-- /infomenu1 -->

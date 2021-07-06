@@ -81,18 +81,72 @@ class ServiceInquiryController extends Controller{
     }
 
     public function faqEdit(Request $request){
+        if($request->isMethod('get')){
         // FAQ 수정 페이지 열기
-        $idx = $request->get('idx');
-        $status = "edit";
-        $faqlist = DB::select('select f.*, a.nickname adminname from faq f, admin a where a.idx = f.writer_id and f.idx=?', [$idx])[0];
-        $fileArray = explode(',', $faqlist->attach_file);
-        return view('doadm.FAQ.form', compact('faqlist', 'status', 'fileArray'));
+            $idx = $request->get('idx');
+            $status = "edit";
+            $faqlist = DB::select('select f.*, a.nickname adminname from faq f, admin a where a.idx = f.writer_id and f.idx=?', [$idx])[0];
+            $fileArray = explode(',', $faqlist->attach_file);
+            return view('doadm.FAQ.form', compact('faqlist', 'status', 'fileArray'));
+        }
+        if($request->isMethod('post')){
+
+            $title = $request->post('iSubject');
+            $content = $request->post('iContent');
+            $division = $request->post('★1radio0');
+            $isPublic = $request->post('iPublic');
+            $idx = $request->post('idx');
+
+            $fileReName=null;
+            $writerId = 0;
+            $fileArray = array();
+
+            //기존에 있던 파일 중 삭제되지 않은 파일
+            for($fcnt=0; $fcnt<3; $fcnt++){
+                $filename = $request->post('save_attach_file_name'.$fcnt);
+                if($filename!=null){
+                    array_push($fileArray, $filename);
+                }
+            }
+
+            //파일 저장
+            for($fcnt=0; $fcnt<3; $fcnt++){
+                $file = $request->file('iFile'.$fcnt);
+                if($file){
+                    $fileIdx = storeAttachFile($file);
+                    $fileReName=$fileIdx['fileReName'];
+                    array_push($fileArray, $fileReName);
+                }
+            }
+
+            $files = implode(',', $fileArray);
+
+            //수정한 정보를 저장
+            DB::table('faq')->where('idx', $idx)->update(array(
+                'division'=>$division,
+                'writer_id'=>$writerId,
+                'title'=>$title,
+                'content'=>$content,
+                'updated_at'=>now(),
+                'attach_file'=>$files,
+                'public_yn'=>$isPublic
+            ));
+            return redirect()->route('serviceinquiry.faq_detail', compact('idx'));
+
+
+        }
     }
 
     public function faqCreate(Request $request){
         if($request->isMethod('get')){
             //FQA 작성 페이지
             return view('doadm.FAQ.form', compact('qalist'));
+                //FAQ 정보 DB 저장
+                $title = $request->post('iSubject');
+                $content = $request->post('iContent');
+                $division = $request->post('★1radio0');
+                $isPublic = $request->post('iPublic');
+
         }
         else if($request->isMethod('post')){
             //FAQ 정보 DB 저장
@@ -100,11 +154,7 @@ class ServiceInquiryController extends Controller{
             $content = $request->post('iContent');
             $division = $request->post('★1radio0');
             $isPublic = $request->post('iPublic');
-            $idx = $request->post('idx');
-            $isDelete = $request->post('isDelete');
-            $attach_file_name = $request->post('attach_file_name');
 
-            $filename=null;
             $fileReName=null;
 
             $writerId = 0;
@@ -119,52 +169,18 @@ class ServiceInquiryController extends Controller{
                 }
             }
             $files = implode(',', $fileArray);
-            if($idx!=''){
+            //새로운 FAQ를 생성
+            DB::table('faq')->insert(array(
+                'division'=>$division,
+                'writer_id'=>$writerId,
+                'title'=>$title,
+                'content'=>$content,
+                'writed_at'=>now(),
+                'attach_file'=>$files,
+                'public_yn'=>$isPublic
+            ));
+            return redirect()->route('serviceinquiry.faq_index');
 
-                if($isDelete=="true" && $filename==''){
-                    //수정한 정보를 저장, 파일 삭제
-                    DB::table('faq')->where('idx', $idx)->update(array(
-                    'division'=>$division,
-                    'writer_id'=>$writerId,
-                    'title'=>$title,
-                    'content'=>$content,
-                    'updated_at'=>now(),
-                    'attach_file'=>'',
-                    'public_yn'=>$isPublic
-                    ));
-                }
-
-                //수정한 정보를 저장 파일 미삭제
-                if($isDelete==null && $filename==''){
-                    $fileReName = $attach_file_name;
-                }
-
-                //수정한 정보를 저장
-                DB::table('faq')->where('idx', $idx)->update(array(
-                    'division'=>$division,
-                    'writer_id'=>$writerId,
-                    'title'=>$title,
-                    'content'=>$content,
-                    'updated_at'=>now(),
-                    'attach_file'=>$files,
-                    'public_yn'=>$isPublic
-                ));
-                return redirect()->route('serviceinquiry.faq_detail', compact('idx'));
-
-
-            }else{
-                //새로운 FAQ를 생성
-                DB::table('faq')->insert(array(
-                    'division'=>$division,
-                    'writer_id'=>$writerId,
-                    'title'=>$title,
-                    'content'=>$content,
-                    'writed_at'=>now(),
-                    'attach_file'=>$files,
-                    'public_yn'=>$isPublic
-                ));
-                return redirect()->route('serviceinquiry.faq_index');
-            }
         }
     }
     public function faqDelete(Request $request){

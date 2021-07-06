@@ -608,8 +608,11 @@ Route::group(['prefix'=>'serviceinquiry', 'as'=>'serviceinquiry.'], function(){
     // FAQ 글 작성
     Route::get('faq_create', [ServiceInquiryController::class, 'faqCreate'])->name('faq_create');
 
-    // FAQ 글 수정
+    // FAQ 글 수정 페이지
     Route::get('faq_edit', [ServiceInquiryController::class, 'faqEdit'])->name('faq_edit');
+
+    // FAQ 글 수정 정보 저장
+    Route::post('faq_edit', [ServiceInquiryController::class, 'faqEdit'])->name('faq_edit');
 
     // FAQ 글 삭제
     Route::get('faq_delete', [ServiceInquiryController::class, 'faqDelete'])->name('faq_delete');

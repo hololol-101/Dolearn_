@@ -21,8 +21,13 @@
 
 <!-- panel1 -->
 <div class="panel1 bg-default shadow">
+@if (isset($status))
+<form action="{{ route('serviceinquiry.faq_edit') }}" method="post" id="frm" enctype="multipart/form-data" onsubmit="return sendwrite();">
 
+@else
 <form action="{{ route('serviceinquiry.faq_create') }}" method="post" id="frm" enctype="multipart/form-data" onsubmit="return sendwrite();">
+
+@endif
 @csrf
 <input type="hidden" name = "idx" @if (isset($faqlist->idx))  value = "{{ $faqlist->idx }}"@endif>
 <!-- writeform1 -->
@@ -41,7 +46,6 @@
         <th scope="row"><label for="iSubject">분류</label></th>
         <td>
             <div class="dd">
-                <input type="hidden" name="selectedName" id="selectedName"/>
                 <span class="dpib mgr1em">
                     <input type="radio" name="★1radio0" id="★1radio0e0" checked="true" value="basic"/> <label for="★1radio0e0">일반</label>
                 </span>
@@ -74,15 +78,13 @@
                 @if (isset($fileArray[$fcnt]))
                 @if ($fileArray[$fcnt]!='')
                     {{ $fileArray[$fcnt] }}
-                    <input type="hidden" name="isDelete" value="">
-                    <input type="hidden" name="save_attach_file_name" value="{{ $fileArray[$fcnt] }} ">
-
-                    <button type="button" value="delete" class="button" id="deleteFile">파일삭제</button>
+                    <input type="hidden" name="save_attach_file_name{{ $fcnt }}" value="{{ $fileArray[$fcnt] }} ">
+                    <button type="button" value="{{ $fcnt }}" class="button" id="deleteFile" onclick="deleteClick(this)">파일삭제</button>
                 @else
                     <input type="file" name="iFile{{ $fcnt }}" id="iFile{{ $fcnt }}" >
                 @endif
             @else
-                    <input type="file" name="iFile{{ $fcnt }}" id="iFile{{ $fcnt +1 }}">
+                    <input type="file" name="iFile{{ $fcnt }}" id="iFile{{ $fcnt }}">
             @endif
 
             </div>
@@ -129,10 +131,13 @@
 <!-- /writeform1 -->
 
 <script>
-    $('#deleteFile').on('click', function(){
-        $('input[name="isDelete"]').val(true);
-        $('#deleteFile').parent().empty().append(' <input type="file" name="iFile" id="iFile">');
-    })
+    function deleteClick(obj){
+        var my = $(obj)
+        var parent = my.parent();
+        var cnt = my.val();
+        $('input[name="isDelete'+cnt+'"]').val(true);
+        my.parent().empty().append(' <input type="file" name="iFile'+cnt+'" id="iFile'+cnt+'">');
+    }
 </script>
 <!-- infomenu1 -->
 <div class="infomenu1 mg0 dott">
