@@ -115,7 +115,6 @@
                 'type': my.attr('tab_type')
             },
             success: (data) => {
-                console.log(data)
                 $('#qna_list').empty();
                 $('#qna_list').append(data.html);
             },
@@ -134,10 +133,15 @@
 			<div class="dd1">
                 <div class="attach1">
                     @if($faq->attach_file!='')
-                        <ul>
-                        <li><a href="{{ asset('storage/uploads/attach/'.$faq->attach_file) }}.'" class="filename">{{ $faq->attach_file }}</a>
-                        <a href="?" target="_blank" title="바로보기 [새 창]" class="b1 quickview"><i class="ic1"></i> 바로보기</a></li>
+                    @foreach (explode(',', $faq->attach_file) as $file)
+                    <ul>
+                        <li>
+                            <a href="{{ asset('storage/uploads/attach/'.$file) }}.'" class="filename">{{ $file }}</a>
+                            <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick = window.open("'.asset('storage/uploads/attach/'.$file).'", "_blank")><i class="ic1"></i> 바로보기</a>
+                        </li>
                         </ul>
+
+                    @endforeach
                     @endif
                 </div>
 

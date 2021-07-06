@@ -54,10 +54,10 @@ class ServiceInquiryController extends Controller{
                 $html.='    </a>';
                 $html.='	<div class="dd1">';
                 $html.='        <div class="attach1">';
-                if($faq->attach_file!=''){
+                foreach( explode(',', $faq->attach_file) as $file){
                     $html.='        <ul>';
-                    $html.='        <li><a href="'.asset('storage/uploads/attach/'.$faq->attach_file).'" class="filename">'. $faq->attach_file .'</a>';
-                    $html.='        <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick = window.open("'.asset('storage/uploads/attach/'.$faq->attach_file).'", "_blank")><i class="ic1"></i> 바로보기</a></li>';
+                    $html.='        <li><a href="'.asset('storage/uploads/attach/'.$file).'" class="filename">'. $file .'</a>';
+                    $html.='        <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick = window.open("'.asset('storage/uploads/attach/'.$file).'", "_blank")><i class="ic1"></i> 바로보기</a></li>';
                     $html.='        </ul>';
                 }
                 $html.='        </div>';
