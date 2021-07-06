@@ -632,6 +632,9 @@ Route::group(['prefix'=>'serviceinquiry', 'as'=>'serviceinquiry.'], function(){
     // Q&A 답변 등록
     Route::post('qa_answer', [ServiceInquiryController::class, 'qaAnswer'])->name('qa_answer');
 
+    // Q&A 답변 수정
+    Route::post('qa_answer_edit', [ServiceInquiryController::class, 'qaAnswerEdit'])->name('qa_answer_edit');
+
     // 첨부 파일 다운
     Route::get('download_attach_file', [ServiceInquiryController::class, 'downloadAttachFile'])->name('download_attach_file');
 

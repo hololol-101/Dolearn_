@@ -74,13 +74,19 @@
                 <small class="time"><i class="ic1"></i>{{ date('Y.m.d', strtotime($qaInfo->answer_writed_at)) }}</small>
                 <div class="attach1">
                     @if ($qaInfo->answer_attach_file!='')
-                    <ul>
-                    <li>
-                        <a href="javascript:void(0)" class="filename">{{ $qaInfo->answer_attach_file }}</a>
-                        <a href="{{ route('serviceinquiry.download_attach_file', ['filename'=>$qaInfo->answer_attach_file]) }}" title="바로보기 [새 창]" class="b1 download" )"><i class="ic1"></i> 다운로드</a>
+                    @if ($fileArray[0] !='')
+                        <ul>
 
-                        <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick ="openNewPage('{{ asset('storage/uploads/attach/'.$qaInfo->answer_attach_file) }}')"><i class="ic1"></i> 바로보기</a></li>
-                    </ul>
+                        @foreach ($fileArray as $file )
+                            <li><a href="javascript:void(0)" class="filename">{{ $file }}</a>
+                            <a href="{{ route('serviceinquiry.download_attach_file', ['filename'=>$file]) }}" title="바로보기 [새 창]" class="b1 download" )"><i class="ic1"></i> 다운로드</a>
+                            <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick ="openNewPage('{{ asset('storage/uploads/attach/'.$file) }}')"><i class="ic1"></i> 바로보기</a></li>
+                            <a class="b1 quickview"><i class="ic1"></i> <span class="blind">바로보기</span> 변환중…</a></li>
+                            </li>
+                        @endforeach
+
+                        </ul>
+                        @endif
                     @endif
 
                 <div class="t1">{!! $qaInfo->answer_content !!}</div>

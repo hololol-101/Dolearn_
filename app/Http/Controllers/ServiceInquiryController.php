@@ -222,7 +222,8 @@ class ServiceInquiryController extends Controller{
         $title = $request->get('title');
 
         $qaInfo = DB::select('select q.*, u.nickname,  a.nickname admin_name from qna q, users u, admin a where q.writer_id = u.email and a.idx = q.admin_id and q.idx = ?', [$idx])[0];
-        return view('doadm.Q&A.read', compact('qaInfo'));
+        $fileArray = explode(',', $qaInfo->answer_attach_file);
+        return view('doadm.Q&A.read', compact('qaInfo', 'fileArray'));
     }
 
     public function qaAnswer(Request $request){
@@ -233,24 +234,26 @@ class ServiceInquiryController extends Controller{
             $title = $request->get('title');
             $status = $request->get('status');
             $qaInfo = DB::select('select * from qna where idx = ?', [$idx])[0];
-                return view('doadm.Q&A.form', compact('qaInfo', 'status'));
+            $fileArray = explode(',', $qaInfo->answer_attach_file);
+            return view('doadm.Q&A.form', compact('qaInfo', 'status', 'fileArray'));
         }else{
             $idx = $request->post('idx');
             $content = $request->post('iContent');
-            $fileReName='';
-            $file = $request->file('iFile');
-            $isDelete = $request->post('isDelete');
-            $attach_file_name = $request->post('attach_file_name');
+
+            $fileReName=null;
+            $fileArray = array();
+
             //파일 저장
-            if($file){
-                $fileIdx = storeAttachFile($file);
-                $fileReName=$fileIdx['fileReName'];
+            for($fcnt=0; $fcnt<3; $fcnt++){
+                $file = $request->file('iFile'.$fcnt);
+                if($file){
+                    $fileIdx = storeAttachFile($file);
+                    $fileReName=$fileIdx['fileReName'];
+                    array_push($fileArray, $fileReName);
+                }
             }
-            if($isDelete=="true"&&$fileReName==''){
-                $fileReName = '';
-            }else if($isDelete==null&& $fileReName==''){
-                $fileReName = $attach_file_name;
-            }
+            $files = implode(',', $fileArray);
+
             //정보 조회
             $info = DB::select('select writer_id, status from qna where idx = ?', [$idx])[0];
 
@@ -260,14 +263,57 @@ class ServiceInquiryController extends Controller{
                 'answer_content'=>$content,
                 'answer_writed_at'=>now(),
                 'status'=>"complete",
-                'answer_attach_file'=>$fileReName,
+                'answer_attach_file'=>$files,
             ]);
                 //QnA 답변 알림
             createNotification('qna', $info->writer_id, '','1:1 문의에 답변이 등록되었습니다.', $idx);
 
             return redirect()->route('serviceinquiry.qa_detail', ['idx'=>$idx]);
-
         }
+    }
+    public function qaAnswerEdit(Request $request){
+        $idx = $request->post('idx');
+        $content = $request->post('iContent');
+
+        $fileReName=null;
+        $fileArray = array();
+
+        //기존에 있던 파일 중 삭제되지 않은 파일
+        for($fcnt=0; $fcnt<3; $fcnt++){
+            $filename = $request->post('answer_attach_file_name'.$fcnt);
+            if($filename!=null){
+                array_push($fileArray, $filename);
+            }
+        }
+
+        //파일 저장
+        for($fcnt=0; $fcnt<3; $fcnt++){
+            $file = $request->file('iFile'.$fcnt);
+            if($file){
+                $fileIdx = storeAttachFile($file);
+                $fileReName=$fileIdx['fileReName'];
+                array_push($fileArray, $fileReName);
+            }
+        }
+
+        $files = implode(',', $fileArray);
+
+
+        //정보 조회
+        $info = DB::select('select writer_id, status from qna where idx = ?', [$idx])[0];
+
+        //답변 등록
+        DB::table('qna')->where('idx', $idx)->update([
+            'admin_id'=>0,
+            'answer_content'=>$content,
+            'answer_writed_at'=>now(),
+            'status'=>"complete",
+            'answer_attach_file'=>$files,
+        ]);
+            //QnA 답변 알림
+        createNotification('qna', $info->writer_id, '','1:1 문의에 답변이 등록되었습니다.', $idx);
+
+        return redirect()->route('serviceinquiry.qa_detail', ['idx'=>$idx]);
     }
 
     public function downloadAttachFile(Request $request){
