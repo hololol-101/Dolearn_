@@ -99,7 +99,7 @@
 
 @php
 /*
-<!-- 답변부분 
+<!-- 답변부분
 
 <!-- bbs1view1.reply1 -->
 <div class="bbs1view1 reply1">

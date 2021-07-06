@@ -94,7 +94,7 @@
 		</div>
 	</div>
 	<div class="w2">
-		<a href="{{ route('notification.delete_read_notification') }}" class="a1">읽은 알림 삭제</a>
+		<a href="{{ route('notification.all_read_notification') }}" class="a1">모두 읽음</a>
 	</div>
 </div>
 <!-- /cp1infomenu2 -->

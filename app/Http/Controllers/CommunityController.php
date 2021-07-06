@@ -26,13 +26,12 @@ class CommunityController extends Controller{
         // 페이지 그룹 내 첫 페이지 번호
         $endPage     = $startPage + $pageNumList-1;
         // 페이지 그룹 내 마지막 페이지 번호
-        
+
         $totalCount  = Notice::where('depth', '=', '0')
             ->where('public_yn', '=', 'Y')
-            ->where('notice_yn', '!=', 'Y')            
+            ->where('notice_yn', '!=', 'Y')
             ->count();
         // 전체 게시글 갯수
-        
         $totalPage   = ceil($totalCount/$writeList);
         // 전체 페이지 갯수
         if($endPage >= $totalPage) {
@@ -53,19 +52,19 @@ class CommunityController extends Controller{
             // 필독 게시글 갯수
             $boardList_notice = Notice::where('depth', '=', '0')
                 ->where('public_yn', '=', 'Y')
-                ->where('notice_yn', '=', 'Y')            
+                ->where('notice_yn', '=', 'Y')
                 ->orderby('pos')
                 ->orderby('thread')
                 ->skip($startNum)
                 ->take($writeList)
                 ->get();
-                
+
             //$writeList = $writeList - $totalCount_notice;
             //$writeList = ( $writeList < 0 ) ? 1 : $writeList;
        } else {
            $boardList_notice = array();
        }
-               
+
         // 공지 게시물
         $boardList = Notice::where('depth', '=', '0')
             ->where('public_yn', '=', 'Y')
@@ -75,12 +74,12 @@ class CommunityController extends Controller{
             ->skip($startNum)
             ->take($writeList)
             ->get();
-            
+
         // 테이블에서 가져온 DB 뷰에서 사용 할 수 있는 변수에 저장.
-        
+
         $pageIndex = getPageIndex($totalCount, $pageNumList, $writeList, $pageNum);
         // 게시판 page nav
-      
+
         return view('sub.community.notice', [
             'totalCount'=>$totalCount,
             'boardList'=>$boardList,
@@ -91,24 +90,24 @@ class CommunityController extends Controller{
             'totalPage'=>$totalPage,
             'pageIndex'=>$pageIndex
             ]);
-            // 요청된 정보 처리 후 결과 되돌려줌      
+            // 요청된 정보 처리 후 결과 되돌려줌
     }
 
     public function noticeDetail(Request $request) {
-        
+
         $pIdx = $request->input('pidx');
 
-    // ** 전달 된 $ id별로 게시물 세부 정보 가져 오기 * / 
-    // $post = Notice::where([ 'idx' => $id])-> first ();      
+    // ** 전달 된 $ id별로 게시물 세부 정보 가져 오기 * /
+    // $post = Notice::where([ 'idx' => $id])-> first ();
         // read count+1
         //Notice::where('idx', $pIdx)->update(['views'=>Notice::raw('views+1')]);
         Notice::find($pIdx)->increment('views'); // 선언된 pk
-        
+
         // Read
-        $read = Notice::where(['idx' => $pIdx])->first();    
+        $read = Notice::where(['idx' => $pIdx])->first();
 
         return view('sub.community.notice_detail', ['boardView' => $read]);
-        
+
     }
 
     public function trend() {
@@ -342,7 +341,12 @@ class CommunityController extends Controller{
     }
 
     public function serviceQna() {
-        return view('sub.community.service_qna');
+        $faqList = DB::select('select f.*, a.nickname adminname from faq f, admin a where a.idx = f.writer_id order by idx desc ');
+
+        if(Auth::check()){
+            $qaList = DB::select('select idx, status, question_title, question_writed_at from qna where writer_id = ? order by idx desc', [Auth::user()->email]);
+        }
+        return view('sub.community.service_qna',  compact('qaList', 'faqList'));
     }
 
     public function getServiceQnaData(Request $request) {
@@ -363,12 +367,51 @@ class CommunityController extends Controller{
         }
     }
 
-    public function oneToOne() {
-        return view('sub.community.one_to_one');
+    public function oneToOne(Request $request) {
+        if($request->isMethod('post')){
+            $selectedName = $request->post('selectedName');
+            $file = $request->file("file");
+            $filename = '';
+            $fileReName = '';
+            if($file){
+                $fileIdx =storeAttachFile($file);
+                $filename = $fileIdx['filename'];
+                $fileReName =$fileIdx['fileReName'];
+            }
+            $title = $request->post('title');
+            $content = $request->post('content');
+            if($selectedName=="★1radio0e0"){
+                $type = "basic";
+            }else if($selectedName=="★1radio0e1"){
+                $type = "lecture";
+            }else if($selectedName=="★1radio0e2"){
+                $type = "video";
+            }else if($selectedName=="★1radio0e3"){
+                $type = "teach";
+            }else{
+                $type = "etc";
+            }
+            DB::table('qna')->insert(array(
+                'writer_id'=>Auth::user()->email,
+                'type'=>$type,
+                'question_title'=>$title,
+                'question_content'=>$content,
+                'question_writed_at'=>now(),
+                'status'=>'active',
+                'question_attach_file'=>$filename
+            ));
+
+            return redirect()->route('sub.community.service_qna').'<script>alert("1:1 문의가 등록되었습니다.")</script>';
+        }else{
+            return view('sub.community.one_to_one');
+        }
     }
 
-    public function oneToOneDetail() {
-        return view('sub.community.one_to_one_detail');
+    public function oneToOneDetail(Request $request) {
+        $idx = $request->get('idx');
+        $qaInfo = DB::select('select * from qna where idx = ?', [$idx])[0];
+
+        return view('sub.community.one_to_one_detail', compact('qaInfo'));
     }
 
     public function reviewAll(Request $request) {

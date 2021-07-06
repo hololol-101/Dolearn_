@@ -41,24 +41,23 @@ class EtcController extends Controller{
                 exit;
             }
 
-            //파일 저장
-            $fileReName=null;
-            $filename=null;
+            $filename ='';
+            $fileReName = '';
+
             if($file){
-                $originalname = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $filename = pathinfo($originalname, PATHINFO_FILENAME);
-                $fileReName=$filename.'_'.time().'.'.$extension;
-                $file->storeAs('uploads/attach/', $fileReName);
+                $fileIdx =storeAttachFile($file);
+                $filename = $fileIdx['filename'];
+                $fileReName = $fileIdx['fileReName'];
             }
 
+            $fileIdx = storeAttachFile($file);
             $hope = ( isset($res['★1radio0'])!=null ?  $res['★1radio0']:' ');
 
             $query2=DB::insert('insert into instructor_application (dolearn_id, email, user_name, mobile, hope_part, introduction, ori_attach_file, save_attach_file, applicated_at, status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [$res['accountEmail'], $res['contactEmail'], $res['name'], $res['celphone'], $hope, $res['textarea0'], $filename, $fileReName, now(), "ready"]);
 
             if($query2){
-                return redirect()->back()->with('alert', '강사신청이 완료되었습니다.');
+                return redirect()->back().'<script>alert("강사신청이 완료되었습니다.") </script>';
             }else{
                 return redirect()->back()->with('alert', '강사신청에 실패했습니다.');
             }
@@ -220,7 +219,6 @@ class EtcController extends Controller{
         if($request->isMethod('get')){
             $email = $request->get('user_idx');
             $query = DB::select('SELECT i.user_name, u.save_profile_image  FROM users u,  instructor_application i WHERE i.dolearn_id = ? AND i.dolearn_id = u.email', [$email]);
-
             $arr = array();
             $arr['name'] = $query[0]->user_name;
             $arr['image_path'] = $query[0]->save_profile_image;
@@ -229,17 +227,13 @@ class EtcController extends Controller{
         }
         if($request->isMethod('post')){
             $req = $request->post();
-
+            $filename ='';
+            $fileReName = '';
             $file = $request->file("file");
-            $fileReName = null;
-            $filename = null;
             if($file){
-                $originalname = $file->getClientOriginalName();
-                $filename = pathinfo($originalname, PATHINFO_FILENAME);
-                $extension = $file->getClientOriginalExtension();
-                $fileReName=$filename.'_'.time().'.'.$extension;
-
-                $file->storeAs('uploads/attach/', $fileReName);
+                $fileIdx =storeAttachFile($file);
+                $filename = $fileIdx['filename'];
+                $fileReName = $fileIdx['fileReName'];
             }
             $query=DB::insert('insert into proposal (writer_id, instructor_id, instructor_name, type, email, content, ori_attach_file, save_attach_file, writed_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [Auth::user()->email, $req['instructor_id'], $req['instructor_name'], $req['★1radio0'], $req['email'], $req['content'], $filename, $fileReName, now()]);

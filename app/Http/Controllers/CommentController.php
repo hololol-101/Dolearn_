@@ -15,10 +15,38 @@ class CommentController extends Controller
      */
     public function index(Request $request)
     {
-        $noticeId = $request->get('noticeId');
+        $postId = $request->get('noticeId');
+        //게시글 id
+        $pageNum     = $request->get('page', 1);
+        // view에서 넘어온 현재페이지의 파라미터 값. 페이지 번호가 없으면 1, 있다면 그대로 사용
+        $startNum    = ($pageNum-1)*10;
+        // 페이지 내 첫 게시글 번호
+        $writeList    = 10;
+        // 한 페이지당 표시될 글 갯수
+        $pageNumList = 10;
+        // 전체 페이지 중 표시될 페이지 갯수
+        $pageGroup   = ceil($pageNum/$pageNumList);
+        // 페이지 그룹 번호
+        $count =  DB::select('select count(*) total_count from comment c where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" order by idx desc', [$postId])[0];
+        // //알림 수 조회 query
+        $totalCount  =$count->total_count;
+        // 전체 알림 갯수
+        $totalPage   = ceil($totalCount/$writeList);
+        // 전체 페이지 갯수
 
-        $commentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.notice_id = ? and c.is_reply = "N"  and c.status!="delete" order by idx desc', [$noticeId]);
-        $recommentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.notice_id = ? and c.is_reply = "Y"  and c.status!="delete" order by idx desc', [$noticeId]);
+
+        $commentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" order by idx desc limit '.$startNum.' ,'.$writeList, [$postId]);
+
+        //commentList에 있는 대댓글 조회
+        $inIdx ='';
+        if(count($commentList)>0){
+            $inIdx .= " and parent_reply_id IN (".$commentList[0]->idx;
+            for($i =1; $i<count($commentList); $i++){
+                $inIdx .= ",".$commentList[$i]->idx;
+            }
+            $inIdx.=") ";
+        }
+        $recommentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "Y"  and c.status!="delete" '.$inIdx.'order by idx desc', [$postId]);
 
         $html = '';
         foreach($commentList as $comment){
@@ -41,12 +69,12 @@ class CommentController extends Controller
             $html.=             $comment->content;
             $html.='        </div>';
             $html.='        <div class="eg1">';
-            $html.='            <a href="#★" class="cp1like2"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">'.$comment->likes.'</span></a>';
+            $html.='            <a href="javascript:void(0)" class="cp1like2" onclick="likeClick(this)" data-value="comment"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">'.$comment->likes.'</span></a>';
             $html.='            <!-- cp1menu1 -->';
             $html.='            <div class="cp1menu1 toggle1s1">';
             $html.='                <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
             $html.='                <div class="cp1menu1c toggle-c">';
-            $html.='                    <a href="?#★" target="_blank" rel="noopener" title="새 창" class="b2 report"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
+            $html.='                    <a href="javascript:void(0)" rel="noopener" title="새 창" class="b2 report" onclick="reportClick(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
             $html.='                </div>';
             $html.='            </div>';
             $html.='            <!-- /cp1menu1 -->';
@@ -93,12 +121,13 @@ class CommentController extends Controller
                     $html.=             $recommentList[$key]->content;
                     $html.='                </div>';
                     $html.='                <div class="eg1">';
-                    $html.='            <a href="#★" class="cp1like2"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">'.$recommentList[$key]->likes.'</span></a>';
+                    $html.='                    <input type="hidden" value="'.$recommentList[$key]->idx.'">';
+                    $html.='                    <a href="javascript:void(0)" class="cp1like2" onclick="likeClick(this)" data-value="recomment"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">'.$recommentList[$key]->likes.'</span></a>';
                     $html.='                    <!-- cp1menu1 -->';
                     $html.='                    <div class="cp1menu1 toggle1s1">';
                     $html.='                        <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
                     $html.='                        <div class="cp1menu1c toggle-c">';
-                    $html.='                            <a href="?#★" target="_blank" rel="noopener" title="새 창" class="b2 report"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
+                    $html.='                            <a href="javascript:void(0)" rel="noopener" title="새 창" class="b2 report" onclick="reportClick(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
                     $html.='                        </div>';
                     $html.='                    </div>';
                     $html.='                    <!-- /cp1menu1 -->';
@@ -117,6 +146,8 @@ class CommentController extends Controller
         }
         $result['html'] = $html;
         $result['status'] = "success";
+
+        $result['pageIndex'] = getPageIndexInAjax($totalCount, $writeList, $pageNumList, $pageNum, $_SERVER["HTTP_REFERER"]);
 
         return response()->json($result, 200);
         //
@@ -129,13 +160,15 @@ class CommentController extends Controller
      */
     public function create(Request $request)
     {
-        $noticeId = $request->post('noticeId');
+        $postId = $request->post('noticeId');
         $parentId =$request->post('parentId');
         $content = $request->post('content');
         $isReply = $request->post('isReply');
+        $pageNum = $request->post('page', 1);
+        // view에서 넘어온 현재페이지의 파라미터 값. 페이지 번호가 없으면 1, 있다면 그대로 사용
 
         DB::table('comment')->insert(array(
-            'notice_id'=>$noticeId,
+            'post_id'=>$postId,
             'writer_id'=>Auth::user()->email,
             'parent_reply_id'=>$parentId,
             'content'=>$content,
@@ -144,8 +177,34 @@ class CommentController extends Controller
             'status'=>'active'
         ));
 
-        $commentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.notice_id = ? and c.is_reply = "N"  and c.status!="delete" order by idx desc', [$noticeId]);
-        $recommentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.notice_id = ? and c.is_reply = "Y"  and c.status!="delete" order by idx desc', [$noticeId]);
+        $startNum    = ($pageNum-1)*10;
+        // 페이지 내 첫 게시글 번호
+        $writeList    = 10;
+        // 한 페이지당 표시될 글 갯수
+        $pageNumList = 10;
+        // 전체 페이지 중 표시될 페이지 갯수
+        $pageGroup   = ceil($pageNum/$pageNumList);
+        // 페이지 그룹 번호
+        $count =  DB::select('select count(*) total_count from comment c where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" order by idx desc', [$postId])[0];
+        // //알림 수 조회 query
+        $totalCount  =$count->total_count;
+        // 전체 알림 갯수
+        $totalPage   = ceil($totalCount/$writeList);
+        // 전체 페이지 갯수
+
+
+        $commentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" order by idx desc limit '.$startNum.' ,'.$writeList, [$postId]);
+
+        //commentList에 있는 대댓글 조회
+        $inIdx ='';
+        if(count($commentList)>0){
+            $inIdx .= " and parent_reply_id IN (".$commentList[0]->idx;
+            for($i =1; $i<count($commentList); $i++){
+                $inIdx .= ",".$commentList[$i]->idx;
+            }
+            $inIdx.=") ";
+        }
+        $recommentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "Y"  and c.status!="delete" '.$inIdx.'order by idx desc', [$postId]);
 
         $html = '';
         foreach($commentList as $comment){
@@ -168,12 +227,12 @@ class CommentController extends Controller
             $html.=             $comment->content;
             $html.='        </div>';
             $html.='        <div class="eg1">';
-            $html.='            <a href="#★" class="cp1like2"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">'.$comment->likes.'</span></a>';
+            $html.='            <a href="javascript:void(0)" class="cp1like2" onclick="likeClick(this)" data-value="comment"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">'.$comment->likes.'</span></a>';
             $html.='            <!-- cp1menu1 -->';
             $html.='            <div class="cp1menu1 toggle1s1">';
             $html.='                <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
             $html.='                <div class="cp1menu1c toggle-c">';
-            $html.='                    <a href="?#★" target="_blank" rel="noopener" title="새 창" class="b2 report"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
+            $html.='                    <a href="javascript:void(0)" rel="noopener" title="새 창" class="b2 report" onclick="reportClick(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
             $html.='                </div>';
             $html.='            </div>';
             $html.='            <!-- /cp1menu1 -->';
@@ -220,12 +279,13 @@ class CommentController extends Controller
                     $html.=             $recommentList[$key]->content;
                     $html.='                </div>';
                     $html.='                <div class="eg1">';
-                    $html.='            <a href="#★" class="cp1like2"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">'.$recommentList[$key]->likes.'</span></a>';
+                    $html.='                    <input type="hidden" value="'.$recommentList[$key]->idx.'">';
+                    $html.='                    <a href="javascript:void(0)" class="cp1like2" onclick="likeClick(this)" data-value="recomment"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">'.$recommentList[$key]->likes.'</span></a>';
                     $html.='                    <!-- cp1menu1 -->';
                     $html.='                    <div class="cp1menu1 toggle1s1">';
                     $html.='                        <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
                     $html.='                        <div class="cp1menu1c toggle-c">';
-                    $html.='                            <a href="?#★" target="_blank" rel="noopener" title="새 창" class="b2 report"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
+                    $html.='                            <a href="javascript:void(0)"  rel="noopener" title="새 창" class="b2 report" onclick="reportClick(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
                     $html.='                        </div>';
                     $html.='                    </div>';
                     $html.='                    <!-- /cp1menu1 -->';
@@ -244,6 +304,7 @@ class CommentController extends Controller
         }
         $result['html'] = $html;
         $result['status'] = "success";
+        $result['pageIndex'] = getPageIndexInAjax($totalCount, $writeList, $pageNumList, $pageNum, $_SERVER["HTTP_REFERER"]);
 
         return response()->json($result, 200);
 
@@ -311,6 +372,39 @@ class CommentController extends Controller
         DB::table('comment')->where('idx', $idx)->update(array(
             'status'=>'delete',
         ));
+
+    }
+
+    public function like(Request $request){
+        $writingId = $request->get('writingId');
+        $programId = $request->get('programId');
+        $email = Auth::user()->email;
+        $info = DB::select('select * from my_likes where user_id = ? and writing_id = ? and program_id =?', [$email, $writingId, $programId]);
+
+        if(count($info)==0){
+            DB::table('my_likes')->insert(array(
+                'user_id'=>$email,
+                'writing_id' =>$writingId,
+                'program_id'=>$programId,
+                'conn_host'=> $_SERVER['REMOTE_ADDR'],
+                'conn_time'=>now()
+            ));
+            if($programId == "comment"||$programId =="recomment"){
+                DB::update('update comment set likes = likes+1 where idx =?', [$writingId]);
+                $result['q'] ='update comment set likes = likes+1 where idx ='.$writingId;
+            }
+            $result['msg'] = "like";
+
+        }else{
+            DB::delete('delete from my_likes where idx = ?', [$info[0]->idx]);
+            if($programId == "comment"){
+                DB::update('update comment set likes = likes-1 where idx =? ', [$writingId]);
+            }
+
+            $result['msg'] = "dislike";
+        }
+        return response()->json($result, 200);
+        return response()->json(array("msg"=>"like"), 200);
 
     }
 

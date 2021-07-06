@@ -34,12 +34,45 @@
 								<input type="radio" name="★1radio1" id="★1radio1e99" /> <label for="★1radio1e99">일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십</label>
 							</li> -->
 						</ul>
-						<button type="submit" class="button primary block">신고하기</button>
+						<button type="button" class="button primary block">신고하기</button>
 					</div>
 					<!-- /cp1form1itemlist1 -->
 				</div>
 				<!-- /★★(동영상 신고) -->
-
+                <script>
+                    $(function(){
+                        var my = $('#layer1report1video1');
+                        var close = $('.close', my);
+                        my.find(':button').on('click', function(){
+                            var content = $('input[name="★1radio1"]:checked').siblings('label').text()
+                            if(content ==''){
+                                alert('신고사유를 선택해주세요!');
+                                return false;
+                            }
+                            $.ajax({
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                type: 'POST',
+                                dataType: 'json',
+                                url: '{{ route('report.report') }}',
+                                data: {
+                                    'type': 'lecture',
+                                    'idx': '{{ $lectureDetail->idx }}',
+                                    'content':content
+                                },
+                                success: (data) => {
+                                    if(data.status=="success"){
+                                        alert("신고접수가 완료되었습니다.")
+                                    }else{
+                                        alert("이미 신고접수를 하셨습니다.")
+                                    }
+                                    close.trigger('click');
+                                }
+                            });
+                        })
+                    })
+                </script>
 
 			</div>
 		</div>

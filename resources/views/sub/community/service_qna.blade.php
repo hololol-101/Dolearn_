@@ -91,43 +91,60 @@
 <!-- cp1tabs1 -->
 <div id="cp1tabs1" class="cp1tabs1 mgt1em mgb3em">
 	<ul>
-        <li class="m1 column on"><a href="javascript:void(0);" class="qna_tab" tab_type="all" style="min-width:4em;"><span class="t1">전체</span><i class="ic1"></i></a></li>
-        <li class="m2 column"><a href="javascript:void(0);" class="qna_tab" tab_type="general" style="min-width:4em;"><span class="t1">일반</span><i class="ic1"></i></a></li>
-        <li class="m3 column"><a href="javascript:void(0);" class="qna_tab" tab_type="instructor" style="min-width:4em;"><span class="t1">강사</span><i class="ic1"></i></a></li>
-        <li class="m4 column"><a href="javascript:void(0);" class="qna_tab" tab_type="student" style="min-width:4em;"><span class="t1">수강자</span><i class="ic1"></i></a></li>
-        <li class="m5 column"><a href="javascript:void(0);" class="qna_tab" tab_type="payment" style="min-width:4em;"><span class="t1">결제</span><i class="ic1"></i></a></li>
+        <li class="m1 column on"><a href="javascript:void(0);" class="qna_tab" tab_type="all" style="min-width:4em;" onclick="clickTab(this)"><span class="t1">전체</span><i class="ic1"></i></a></li>
+        <li class="m2 column"><a href="javascript:void(0);" class="qna_tab" tab_type="basic" style="min-width:4em;" onclick="clickTab(this)"><span class="t1">일반</span><i class="ic1"></i></a></li>
+        <li class="m3 column"><a href="javascript:void(0);" class="qna_tab" tab_type="instructor" style="min-width:4em;" onclick="clickTab(this)"><span class="t1">강사</span><i class="ic1"></i></a></li>
+        <li class="m4 column"><a href="javascript:void(0);" class="qna_tab" tab_type="student" style="min-width:4em;" onclick="clickTab(this)"><span class="t1">수강자</span><i class="ic1"></i></a></li>
+        <li class="m5 column"><a href="javascript:void(0);" class="qna_tab" tab_type="pay" style="min-width:4em;" onclick="clickTab(this)"><span class="t1">결제</span><i class="ic1"></i></a></li>
 	</ul>
 </div>
 <!-- /cp1tabs1 -->
-
+<script>
+    function clickTab(obj){
+        my=$(obj);
+        my.parents().siblings().removeClass('on');
+        my.parent().addClass('on');
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'POST',
+            dataType: 'json',
+            url: '{{ route('serviceinquiry.faq_index') }}',
+            data: {
+                'type': my.attr('tab_type')
+            },
+            success: (data) => {
+                console.log(data)
+                $('#qna_list').empty();
+                $('#qna_list').append(data.html);
+            },
+        });
+    }
+</script>
 
 <!-- cp1qna1 -->
 <div class="cp1qna1" id="qna_list">
 	<ul class="dl1">
-		<li class="di1">
+        @foreach ($faqList as $faq)
+        <li class="di1">
 			<a href="javascript:void(0);" class="dt1">
-				자주 묻는 질문 제목이 표시됩니다.
+			{{	$faq->title}}
 			</a>
 			<div class="dd1">
-				자주 묻는 질문에 대한 답변입니다.
+                <div class="attach1">
+                    @if($faq->attach_file!='')
+                        <ul>
+                        <li><a href="{{ asset('storage/uploads/attach/'.$faq->attach_file) }}.'" class="filename">{{ $faq->attach_file }}</a>
+                        <a href="?" target="_blank" title="바로보기 [새 창]" class="b1 quickview"><i class="ic1"></i> 바로보기</a></li>
+                        </ul>
+                    @endif
+                </div>
+
+				{!! $faq->content !!}
 			</div>
 		</li>
-		<li class="di1">
-			<a href="javascript:void(0);" class="dt1">
-				자주 묻는 질문 제목이 표시됩니다.
-			</a>
-			<div class="dd1">
-				자주 묻는 질문에 대한 답변입니다.
-			</div>
-		</li>
-		<li class="di1">
-			<a href="javascript:void(0);" class="dt1">
-				자주 묻는 질문 제목이 표시됩니다.
-			</a>
-			<div class="dd1">
-				자주 묻는 질문에 대한 답변입니다.
-			</div>
-		</li>
+        @endforeach
 	</ul>
 </div>
 <!-- /cp1qna1 -->
@@ -189,16 +206,26 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-        <td><i class="button w5em small primary1">대기중</i></td>
-        <td><a href="{{ route('sub.community.one_to_one_detail', ['idx' => '']) }}">[기타] 이메일 변경</a></td>
-        <td>2021.07.01</td>
-        </tr>
-        <tr>
-        <td><i class="button w5em small gray4">답변완료</i></td>
-        <td><a href="{{ route('sub.community.one_to_one_detail', ['idx' => '']) }}">[기타] 수료증 발급 일이삼사오륙칠팔구십</a></td>
-        <td>2021.06.08</td>
-        </tr>
+        @if (Auth::check())
+            @foreach ($qaList as $qa)
+            <tr>
+                @if ($qa->status =="active")
+                    <td><i class="button w5em small primary1">대기중</i></td>
+                @else
+                    <td><i class="button w5em small gray4">답변완료</i></td>
+                @endif
+                <td><a href="{{ route('sub.community.one_to_one_detail', ['idx' => $qa->idx ]) }}">{{ $qa->question_title }}</a></td>
+                <td>{{ date('Y.m.d', strtotime($qa->question_writed_at)) }}</td>
+            </tr>
+            @endforeach
+            @if (count($qaList)==0)
+            <div>문의 내역이 없습니다.</div>
+            @endif
+
+        @else
+        <div>로그인 후 이용해주세요.</div>
+        @endif
+
     </tbody>
 </table>
 
@@ -215,33 +242,33 @@
 
 @section('script')
 <script>
+
 $(function() {
     // 서비스 문의 탭 선택
     $('.qna_tab').click(function() {
-        var $myItem = $(this).closest('li');
+        var myItem = $(this).closest('li');
         var tabType = $(this).attr('tab_type');
-
+        myItem.siblings().removeClass('on');
+        myItem.addClass('on');
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             type: 'POST',
             dataType: 'json',
-            url: '{{ route('sub.community.get_service_qna_data') }}',
+            url: '{{ route('serviceinquiry.faq_index') }}',
             data: {
                 'type': tabType
             },
             success: (data) => {
+                console.log(data)
                 if (data.status == 'success') {
-                    // alert('done!');
 
-                    if (data.resData.length != 0) {
+                    if (data.html.length != 0) {
                         $('#qna_list').empty();
-                        $('#qna_list').append(data.resData);
-
+                        $('#qna_list').append(data.html);
                     } else {
                         html = '<br><span>자주 묻는 질문 내역이 없습니다.</span>';
-
                         $('#qna_list').empty();
                         $('#qna_list').append(html);
                     }

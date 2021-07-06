@@ -45,24 +45,34 @@
 			<div class="w1w1">
 				<div class="f1">
 					<span class="f1p1">
-						<!-- <img src="../../img/main/x1/x1p601.jpg" alt="★대체텍스트필수" /> -->
+                        @if (Auth::user()->save_profile_image!='')
+                        <img src="{{ asset('storage/uploads/profile/'.Auth::user()->save_profile_image) }}" alt="이미지 없음" />
+                        @else
 						<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
+                        @endif
 					</span>
 				</div>
 			</div>
 			<div class="w1w2">
 				<div class="tt1">
-					질문 제목이 표시 일이삼사오육?
+					{{ $qaInfo->question_title }}
 				</div>
 				<div class="tg1">
-					<span class="t1">김두런</span>
-					<span class="t2">1달전</span>
+					<span class="t1">{{ Auth::user()->nickname }}</span>
+					<span class="t2">{{ format_date($qaInfo->question_writed_at) }}</span>
 				</div>
+                <div class="attach1">
+                    @if ($qaInfo->question_attach_file!='')
+                    <ul>
+                    <li><a href="{{ route('serviceinquiry.download_attach_file', ['filename'=>$qaInfo->question_attach_file]) }}" class="filename">{{ $qaInfo->question_attach_file }}</a>
+                    <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick="openNewPage('{{ asset('storage/uploads/attach/'.$qaInfo->question_attach_file) }}')"><i class="ic1"></i> 바로보기</a></li>
+                    </ul>
+                    @endif
+                    </div>
+
 				<div class="tg2">
-					선생님~~ 제가 지금 3.9버전을 쓰는데 background = pygame.image.load("C:/Users/leeha/Desktop/ 라고 적었는데 안되요ㅠㅠ 어떻게 해야 하나요
-					선생님~~ 제가 지금 3.9버전을 쓰는데 background = pygame.image.load("C:/Users/leeha/Desktop/ 라고 적었는데 안되요ㅠㅠ 어떻게 해야 하나요
-					선생님~~ 제가 지금 3.9버전을 쓰는데 background = pygame.image.load("C:/Users/leeha/Desktop/ 라고 적었는데 안되요ㅠㅠ 어떻게 해야 하나요????
-				</div>
+                    {!! $qaInfo->question_content !!}
+                </div>
 				<div class="eg1">
 					<a href="#★" class="cp1like1"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">0</span></a>
 					<!-- cp1menu1 -->
@@ -76,32 +86,34 @@
 				</div>
 			</div>
 		</div>
-		<!-- /게시글 -->
-		<!-- 댓글작성 -->
-		{{-- <div class="w1 item reply">
-			<textarea rows="3" cols="80" title="댓글작성" placeholder="댓글을 입력하세요." class="w100 type1"></textarea>
-			<div class="tar">
-				<button type="submit" class="button submit semismall">등록하기</button>
-			</div>
-		</div> --}}
-		<!-- /댓글작성 -->
+        @if($qaInfo->status=="complete")
 		<!-- 댓글 -->
-		<div class="w1 item reply">
+        <div class="w1 item reply">
+
 			<div class="w1w1">
-				<div class="f1">
+				{{-- <div class="f1">
 					<span class="f1p1">
 						<!-- <img src="../../img/main/x1/x1p601.jpg" alt="★대체텍스트필수" /> -->
 						<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
 					</span>
-				</div>
+				</div> --}}
 			</div>
 			<div class="w1w2">
 				<div class="tg1">
-					<span class="t1">강사명</span>
-					<span class="t2">방금</span>
+					<span class="t1">관리자</span>
+					<span class="t2">{{ format_date($qaInfo->answer_writed_at) }}</span>
 				</div>
+                <div class="attach1">
+                    @if ($qaInfo->answer_attach_file!='')
+                    <ul>
+                    <li><a href="{{ route('serviceinquiry.download_attach_file', ['filename'=>$qaInfo->answer_attach_file]) }}" class="filename">{{ $qaInfo->answer_attach_file }}</a>
+                    <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick="openNewPage('{{ asset('storage/uploads/attach/'.$qaInfo->answer_attach_file) }}')"><i class="ic1"></i> 바로보기</a></li>
+                    </ul>
+                    @endif
+                </div>
+
 				<div class="tg2">
-					질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.
+					{!! $qaInfo->answer_content !!}
 				</div>
 				<div class="eg1">
 					<a href="#★" class="cp1like2"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">0</span></a>
@@ -117,6 +129,8 @@
 			</div>
 		</div>
 		<!-- /댓글 -->
+        @else
+        @endif
 	</div>
 	<!-- /cp1bbs4view1 type2 -->
 
@@ -134,6 +148,11 @@
 
 
 
+ <script>
+    function openNewPage(url){
+        window.open(url, "_blank")
+    }
+</script>
 
 
 </div>

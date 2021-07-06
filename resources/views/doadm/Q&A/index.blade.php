@@ -26,8 +26,8 @@
 
 <div class="left">
     <div class="info1">
-            총 <b class="em">{{ $totalCount }}</b>건의 자료가 있습니다.
-        <span class="dpib">(<b class="em">{{ $pageNum }}</b>/{{ $pageIndex['totalPage'] }} 페이지)</span>
+        총 <b class="em">{{ $pageIndex['totalRecord'] }}</b>건의 자료가 있습니다.
+        <span class="dpib">(<b class="em">{{ $pageIndex['currentPage'] }}</b>/{{ $pageIndex['totalPage'] }} 페이지)</span>
     </div>
 </div>
 <div class="right">
@@ -47,34 +47,39 @@
         <thead>
         <tr>
         <th scope="col" style="width:auto;">번호</th>
+        <th scope="col" style="width:4em;">문의</th>
         <th scope="col" style="width:50%;">제목</th>
         <th scope="col" style="width:4em;">작성자</th>
         <th scope="col" style="width:6em;">작성일</th>
         <th scope="col" style="width:auto;">첨부</th>
-        <th scope="col" style="width:auto;">조회</th>
         </tr>
         </thead>
         <tbody>
-        @foreach($boardList as $boardlist)
+        @foreach($qalist as $qaInfo)
         <tr>
-        <td>{{ $boardlist->idx }}</td>
+        <td>{{ $qaInfo->idx }}</td>
+        @if ($qaInfo->status=="active")
+        <td>대기중</td>
+        @else
+        <td>답변완료</td>
+        @endif
+
         <td class="tal">
-        @if  ($boardlist->depth > 0)
-            @for($k=1;$k<$boardlist->depth;$k++)
+        {{-- @if  ($qaInfo->depth > 0)
+            @for($k=1;$k<$qaInfo->depth;$k++)
                 &nbsp;&nbsp;
             @endfor
             <i>└</i>
-        @endif
-        <a href="/doadm/notice/{{ $boardlist->idx }}">{{ $boardlist->subject }}</a>
+        @endif --}}
+        <a href="{{route('serviceinquiry.qa_detail',['idx'=>$qaInfo->idx])  }}">{{ $qaInfo->question_title }}</a>
         </td>
-        <td>{{ $boardlist->name }}</td>
-        <td>{{ date('Y.m.d',$boardlist->regdate) }}</td>
+        <td>{{ $qaInfo->nickname }}</td>
+        <td>{{ date('Y.m.d',strtotime($qaInfo->question_writed_at)) }}</td>
         <td>
             <a href="filename.zip"><img src="/_res/A/img/board/icon/ic16_zip.png" width="16" height="16" alt="zip 파일 첨부"></a>
             <a href="filename.zip"><img src="/_res/A/img/board/icon/ic16_file.png" width="16" height="16" alt="파일 첨부"></a>
             <a href="filename.odf"><img src="/_res/A/img/board/icon/ic16_file.png" width="16" height="16" alt="파일 첨부"></a>
         </td>
-        <td>{{ $boardlist->views }}</td>
         </tr>
         @endforeach
         </tbody>
@@ -92,9 +97,6 @@
 
     <p class="left">
         <a href="?" onclick="history.go(-1); return false;" class="button default">이전</a>
-    </p>
-    <p class="right">
-        <a href="notice/post" class="button">글작성</a>
     </p>
 
 </div>

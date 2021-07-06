@@ -18,9 +18,11 @@
 				<li class="m10"><a href="?#★">최근 업데이트 메뉴</a></li>
 				<li class="m11"><a href="?#★">콘텐츠갱신알림</a></li>
 				<li class="m11"><a href="?#★">웹호환성로깅</a></li>
-			</ul>
+				<li class="m11"><a href="{{ route('serviceinquiry.faq_index') }}">FAQ</a></li>
+                <li class="m11"><a href="{{ route('serviceinquiry.qa_index') }}">Q&A관리</a></li>
+            </ul>
 		</div>
-		</li>  
+		</li>
 		<li class="m2"><a href='?'><i class='ic1'></i><span class='t1'>관리자설정</span></a>
 		<div class="d2"><div class="bg"></div>
 			<ul>
@@ -71,9 +73,9 @@
 				<li class="m8"><a href="?#★">일정관리</a></li>
 				<li class="m9"><a href="?#★">만족도관리</a></li>
 				<li class="m11"><a href="?#★">공통코드관리</a></li>
-				<li class="m11"><a href="?#★">SMS발송메시지관리</a></li> 
-				<li class="m12"><a href="?#★">파일업로더</a></li> 
-				<li class="m13"><a href="?#★">업로드 경로 설정</a></li> 
+				<li class="m11"><a href="?#★">SMS발송메시지관리</a></li>
+				<li class="m12"><a href="?#★">파일업로더</a></li>
+				<li class="m13"><a href="?#★">업로드 경로 설정</a></li>
 			</ul>
 			</div>
 		</li>

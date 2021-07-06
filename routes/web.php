@@ -22,6 +22,8 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\YouTubeAPIController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ServiceInquiryController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -97,6 +99,10 @@ Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
 
         //댓글 등록
         Route::post('create', [CommentController::class, 'create'])->name('create');
+
+        //좋아요
+        Route::get('like', [CommentController::class, 'like'])->name('like');
+
     });
 
     // 게시판
@@ -226,7 +232,10 @@ Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
         Route::post('get_service_qna_data', [CommunityController::class, 'getServiceQnaData'])->name('get_service_qna_data');
 
         // 1:1 문의
-        Route::get('one_to_one', [CommunityController::class, 'oneToOne'])->name('one_to_one');
+        Route::get('one_to_one', [CommunityController::class, 'oneToOne'])->name('one_to_one')->middleware('auth');;
+
+        // 1:1 문의 등록
+        Route::post('one_to_one', [CommunityController::class, 'oneToOne'])->name('one_to_one')->middleware('auth');;
 
         // 1:1 문의 상세
         Route::get('one_to_one_detail', [CommunityController::class, 'oneToOneDetail'])->name('one_to_one_detail');
@@ -567,7 +576,7 @@ Route::group(['prefix'=>'notification', 'as'=>'notification.'], function(){
     Route::get('delete', [NotificationController::class, 'delete'])->name('delete');
 
     //읽은 알림 삭제
-    Route::get('delete_read_notification', [NotificationController::class, 'deleteReadNotification'])->name('delete_read_notification');
+    Route::get('all_read_notification', [NotificationController::class, 'allReadNotification'])->name('all_read_notification');
 
     // 알림 읽음 표시
     Route::get('read', [NotificationController::class, 'read'])->name('read');
@@ -583,6 +592,61 @@ Route::group(['prefix'=>'notification', 'as'=>'notification.'], function(){
 
 
 });
+
+// 서비스 문의
+Route::group(['prefix'=>'serviceinquiry', 'as'=>'serviceinquiry.'], function(){
+
+    // FAQ 가져오기
+    Route::get('faq_index', [ServiceInquiryController::class, 'faqIndex'])->name('faq_index');
+
+    // FAQ 분류별로 가져오기
+    Route::post('faq_index', [ServiceInquiryController::class, 'faqIndex'])->name('faq_index');
+
+    // FAQ 상세보기
+    Route::get('faq_detail', [ServiceInquiryController::class, 'faqDetail'])->name('faq_detail');
+
+    // FAQ 글 작성
+    Route::get('faq_create', [ServiceInquiryController::class, 'faqCreate'])->name('faq_create');
+
+    // FAQ 글 수정
+    Route::get('faq_edit', [ServiceInquiryController::class, 'faqEdit'])->name('faq_edit');
+
+    // FAQ 글 삭제
+    Route::get('faq_delete', [ServiceInquiryController::class, 'faqDelete'])->name('faq_delete');
+
+    // FAQ 글 저장
+    Route::post('faq_create', [ServiceInquiryController::class, 'faqCreate'])->name('faq_create');
+
+    // Q&A 가져오기
+    Route::get('qa_index', [ServiceInquiryController::class, 'qaIndex'])->name('qa_index');
+
+    // Q&A 상세보기
+    Route::get('qa_detail', [ServiceInquiryController::class, 'qaDetail'])->name('qa_detail');
+
+    // Q&A 답변
+    Route::get('qa_answer', [ServiceInquiryController::class, 'qaAnswer'])->name('qa_answer');
+
+    // Q&A 답변 등록
+    Route::post('qa_answer', [ServiceInquiryController::class, 'qaAnswer'])->name('qa_answer');
+
+    // 첨부 파일 다운
+    Route::get('download_attach_file', [ServiceInquiryController::class, 'downloadAttachFile'])->name('download_attach_file');
+
+    // 첨부 파일 삭제
+    Route::get('delete_attach_file', [ServiceInquiryController::class, 'deleteAttachFile'])->name('delete_attach_file');
+});
+//신고
+Route::group(['prefix'=>'report', 'as'=>'report.'], function(){
+
+    //신고하기
+    Route::post('report', [ReportController::class, 'report'])->name('report');
+
+    //신고한 기록 조회
+    Route::get('get_report_list', [ReportController::class, 'getReportList'])->name('get_report_list');
+
+
+});
+
 
 // 테스트...
 // 인증

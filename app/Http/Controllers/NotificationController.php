@@ -15,8 +15,8 @@ class NotificationController extends Controller{
         return redirect()->back();
     }
 
-    public function deleteReadNotification(){
-        DB::update('update notification set status = "delete", deleted_at = ? where status = "read" and target_id = ?', [now(), Auth::user()->email]);
+    public function allReadNotification(){
+        DB::update('update notification set status = "read" where status != "delete" and target_id = ?', [Auth::user()->email]);
         return redirect()->back();
     }
     public function read(Request $request){
@@ -73,7 +73,10 @@ class NotificationController extends Controller{
         // 전체 페이지 중 표시될 페이지 갯수
         $pageGroup   = ceil($pageNum/$pageNumList);
         // 페이지 그룹 번호
-
+        $startPage   = (($pageGroup-1)*$pageNumList)+1;
+        // 페이지 그룹 내 첫 페이지 번호
+        $endPage     = $startPage + $pageNumList-1;
+        // 페이지 그룹 내 마지막 페이지 번호
         $count =  DB::select('select count(*) total_count, count(case when status="active" then 1 end) new_count from notification where status!="delete" and target_id = ?', [Auth::user()->email])[0];
         //알림 수 조회 query
         $totalCount  =$count->total_count;
@@ -82,7 +85,9 @@ class NotificationController extends Controller{
         // 새 알림 갯수
         $totalPage   = ceil($totalCount/$writeList);
         // 전체 페이지 갯수
-
+        if($endPage >= $totalPage) {
+            $endPage = $totalPage;
+        }
         $myNotificationList = DB::select('select * from notification where status!="delete" and target_id = ? order by idx desc limit '.$startNum.' ,'.$writeList, [Auth::user()->email]);
 
         $pageIndex = getPageIndex($totalCount, $writeList, $pageNumList, $pageNum);

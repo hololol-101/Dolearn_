@@ -75,11 +75,12 @@
 		</div>
 		<!-- /게시글 -->
 		<!-- 댓글작성 -->
-        @include('sub.comment.form')        
+        @include('sub.comment.form')
         <div id="commentSrc"></div>
 		<!-- /댓글 -->
 	</div>
 	<!-- /cp1bbs4view1 -->
+    <div id="commentPage"></div>
 
 
 </div>
