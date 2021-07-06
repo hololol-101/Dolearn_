@@ -371,11 +371,10 @@ class CommunityController extends Controller{
         if($request->isMethod('post')){
             $selectedName = $request->post('selectedName');
             $file = $request->file("file");
-            $filename = '';
+
             $fileReName = '';
             if($file){
                 $fileIdx =storeAttachFile($file);
-                $filename = $fileIdx['filename'];
                 $fileReName =$fileIdx['fileReName'];
             }
             $title = $request->post('title');
@@ -391,17 +390,19 @@ class CommunityController extends Controller{
             }else{
                 $type = "etc";
             }
-            DB::table('qna')->insert(array(
+            $idx =DB::table('qna')->insert(array(
                 'writer_id'=>Auth::user()->email,
                 'type'=>$type,
                 'question_title'=>$title,
                 'question_content'=>$content,
                 'question_writed_at'=>now(),
                 'status'=>'active',
-                'question_attach_file'=>$filename
+                'question_attach_file'=>$fileReName
             ));
+            //QnA 답변 알림
+            createNotification('qna', Auth::user()->email, '','1:1 문의가 등록되었습니다.', '');
 
-            return redirect()->route('sub.community.service_qna').'<script>alert("1:1 문의가 등록되었습니다.")</script>';
+            return redirect()->route('sub.community.service_qna');
         }else{
             return view('sub.community.one_to_one');
         }
