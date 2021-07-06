@@ -74,7 +74,7 @@ if(!function_exists("create_notification")){
                 $query['route']='/manage/lecture/lecture_info?idx='.$url;
             }if($division=="qna"){
                 $query['program_name']="문의";
-                $query['route']='/sub/community/one_to_one_detail?idx='.$url;
+                $query['route']='/sub/community/service_qna';
             }
             $query['status']='active';
 

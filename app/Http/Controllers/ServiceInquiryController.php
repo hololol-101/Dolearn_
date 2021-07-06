@@ -265,8 +265,8 @@ class ServiceInquiryController extends Controller{
                 'status'=>"complete",
                 'answer_attach_file'=>$files,
             ]);
-                //QnA 답변 알림
-            createNotification('qna', $info->writer_id, '','1:1 문의에 답변이 등록되었습니다.', $idx);
+            //QnA 답변 알림
+            createNotification('qna', $info->writer_id, '','1:1 문의에 답변이 등록되었습니다.', '');
 
             return redirect()->route('serviceinquiry.qa_detail', ['idx'=>$idx]);
         }
