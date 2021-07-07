@@ -54,8 +54,8 @@
         <a href="?" class="button next default"><span class="t1">다음</span></a>
     </p>
     <p class="right">
-        <a href="{{ route('serviceinquiry.qa_answer', ['idx'=> $qaInfo->idx]) }}" class="button">답변</a>
-        <a href="{{ route('serviceinquiry.qa_index') }}" class="button">목록</a>
+        <a href="{{ route('serviceinquiry.qna.answer', ['idx'=> $qaInfo->idx]) }}" class="button">답변</a>
+        <a href="{{ route('serviceinquiry.qna.index') }}" class="button">목록</a>
     </p>
 
     </div>
@@ -93,8 +93,8 @@
             </div>
             </p>
             <p style="text-align:right">
-                <a href="{{ route('serviceinquiry.qa_answer', ['idx'=> $qaInfo->idx, 'status'=>'edit']) }}" class="button">수정</a>
-                <a href="/doadm/notice/{{ $qaInfo->idx }}/delete" class="button">삭제</a>
+                <a href="{{ route('serviceinquiry.qna.answer', ['idx'=> $qaInfo->idx, 'status'=>'edit']) }}" class="button">수정</a>
+                {{-- <a href="/doadm/notice/{{ $qaInfo->idx }}/delete" class="button">삭제</a> --}}
             </p>
 
         </li>
@@ -112,7 +112,7 @@
         <a href="?" class="button next default"><span class="t1">다음</span></a>
     </p>
     <p class="right">
-        <a href="{{ route('serviceinquiry.qa_index') }}" class="button">목록</a>
+        <a href="{{ route('serviceinquiry.qna.index') }}" class="button">목록</a>
     </p></div>
 
     </div>

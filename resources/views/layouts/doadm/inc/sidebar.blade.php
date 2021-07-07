@@ -18,8 +18,10 @@
 				<li class="m10"><a href="?#★">최근 업데이트 메뉴</a></li>
 				<li class="m11"><a href="?#★">콘텐츠갱신알림</a></li>
 				<li class="m11"><a href="?#★">웹호환성로깅</a></li>
-				<li class="m11"><a href="{{ route('serviceinquiry.faq_index') }}">FAQ</a></li>
-                <li class="m11"><a href="{{ route('serviceinquiry.qa_index') }}">Q&A관리</a></li>
+                <li class="m11"><a href="{{ route('serviceinquiry.faq.index') }}">FAQ</a></li>
+                <li class="m11"><a href="{{ route('serviceinquiry.qna.index') }}">Q&A관리</a></li>
+				<li class="m11"><a href="{{ route('serviceinquiry.trend.index') }}">최신트렌드</a></li>
+
             </ul>
 		</div>
 		</li>

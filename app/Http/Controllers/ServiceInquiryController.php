@@ -94,7 +94,7 @@ class ServiceInquiryController extends Controller{
                 'attach_file'=>$files,
                 'public_yn'=>$isPublic
             ));
-            return redirect()->route('serviceinquiry.faq_detail', compact('idx'));
+            return redirect()->route('serviceinquiry.faq.detail', compact('idx'));
 
 
         }
@@ -142,7 +142,7 @@ class ServiceInquiryController extends Controller{
                 'attach_file'=>$files,
                 'public_yn'=>$isPublic
             ));
-            return redirect()->route('serviceinquiry.faq_index');
+            return redirect()->route('serviceinquiry.faq.index');
 
         }
     }
@@ -150,7 +150,7 @@ class ServiceInquiryController extends Controller{
         //FAQ 삭제
         $idx = $request->get('idx');
         DB::delete('delete from faq where idx = ?', [$idx]);
-        return redirect()->route('serviceinquiry.faq_index');
+        return redirect()->route('serviceinquiry.faq.index');
     }
     public function qaIndex(Request $request){
         $pageNum     = $request->get('page', 1);
@@ -231,7 +231,7 @@ class ServiceInquiryController extends Controller{
             //QnA 답변 알림
             createNotification('qna', $info->writer_id, '','1:1 문의에 답변이 등록되었습니다.', '');
 
-            return redirect()->route('serviceinquiry.qa_detail', ['idx'=>$idx]);
+            return redirect()->route('serviceinquiry.qna.detail', ['idx'=>$idx]);
         }
     }
     public function qaAnswerEdit(Request $request){
@@ -276,7 +276,19 @@ class ServiceInquiryController extends Controller{
             //QnA 답변 알림
         createNotification('qna', $info->writer_id, '','1:1 문의에 답변이 등록되었습니다.', $idx);
 
-        return redirect()->route('serviceinquiry.qa_detail', ['idx'=>$idx]);
+        return redirect()->route('serviceinquiry.qna.detail', ['idx'=>$idx]);
+    }
+    public function trendIndex(){
+        return view('doadm.trend.index');
+    }
+    public function trendCreate(){
+
+    }
+    public function trendDelete(){
+
+    }
+    public function trendDetail(){
+
     }
 
     public function downloadAttachFile(Request $request){
@@ -288,5 +300,4 @@ class ServiceInquiryController extends Controller{
         return response()->download(public_path('/storage/uploads/attach/'.$filename));
 
     }
-
 }

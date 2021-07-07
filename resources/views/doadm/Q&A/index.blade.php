@@ -71,7 +71,7 @@
             @endfor
             <i>└</i>
         @endif --}}
-        <a href="{{route('serviceinquiry.qa_detail',['idx'=>$qaInfo->idx])  }}">{{ $qaInfo->question_title }}</a>
+        <a href="{{route('serviceinquiry.qna.detail',['idx'=>$qaInfo->idx])  }}">{{ $qaInfo->question_title }}</a>
         </td>
         <td>{{ $qaInfo->nickname }}</td>
         <td>{{ date('Y.m.d',strtotime($qaInfo->question_writed_at)) }}</td>

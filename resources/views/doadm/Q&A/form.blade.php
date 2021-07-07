@@ -22,9 +22,9 @@
 <!-- panel1 -->
 <div class="panel1 bg-default shadow">
 @if(isset($status))
-<form action="{{ route('serviceinquiry.qa_answer_edit') }}" method="post" id="frm" enctype="multipart/form-data" onsubmit="return sendwrite();">
+<form action="{{ route('serviceinquiry.qna.answer_edit') }}" method="post" id="frm" enctype="multipart/form-data" onsubmit="return sendwrite();">
 @else
-<form action="{{ route('serviceinquiry.qa_answer') }}" method="post" id="frm" enctype="multipart/form-data" onsubmit="return sendwrite();">
+<form action="{{ route('serviceinquiry.qna.answer') }}" method="post" id="frm" enctype="multipart/form-data" onsubmit="return sendwrite();">
 @endif
 
 @csrf

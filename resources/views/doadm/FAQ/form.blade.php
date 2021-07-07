@@ -22,10 +22,10 @@
 <!-- panel1 -->
 <div class="panel1 bg-default shadow">
 @if (isset($status))
-<form action="{{ route('serviceinquiry.faq_edit') }}" method="post" id="frm" enctype="multipart/form-data" onsubmit="return sendwrite();">
+<form action="{{ route('serviceinquiry.faq.edit') }}" method="post" id="frm" enctype="multipart/form-data" onsubmit="return sendwrite();">
 
 @else
-<form action="{{ route('serviceinquiry.faq_create') }}" method="post" id="frm" enctype="multipart/form-data" onsubmit="return sendwrite();">
+<form action="{{ route('serviceinquiry.faq.create') }}" method="post" id="frm" enctype="multipart/form-data" onsubmit="return sendwrite();">
 
 @endif
 @csrf

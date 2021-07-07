@@ -69,7 +69,7 @@
             <td>결제</td>
         @endif
         <td class="tal">
-        <a href="{{ route('serviceinquiry.faq_detail', ['idx'=>$faItem->idx]) }}">{{ $faItem->title }}</a>
+        <a href="{{ route('serviceinquiry.faq.detail', ['idx'=>$faItem->idx]) }}">{{ $faItem->title }}</a>
         </td>
         <td>{{ $faItem->adminname }}</td>
         <td>{{ date('Y.m.d',strtotime($faItem->writed_at)) }}</td>
@@ -98,7 +98,7 @@
         <a href="?" onclick="history.go(-1); return false;" class="button default">이전</a>
     </p>
     <p class="right">
-        <a href="{{ route('serviceinquiry.faq_create') }}" class="button">글작성</a>
+        <a href="{{ route('serviceinquiry.faq.create') }}" class="button">글작성</a>
     </p>
 
 </div>

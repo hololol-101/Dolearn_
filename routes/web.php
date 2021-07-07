@@ -599,45 +599,64 @@ Route::group(['prefix'=>'notification', 'as'=>'notification.'], function(){
 
 // 서비스 문의
 Route::group(['prefix'=>'serviceinquiry', 'as'=>'serviceinquiry.'], function(){
+    Route::group(['prefix'=>'faq', 'as'=>'faq.'], function(){
+        // FAQ 가져오기
+        Route::get('index', [ServiceInquiryController::class, 'faqIndex'])->name('index');
 
-    // FAQ 가져오기
-    Route::get('faq_index', [ServiceInquiryController::class, 'faqIndex'])->name('faq_index');
+        // FAQ 분류별로 가져오기
+        Route::post('index', [ServiceInquiryController::class, 'faqIndex'])->name('index');
 
-    // FAQ 분류별로 가져오기
-    Route::post('faq_index', [ServiceInquiryController::class, 'faqIndex'])->name('faq_index');
+        // FAQ 상세보기
+        Route::get('detail', [ServiceInquiryController::class, 'faqDetail'])->name('detail');
 
-    // FAQ 상세보기
-    Route::get('faq_detail', [ServiceInquiryController::class, 'faqDetail'])->name('faq_detail');
+        // FAQ 글 작성
+        Route::get('create', [ServiceInquiryController::class, 'faqCreate'])->name('create');
 
-    // FAQ 글 작성
-    Route::get('faq_create', [ServiceInquiryController::class, 'faqCreate'])->name('faq_create');
+        // FAQ 글 수정 페이지
+        Route::get('edit', [ServiceInquiryController::class, 'faqEdit'])->name('edit');
 
-    // FAQ 글 수정 페이지
-    Route::get('faq_edit', [ServiceInquiryController::class, 'faqEdit'])->name('faq_edit');
+        // FAQ 글 수정 정보 저장
+        Route::post('edit', [ServiceInquiryController::class, 'faqEdit'])->name('edit');
 
-    // FAQ 글 수정 정보 저장
-    Route::post('faq_edit', [ServiceInquiryController::class, 'faqEdit'])->name('faq_edit');
+        // FAQ 글 삭제
+        Route::get('delete', [ServiceInquiryController::class, 'faqDelete'])->name('delete');
 
-    // FAQ 글 삭제
-    Route::get('faq_delete', [ServiceInquiryController::class, 'faqDelete'])->name('faq_delete');
+        // FAQ 글 저장
+        Route::post('create', [ServiceInquiryController::class, 'faqCreate'])->name('create');
 
-    // FAQ 글 저장
-    Route::post('faq_create', [ServiceInquiryController::class, 'faqCreate'])->name('faq_create');
+    });
+    Route::group(['prefix'=>'qna', 'as'=>'qna.'], function(){
+        // Q&A 가져오기
+        Route::get('index', [ServiceInquiryController::class, 'qaIndex'])->name('index');
 
-    // Q&A 가져오기
-    Route::get('qa_index', [ServiceInquiryController::class, 'qaIndex'])->name('qa_index');
+        // Q&A 상세보기
+        Route::get('detail', [ServiceInquiryController::class, 'qaDetail'])->name('detail');
 
-    // Q&A 상세보기
-    Route::get('qa_detail', [ServiceInquiryController::class, 'qaDetail'])->name('qa_detail');
+        // Q&A 답변
+        Route::get('answer', [ServiceInquiryController::class, 'qaAnswer'])->name('answer');
 
-    // Q&A 답변
-    Route::get('qa_answer', [ServiceInquiryController::class, 'qaAnswer'])->name('qa_answer');
+        // Q&A 답변 등록
+        Route::post('answer', [ServiceInquiryController::class, 'qaAnswer'])->name('answer');
 
-    // Q&A 답변 등록
-    Route::post('qa_answer', [ServiceInquiryController::class, 'qaAnswer'])->name('qa_answer');
+        // Q&A 답변 수정
+        Route::post('answer_edit', [ServiceInquiryController::class, 'qaAnswerEdit'])->name('answer_edit');
+    });
+    Route::group(['prefix'=>'trend', 'as'=>'trend.'], function(){
+         // 최신 트렌드 목록
+        Route::get('index', [ServiceInquiryController::class, 'trendIndex'])->name('index');
 
-    // Q&A 답변 수정
-    Route::post('qa_answer_edit', [ServiceInquiryController::class, 'qaAnswerEdit'])->name('qa_answer_edit');
+        // 최신 트렌드 생성
+        Route::get('create', [ServiceInquiryController::class, 'trendCreate'])->name('create');
+
+        // 최신 트렌드 삭제
+        Route::get('delete', [ServiceInquiryController::class, 'trendDelete'])->name('delete');
+
+        // 최신 트렌드 상세
+        Route::get('detail', [ServiceInquiryController::class, 'trendDetail'])->name('detail');
+
+    });
+
+
 
     // 첨부 파일 다운
     Route::get('download_attach_file', [ServiceInquiryController::class, 'downloadAttachFile'])->name('download_attach_file');
