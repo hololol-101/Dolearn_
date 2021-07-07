@@ -101,7 +101,7 @@
 <!-- /cp1tabs1 -->
 
 <!-- cp1qna1 -->
-<div class="cp1qna1" id="qna_list">
+<div class="cp1qna1" id="faqList">
 	<ul class="dl1">
         @foreach ($faqList as $faq)
         <li class="di1">
@@ -110,8 +110,9 @@
 			</a>
 			<div class="dd1">
                 <div class="attach1">
-                    @if($faq->attach_file!='')
+                    @if($faq->attach_file!=null)
                     @foreach (explode(',', $faq->attach_file) as $file)
+
                     <ul>
                         <li>
                             <a href="{{ asset('storage/uploads/attach/'.$file) }}.'" class="filename">{{ $file }}</a>
@@ -122,15 +123,78 @@
                     @endforeach
                     @endif
                 </div>
-
 				{!! $faq->content !!}
 			</div>
 		</li>
         @endforeach
 	</ul>
 </div>
-<!-- /cp1qna1 -->
 
+<!-- infomenu1 -->
+<div class="infomenu1">
+    <!-- pagination -->
+	<div class="pagination" id="faqPagenation" title="페이지 수 매기기">
+    {!! $faqPageHtml !!}
+	</div>
+</div>
+<!-- /infomenu1 -->
+
+
+<script>
+    function pageClick(obj){
+        var item = $(obj).closest('.pagination').attr('id');
+        if(item == 'qnaPagenation'){
+            var status="qna";
+            var selectedPage=$(obj).text();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'post',
+                dataType: 'json',
+                url: '{{ route('sub.community.service_qna') }}',
+                data: {
+                    'qnaPage': selectedPage,
+                    'status':status
+                },
+                success: (data) => {
+                    $('#qnaList').empty().append(data.qnaListHtml);
+                    $('#qnaPagenation').empty().append(data.qnaPageHtml);
+                    console.log(data.cnt);
+                },
+                error: function(request, status, error) {
+                    //
+                },
+            });
+
+        }else{
+            status="faq";
+            var selectedPage=$(obj).text();
+            var qna_tab=$('#cp1tabs1').find('.on .qna_tab').attr('tab_type');
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'post',
+                dataType: 'json',
+                url: '{{ route('sub.community.service_qna') }}',
+                data: {
+                    'faqpage': selectedPage,
+                    'tab':qna_tab,
+                    'status':status
+                },
+                success: (data) => {
+                    $('#faqList').empty().append(data.faqListHtml);
+                    $('#faqPagenation').empty().append(data.faqPageHtml);
+                    console.log(data);
+                },
+                error: function(request, status, error) {
+                    //
+                },
+            });
+        }
+    }
+</script>
 <script>/*<![CDATA[*/
 	$(function(){
 		/** ◇◆ 질문답변아코디언. 20210317. @m.
@@ -187,7 +251,7 @@
         <th scope="col">날짜</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="qnaList">
         @if (Auth::check())
             @foreach ($qaList as $qa)
             <tr>
@@ -210,8 +274,17 @@
 
     </tbody>
 </table>
-
-
+@if(Auth::check())
+<!-- infomenu1 -->
+<div class="infomenu1">
+    <!-- pagination -->
+	<div class="pagination" id="qnaPagenation" title="페이지 수 매기기">
+    {!! $qnaPageHtml !!}
+	</div>
+	<!-- /pagination -->
+</div>
+<!-- /infomenu1 -->
+@endif
 </div>
 <!-- /container -->
 </div>
@@ -230,6 +303,7 @@ $(function() {
     $('.qna_tab').click(function() {
         var myItem = $(this).closest('li');
         var tabType = $(this).attr('tab_type');
+
         myItem.siblings().removeClass('on');
         myItem.addClass('on');
         $.ajax({
@@ -238,30 +312,22 @@ $(function() {
             },
             type: 'POST',
             dataType: 'json',
-            url: '{{ route('serviceinquiry.faq_index') }}',
+            url: '{{ route('sub.community.service_qna') }}',
             data: {
-                'type': tabType
+                'faqpage':1,
+                'tab': tabType,
+                'status':'faq'
             },
             success: (data) => {
-                if (data.status == 'success') {
-
-                    if (data.html.length != 0) {
-                        $('#qna_list').empty();
-                        $('#qna_list').append(data.html);
-                    } else {
-                        html = '<br><span>자주 묻는 질문 내역이 없습니다.</span>';
-                        $('#qna_list').empty();
-                        $('#qna_list').append(html);
-                    }
-
+                if (data.faqListHtml.length != 0) {
+                    $('#faqList').empty().append(data.faqListHtml);
+                    $('#faqPagenation').empty().append(data.faqPageHtml);
                 } else {
-                    alert('강좌 목록을 조회하는 도중 문제가 발생했습니다.\n관리자에게 문의 바랍니다.');
-                    // console.log('code: ' + data.code + '\nmessage: ' + data.msg);
+                    html = '<br><span>자주 묻는 질문 내역이 없습니다.</span>';
+                    $('#faqList').empty();
                 }
             },
-            error: function(request, status, error) {
-                //
-            },
+
         });
     });
 });

@@ -195,3 +195,72 @@ if ( !function_exists("storeAttachFile") ) { // 파일 저장
         return array('filename'=>$filename, 'fileReName'=>$fileReName);
     }
 }
+if(!function_exists('pagenationToAjax')){
+    function pagenationToAjax($curPage, $totalCount){
+        // 페이지 이동 시 화면 새로고침이 아닌 pageClick 실행
+        //현재 페이지
+        $dataPerPage=10;
+        //한 페이지당 표시할 데이터 수
+        $pageCount=10;
+        //보여줄 페이지 수
+        $totalPage = ceil($totalCount/$dataPerPage);
+        // 총 faq 페이지 수
+        $pageGroup = ceil($curPage/$pageCount);
+        // 현재 faq 페이지 그룹
+        $last = $pageGroup*$pageCount;
+        // 현재 페이지 그룹 마지막 번호
+        $first = $last-$pageCount +1;
+        // 현재 페이지 그룹 첫번째 번호
+        if($last>$totalPage){
+            $last = $totalPage;
+        }
+
+        if($curPage=="처음"){
+            $curPage = 1;
+        }
+        else if($curPage=="이전"){
+            $curPage = $first-1;
+        }
+        else if($curPage=="다음"){
+            $curPage = $last+1;
+        }
+        else if($curPage=="마지막"){
+            $curPage = $totalPage;
+        }
+
+
+
+        $html = '';
+        $html.='<span class="control">';
+        if ($pageGroup<=1){
+            $html.='<span class="m first"><a title="처음 페이지"><i class="ic">처음</i></a></span>';
+            $html.='<span class="m prev"><a title="이전 페이지"><i class="ic">이전</i></a></span>';
+        }
+        else{
+            $html.='<span class="m first"><a href="javascript:void(0)" onclick="pageClick(this)" title="처음 페이지"><i class="ic">처음</i></a></span>';
+            $html.='<span class="m prev"><a href="javascript:void(0)" onclick="pageClick(this)" title="이전 페이지"><i class="ic">이전</i></a></span>';
+        }
+
+        $html.='</span>';
+        $html.='<span class="pages">';
+        for($idx = $first; $idx<=$last; $idx++){
+            if($idx == $curPage )
+            $html.='<span class="m on"><a href="javascript:void(0)" onclick="pageClick(this)" title="'.$idx.' 페이지">'.$idx.'</a></span>';
+        else
+            $html.='<span class="m"><a href="javascript:void(0)" onclick="pageClick(this)" title="'.$idx.' 페이지">'.$idx.'</a></span>';
+        }
+        $html.='</span>';
+        $html.='<span class="control">';
+        if ($pageGroup >= ceil($totalPage/10)){
+            $html.='<span class="m next"><a title="다음 페이지"><i class="ic">다음</i></a></span>';
+            $html.='<span class="m last" id="last"><a title="마지막 페이지"><i class="ic">마지막</i></a></span>';
+        }
+        else{
+            $html.='<span class="m next"><a  href="javascript:void(0)" onclick="pageClick(this)" title="다음 페이지"><i class="ic">다음</i></a></span>';
+            $html.='<span class="m last" id="last"><a  href="javascript:void(0)" onclick="pageClick(this)" title="마지막 페이지"><i class="ic">마지막</i></a></span>';
+        }
+
+        $html.='</span>';
+        return $html;
+    }
+}

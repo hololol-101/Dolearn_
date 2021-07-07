@@ -340,13 +340,105 @@ class CommunityController extends Controller{
 
     }
 
-    public function serviceQna() {
-        $faqList = DB::select('select f.*, a.nickname adminname from faq f, admin a where a.idx = f.writer_id order by idx desc ');
+    public function serviceQna(Request $request) {
+        if($request->isMethod('get')){
+            $faqPage = $request->get('faqpage', 1);
+            //현재 faq 페이지
+            $faqTotalCount=DB::select('select count(*) count from faq where public_yn="Y"')[0]->count;
+            $faqList = DB::select('select f.*, a.nickname adminname from faq f, admin a where a.idx = f.writer_id and public_yn="Y" order by idx desc limit 0,10');
 
-        if(Auth::check()){
-            $qaList = DB::select('select idx, status, question_title, question_writed_at from qna where writer_id = ? order by idx desc', [Auth::user()->email]);
+            $faqPageHtml = pagenationToAjax($faqPage, $faqTotalCount); //faq 페이지네이션
+
+            if(Auth::check()){//로그인이 되어있을 경우 qna 출력
+                $qnaPage = $request->get('qnaPage', 1);
+                //현재 qna 페이지
+                $qaList = DB::select('select idx, status, question_title, question_writed_at from qna where writer_id = ? order by idx desc limit 10', [Auth::user()->email]);
+                $qnaTotalCount = DB::select('select count(*) count from qna where writer_id = ?', [Auth::user()->email])[0]->count;
+
+                $qnaPageHtml = pagenationToAjax($qnaPage, $qnaTotalCount);
+                //qna페이지네이션
+            }
+            return view('sub.community.service_qna',  compact('qaList', 'faqList','faqPageHtml','qnaPageHtml'));
+        }else if($request->isMethod('post')){
+            $status = $request->post('status');
+            if($status =='faq'){
+                //faq 페이지가 바뀐 경우
+
+                $faqPage = $request->post('faqpage', 1);
+                $type = $request->post('tab');
+
+                if($type=='all'){
+                    $faqList = DB::select('select f.*, a.nickname adminname from faq f, admin a where a.idx = f.writer_id and public_yn="Y"  order by idx desc limit '.(($faqPage-1)*10).',10');
+                    $faqTotalCount=DB::select('select count(*) count from faq where public_yn="Y"')[0]->count;
+                    // 총 faq 데이터 수
+                }else{
+                    $faqList = DB::select('select f.*, a.nickname adminname from faq f, admin a where a.idx = f.writer_id and public_yn="Y" and division=? order by idx desc limit '.(($faqPage-1)*10).',10', [$type]);
+                    $faqTotalCount=DB::select('select count(*) count from faq where public_yn="Y" and division = ?',[$type])[0]->count;
+                    // 총 faq 데이터 수
+                }
+                $faqPageHtml = pagenationToAjax($faqPage, $faqTotalCount);
+
+                $faqListHtml ='';
+                $faqListHtml.='<ul class="dl1">';
+                foreach ($faqList as $faq){
+                    $faqListHtml.='    <li class="di1">';
+                    $faqListHtml.='        <a href="javascript:void(0);" class="dt1">';
+                    $faqListHtml.=            $faq->title;
+                    $faqListHtml.='        </a>';
+                    $faqListHtml.='        <div class="dd1">';
+                    $faqListHtml.='            <div class="attach1">';
+                    if($faq->attach_file!=null){
+                        foreach (explode(',', $faq->attach_file) as $file){
+                        $faqListHtml.='            <ul>';
+                        $faqListHtml.='                <li>';
+                        $faqListHtml.='                    <a href="'.asset('storage/uploads/attach/'.$file).'" class="filename">'.$file.'</a>';
+                        $faqListHtml.='                    <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick = window.open("'.asset('storage/uploads/attach/'.$file).'", "_blank")><i class="ic1"></i> 바로보기</a>';
+                        $faqListHtml.='                </li>';
+                        $faqListHtml.='            </ul>';
+
+                        }
+                    }
+                    $faqListHtml.='            </div>';
+                    $faqListHtml.=            $faq->content;
+                    $faqListHtml.='        </div>';
+                    $faqListHtml.='    </li>';
+                }
+                $faqListHtml.='</ul>';
+
+                $result['faqListHtml']=$faqListHtml;
+                $result['faqPageHtml']=$faqPageHtml;
+
+            }else{
+                //qna 페이지가 변한경우
+                $qnaPage = $request->post('qnaPage', 1);
+
+                if(Auth::check()){
+                    $qaList = DB::select('select idx, status, question_title, question_writed_at from qna where writer_id = ? order by idx desc limit '.(($qnaPage-1)*10).', 10', [Auth::user()->email]);
+                    $qnaTotalCount = DB::select('select count(*) count from qna where writer_id = ?', [Auth::user()->email])[0]->count;
+                    $qnaPageHtml = pagenationToAjax($qnaPage, $qnaTotalCount);
+                    $qnaListHtml ='';
+                    foreach ($qaList as $qa){
+
+                        $qnaListHtml.='<tr>';
+                        if ($qa->status =="active"){
+                            $qnaListHtml.='<td><i class="button w5em small primary1">대기중</i></td>';
+                        }else{
+                            $qnaListHtml.='<td><i class="button w5em small gray4">답변완료</i></td>';
+                        }
+                        $qnaListHtml.='<td><a href="'.route('sub.community.one_to_one_detail', ['idx' => $qa->idx ]).'">'.$qa->question_title.'</a></td>';
+                        $qnaListHtml.='<td>'.date('Y.m.d', strtotime($qa->question_writed_at)).'</td>';
+                        $qnaListHtml.='</tr>';
+                    }
+                    if (count($qaList)==0)
+                    $qnaListHtml='<div>문의 내역이 없습니다.</div>';
+                }
+
+                $result['qnaListHtml']=$qnaListHtml;
+                $result['qnaPageHtml']=$qnaPageHtml;
+
+            }
+            return response()->json($result, 200);
         }
-        return view('sub.community.service_qna',  compact('qaList', 'faqList'));
     }
 
     public function getServiceQnaData(Request $request) {
@@ -401,6 +493,7 @@ class CommunityController extends Controller{
             ));
             //QnA 답변 알림
             createNotification('qna', Auth::user()->email, '','1:1 문의가 등록되었습니다.', '');
+
 
             return redirect()->route('sub.community.service_qna');
         }else{

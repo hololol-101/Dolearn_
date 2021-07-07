@@ -28,48 +28,11 @@ class ServiceInquiryController extends Controller{
             if($endPage >= $totalPage) {
             $endPage = $totalPage;
             }
-            $faqlist = DB::select('select f.*, a.nickname adminname from faq f, admin a where a.idx = f.writer_id order by idx desc limit '.$startNum.' ,'.$writeList);
+            $faqlist = DB::select('select f.*, a.nickname adminname from faq f, admin a where a.idx = f.writer_id  order by idx desc limit '.$startNum.' ,'.$writeList);
 
             $pageIndex = getPageIndex($totalCount, $writeList, $pageNumList, $pageNum);
 
             return view('doadm.FAQ.index', compact('faqlist', 'pageIndex'));
-        }else if($request->isMethod('post')){
-            $type = $request->post('type');
-            if($type =="all"){
-                //ALL을 선택한 경우
-                $faqlist = DB::select('select f.*, a.nickname adminname from faq f, admin a where a.idx = f.writer_id order by idx desc ');
-            }else{
-                //ALL을 제외한 나머지 탭을 선택한 경우
-                $faqlist = DB::select('select f.*, a.nickname adminname from faq f, admin a where a.idx = f.writer_id and division = ? order by idx desc ', [$type]);
-            }
-            $html ='<ul class="dl1">';
-            if(count($faqlist)==0){
-                //FAQ가 없을 경우
-                $html.='자주 묻는 질문 내역이 없습니다.';
-            }
-            foreach($faqlist as $faq){
-                $html.='<li class="di1">';
-                $html.='    <a href="javascript:void(0);" class="dt1">';
-				$html.=         $faq->title;
-                $html.='    </a>';
-                $html.='	<div class="dd1">';
-                $html.='        <div class="attach1">';
-                foreach( explode(',', $faq->attach_file) as $file){
-                    $html.='        <ul>';
-                    $html.='        <li><a href="'.asset('storage/uploads/attach/'.$file).'" class="filename">'. $file .'</a>';
-                    $html.='        <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick = window.open("'.asset('storage/uploads/attach/'.$file).'", "_blank")><i class="ic1"></i> 바로보기</a></li>';
-                    $html.='        </ul>';
-                }
-                $html.='        </div>';
-                $html.=         $faq->content;
-                $html.='    </div>';
-                $html.='</li>';
-            }
-            $html.='</ul>';
-            $result['html']=$html;
-            $result['tab']=$type;
-            $result['status']="success";
-            return response()->json($result, 200);
         }
     }
     public function faqDetail(Request $request){

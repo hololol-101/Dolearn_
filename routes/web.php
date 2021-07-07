@@ -228,6 +228,10 @@ Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
         // 서비스 문의
         Route::get('service_qna', [CommunityController::class, 'serviceQna'])->name('service_qna');
 
+        // 서비스 문의 ajax
+        Route::post('service_qna', [CommunityController::class, 'serviceQna'])->name('service_qna');
+
+
         // 서비스 문의 목록 조회(탭 별 - 전체, 일반, 강사, 수강자, 결제)
         Route::post('get_service_qna_data', [CommunityController::class, 'getServiceQnaData'])->name('get_service_qna_data');
 
