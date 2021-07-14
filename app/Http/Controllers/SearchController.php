@@ -30,13 +30,13 @@ class SearchController extends Controller{
             $keyword = $request->post('keyword', '');
         }
 
+        $keyword = addslashes($keyword);
         //키원드가 있을 경우 where문
         if($keyword!="" or $keyword!=null){
             $where = " LIKE '%$keyword%' ";
             $whereVideo= "where subject".$where." or content ".$where;
             $whereLecture= "where title ".$where." or description ".$where;
         }
-
 
         // TODO: type parameter에 따른 검색 내용 조회
         if ($type == '' || $type == 'all') {
@@ -85,7 +85,7 @@ class SearchController extends Controller{
             return view('index');
             exit;
         }
-        $result['keyword'] = $keyword;
+        $result['keyword'] = stripslashes($keyword);
         return view('sub.search.integrated_search', compact('result', 'videoList', 'lectureList', 'insightList', 'instructorList', 'youtuberList'));
 
         /*

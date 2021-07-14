@@ -17,7 +17,6 @@ class Learning2Controller extends Controller{
 
         // 영상 정보 조회
         $videoDetail = DB::select('SELECT * FROM _youtube_fulldata_temp WHERE uid="'.$videoId.'"');
-
         // 해당 영상을 기존에 시청한 기록이 있는지 조회
         $existHistory = DB::select('SELECT * FROM video_history WHERE video_id = "'.$videoId.'" AND user_id = "'.$userId.'"');
 

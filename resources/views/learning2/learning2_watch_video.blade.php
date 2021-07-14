@@ -4,7 +4,6 @@ $timestamp = isset($_GET['timestamp']) ? $_GET['timestamp'] : '';
 
 <!-- cp4view1 -->
 <div class="cp4view1">
-
 	<div class="tg1">
 		<strong class="t1">{{ $videoDetail->subject }}</strong>
 	</div>
@@ -74,7 +73,7 @@ $timestamp = isset($_GET['timestamp']) ? $_GET['timestamp'] : '';
 @include('sub.video.inc_layer_playlist')
 
 <!-- (신고하기 레이어팝업) -->
-@include('sub.lecture.inc_layer_report_video')
+@include('sub.video.inc_layer_report_video')
 
 {{-- TODO: 유튜브 영상 소개가 있는 경우만 출력 --}}
 <!-- toggle1s2 cp4unfold1 -->

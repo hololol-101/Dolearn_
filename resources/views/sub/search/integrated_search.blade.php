@@ -752,7 +752,7 @@ $title = '통합검색 - '.$result['title'];
 @else
 
 {{-- 검색 결과가 없을 경우 --}}
-@include('sub.inc_no_result')
+@include('sub.search.inc_no_result')
 
 @endif
 

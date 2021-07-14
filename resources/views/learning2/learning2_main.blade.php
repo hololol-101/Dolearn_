@@ -12,6 +12,7 @@
 
 @section('content')
 
+
 <? $d1n = '1'; // 1차활성 ?>
 
 <!-- #body -->
@@ -21,7 +22,6 @@
 
 {{-- 현재 재생중인 영상 ID --}}
 <input type="hidden" id="video_id" value="{{ $_GET['uid'] }}">
-
 {{-- watch_video --}}
 <div id="watch_video">
 

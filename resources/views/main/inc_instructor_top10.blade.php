@@ -16,7 +16,7 @@
             @foreach ($hotInstructorList as $key => $hotInstructor)
             <li class="item">
                 <div class="w1">
-                    <a href="{{ route('etc.user_introduction', ['role' => 'instructor']) }}" class="a1">
+                    <a href="{{ route('etc.user_introduction', ['type' => 'instructor', 'user_idx'=>$hotInstructor->id]) }}" class="a1">
                         <b class="g1">{{ $key + 1 }}</b>
                         <div class="f1">
                             <span class="f1p1">

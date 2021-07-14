@@ -87,7 +87,7 @@ $timestamp = isset($_GET['timestamp']) ? $_GET['timestamp'] : '';
 <!-- /cp4view2 -->
 
 <!-- (신고하기 레이어팝업) -->
-@include('sub.lecture.inc_layer_report_video')
+@include('sub.video.inc_layer_report_video')
 
 {{-- TODO: 유튜브 영상 소개가 있는 경우만 출력 --}}
 <!-- toggle1s2 cp4unfold1 -->
