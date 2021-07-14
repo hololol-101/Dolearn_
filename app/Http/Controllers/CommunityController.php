@@ -110,12 +110,60 @@ class CommunityController extends Controller{
 
     }
 
-    public function trend() {
-        return view('sub.community.insight_trend');
+    public function trend(Request $request) {
+        $pageNum     = $request->get('page', 1);
+        // view에서 넘어온 현재페이지의 파라미터 값. 페이지 번호가 없으면 1, 있다면 그대로 사용
+        $startNum    = ($pageNum-1)*10;
+        // 페이지 내 첫 게시글 번호
+        $writeList    = 9;
+        // 한 페이지당 표시될 글 갯수
+        $pageNumList = 10;
+        // 전체 페이지 중 표시될 페이지 갯수
+        $pageGroup   = ceil($pageNum/$pageNumList);
+        // 페이지 그룹 번호
+        $startPage   = (($pageGroup-1)*$pageNumList)+1;
+        // 페이지 그룹 내 첫 페이지 번호
+        $endPage     = $startPage + $pageNumList-1;
+        // 페이지 그룹 내 마지막 페이지 번호
+        $totalCount =  DB::select('select count(*) total_count from latest_trend where public_yn="Y"')[0]->total_count;
+        // 전체 알림 갯수
+        $totalPage   = ceil($totalCount/$writeList);
+        // 전체 페이지 갯수
+        if($endPage >= $totalPage) {
+            $endPage = $totalPage;
+        }
+        $trendList = DB::select('select * from latest_trend where public_yn="Y" order by idx desc limit '.(($pageNum-1)*9).',  9');
+        $pageIndex = getPageIndex($totalCount, $writeList, $pageNumList, $pageNum);
+        return view('sub.community.insight_trend', compact( 'trendList','pageIndex'));
     }
 
-    public function trendDetail() {
-        return view('sub.community.insight_trend_detail');
+    public function trendDetail(Request $request) {
+        $idx = $request->get('id');
+        $trendInfo = DB::select('SELECT l.*, a.nickname adminName from latest_trend l, admin a WHERE l.idx = ? AND a.idx = l.writer_id', [$idx])[0];
+        $rank[0]=$trendInfo->ranking0;
+        $rank[1]=$trendInfo->ranking1;
+        $rank[2]=$trendInfo->ranking2;
+        $rank[3]=$trendInfo->ranking3;
+        $rank[4]=$trendInfo->ranking4;
+
+        for($idx=0;$idx<5;$idx++){
+            $arr = explode('|', $rank[$idx]);
+            if(count($arr)>1){
+                $ranking[$idx]['writer_name']=$arr[0];
+                $ranking[$idx]['explain']=$arr[1];
+                $ranking[$idx]['youtubeExp']=$arr[2];
+                $ranking[$idx]['youtubeId']=$arr[3];
+                $name = $ranking[$idx]['writer_name'];
+
+                $rankerInfo = DB::select('select * from users where nickname = ?', [$name])[0];
+                $ranking[$idx]['rIdx']=$rankerInfo->id;
+                $ranking[$idx]['rName']=$rankerInfo->nickname;
+                $ranking[$idx]['rImage']=$rankerInfo->save_profile_image;
+                $ranking[$idx]['role']=$rankerInfo->role;
+
+            }
+        }
+        return view('sub.community.insight_trend_detail', compact('trendInfo', 'ranking'));
     }
 
     public function ranking(Request $request) {

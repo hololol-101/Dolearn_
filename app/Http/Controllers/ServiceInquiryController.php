@@ -278,17 +278,207 @@ class ServiceInquiryController extends Controller{
 
         return redirect()->route('serviceinquiry.qna.detail', ['idx'=>$idx]);
     }
-    public function trendIndex(){
-        return view('doadm.trend.index');
+    public function trendIndex(Request $request){
+        $pageNum     = $request->get('page', 1);
+        // view에서 넘어온 현재페이지의 파라미터 값. 페이지 번호가 없으면 1, 있다면 그대로 사용
+        $startNum    = ($pageNum-1)*10;
+        // 페이지 내 첫 게시글 번호
+        $writeList    = 10;
+        // 한 페이지당 표시될 글 갯수
+        $pageNumList = 10;
+        // 전체 페이지 중 표시될 페이지 갯수
+        $pageGroup   = ceil($pageNum/$pageNumList);
+        // 페이지 그룹 번호
+        $startPage   = (($pageGroup-1)*$pageNumList)+1;
+        // 페이지 그룹 내 첫 페이지 번호
+        $endPage     = $startPage + $pageNumList-1;
+        // 페이지 그룹 내 마지막 페이지 번호
+        $totalCount  = DB::select('select count(*) count from latest_trend l, admin a where a.idx = l.writer_id')[0]->count;
+        // 전체 게시글 갯수
+        $totalPage   = ceil($totalCount/$writeList);
+        // 전체 페이지 갯수
+        if($endPage >= $totalPage) {
+        $endPage = $totalPage;
+        }
+        $trendList = DB::select('select l.idx, l.title, l.writed_at, l.public_yn, a.nickname adminname from latest_trend l, admin a where a.idx = l.writer_id order by idx desc limit '.$startNum.' , '.$writeList);
+        $pageIndex = getPageIndex($totalCount, $writeList, $pageNumList, $pageNum);
+        return view('doadm.trend.index', compact('trendList', 'pageIndex'));
     }
-    public function trendCreate(){
+    public function trendCreate(Request $request){
+        if($request->isMethod('get')){
+            return view('doadm.trend.form');
+        }else{
+            $title =$request->post('iSubject');
+            $summary =$request->post('iSummary');
+            $content =$request->post('iContent');
+            $writerId =3;
+            $publicYn =$request->post('iPublic');
+            $imageStoreName = '';
+            $ranking = array();
+            for($i=0;$i<5;$i++){
+                $arr['writer_name'] = $request->post('iRankingName'.$i);
+                $arr['explain'] = $request->post('iRanking'.$i);
+                $arr['youtubeExp'] =$request->post('iRankingYoutube'.$i);
+                $url =$request->post('iRankingUrl'.$i);
+                $urlsplit = explode('=', $url);
+                $arr['videoId'] =$urlsplit[count($urlsplit)-1];
+                array_push($ranking, implode("|", $arr));
+            }
 
+            //이미지 저장
+            if($request->file('imageFile')){
+                $imagePath = $request->file('imageFile');
+                $imageNameWithExtension = $imagePath->getClientOriginalName();
+                $imageName = pathinfo($imageNameWithExtension, PATHINFO_FILENAME);
+                $extension = $imagePath->getClientOriginalExtension();
+
+                $allowType = array('jpg', 'jpeg', 'gif', 'png', 'bmp');
+
+                if (!in_array(strtolower($extension), $allowType)) {
+                    $result['status'] = 'imgfail';
+                    $result['msg'] = '이미지 파일만 업로드가 가능합니다.';
+
+                    return redirect()->back();
+                }
+                $imageStoreName = $imageName.'_'.time().'.'.$extension;
+                $request->file('imageFile')->storeAs('uploads/thumbnail/', $imageStoreName);
+
+                $result['status'] = 'success';
+                $result['msg'] = '이미지 업로드가 완료되었습니다.';
+                $result['fileName'] = $imageStoreName;
+                $result['savePath'] = asset('storage/thumbnail/profile/'.$imageStoreName);
+            }
+            else {
+                $result['status'] = 'fail';
+                $result['msg'] = '이미지 업로드에 실패했습니다.';
+            }
+
+            DB::table('latest_trend')->insert(array(
+                'title'=>$title,
+                'summary'=>$summary,
+                'content'=>$content,
+                'writer_id'=>$writerId,
+                'main_image'=>$imageStoreName,
+                'writed_at'=>now(),
+                'public_yn'=>$publicYn,
+                'ranking0'=>$ranking[0],
+                'ranking1'=>$ranking[1],
+                'ranking2'=>$ranking[2],
+                'ranking3'=>$ranking[3],
+                'ranking4'=>$ranking[4]
+            ));
+            return redirect()->route('serviceinquiry.trend.index');
+        }
     }
-    public function trendDelete(){
+    public function trendEdit(Request $request){
+        if($request->isMethod('get')){
+            $idx = $request->get('idx');
+            $trendInfo = DB::select('select * from latest_trend where idx = ?', [$idx])[0];
+            $status = "edit";
+            $rankerArr = array();
+            $rankerArr[0] = explode('|', $trendInfo->ranking0);
+            $rankerArr[1] = explode('|', $trendInfo->ranking1);
+            $rankerArr[2] = explode('|', $trendInfo->ranking2);
+            $rankerArr[3] = explode('|', $trendInfo->ranking3);
+            $rankerArr[4] = explode('|', $trendInfo->ranking4);
 
+            return view('doadm.trend.form', compact('trendInfo', 'status', 'rankerArr'));
+        }else if($request->isMethod('post')){
+            $idx = $request->post('idx');
+            $mainImage = $request->post('main_image');
+            $title =$request->post('iSubject');
+            $summary =$request->post('iSummary');
+            $content =$request->post('iContent');
+            $writerId =3;
+            $publicYn =$request->post('iPublic');
+            $imageStoreName = '';
+            $ranking = array();
+            for($i=0;$i<5;$i++){
+                $arr['writer_name'] = $request->post('iRankingName'.$i);
+                $arr['explain'] = $request->post('iRanking'.$i);
+                $arr['youtubeExp'] =$request->post('iRankingYoutube'.$i);
+                $url =$request->post('iRankingUrl'.$i);
+                $urlsplit = explode('=', $url);
+                $arr['videoId'] =$urlsplit[count($urlsplit)-1];
+                array_push($ranking, implode("|", $arr));
+            }
+            if($mainImage!=null){
+                $imageStoreName =$mainImage;
+            }
+            //이미지 저장
+            if($request->file('imageFile')){
+                $imagePath = $request->file('imageFile');
+                $imageNameWithExtension = $imagePath->getClientOriginalName();
+                $imageName = pathinfo($imageNameWithExtension, PATHINFO_FILENAME);
+                $extension = $imagePath->getClientOriginalExtension();
+
+                $allowType = array('jpg', 'jpeg', 'gif', 'png', 'bmp');
+
+                if (!in_array(strtolower($extension), $allowType)) {
+                    $result['status'] = 'imgfail';
+                    $result['msg'] = '이미지 파일만 업로드가 가능합니다.';
+
+                    return redirect()->back();
+                }
+                $imageStoreName = $imageName.'_'.time().'.'.$extension;
+                $request->file('imageFile')->storeAs('uploads/thumbnail/', $imageStoreName);
+
+                $result['status'] = 'success';
+                $result['msg'] = '이미지 업로드가 완료되었습니다.';
+                $result['fileName'] = $imageStoreName;
+                $result['savePath'] = asset('storage/thumbnail/profile/'.$imageStoreName);
+            }
+
+
+            DB::table('latest_trend')->where('idx', $idx)->update(array(
+                'title'=>$title,
+                'summary'=>$summary,
+                'content'=>$content,
+                'writer_id'=>$writerId,
+                'main_image'=>$imageStoreName,
+                'writed_at'=>now(),
+                'public_yn'=>$publicYn,
+                'ranking0'=>$ranking[0],
+                'ranking1'=>$ranking[1],
+                'ranking2'=>$ranking[2],
+                'ranking3'=>$ranking[3],
+                'ranking4'=>$ranking[4]
+            ));
+            return redirect()->route('serviceinquiry.trend.detail', ['idx'=>$idx]);
+        }
     }
-    public function trendDetail(){
+    public function trendDelete(Request $request){
+        $idx = $request->get('idx');
+        DB::delete('delete from latest_trend where idx = ?', [$idx]);
+        return redirect()->route('serviceinquiry.trend.index');
+    }
+    public function trendDetail(Request $request){
+        $idx = $request->get('idx');
+        $trendInfo = DB::select('SELECT l.*, a.nickname adminName from latest_trend l, admin a WHERE l.idx = ? AND a.idx = l.writer_id', [$idx])[0];
+        $rank[0]=$trendInfo->ranking0;
+        $rank[1]=$trendInfo->ranking1;
+        $rank[2]=$trendInfo->ranking2;
+        $rank[3]=$trendInfo->ranking3;
+        $rank[4]=$trendInfo->ranking4;
 
+        for($idx=0;$idx<5;$idx++){
+            $arr = explode('|', $rank[$idx]);
+            if(count($arr)>1){
+                $ranking[$idx]['writer_name']=$arr[0];
+                $ranking[$idx]['explain']=$arr[1];
+                $ranking[$idx]['youtubeExp']=$arr[2];
+                $ranking[$idx]['youtubeId']=$arr[3];
+                $name = $ranking[$idx]['writer_name'];
+
+                $rankerInfo = DB::select('select * from users where nickname = ?', [$name])[0];
+                $ranking[$idx]['rIdx']=$rankerInfo->id;
+                $ranking[$idx]['rName']=$rankerInfo->nickname;
+                $ranking[$idx]['rImage']=$rankerInfo->save_profile_image;
+                $ranking[$idx]['role']=$rankerInfo->role;
+
+            }
+        }
+        return view('doadm.trend.read', compact('trendInfo', 'ranking'));
     }
 
     public function downloadAttachFile(Request $request){

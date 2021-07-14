@@ -91,146 +91,33 @@
 <!-- cp1fcard8 -->
 <div class="cp1fcard8 mgt1em">
 <div class="wrap1">
-
 	<!-- lst1 -->
 	<div class="lst1 even-grid evenmix-23 gap3pct">
-		<div class="item column">
+        @foreach ($trendList as $trend )
+        <div class="item column">
 			<div class="w1">
-				<a href="{{ route('sub.community.trend_detail', ['id' => '']) }}" class="a1">
+				<a href="{{ route('sub.community.trend_detail', ['id' => $trend->idx]) }}" class="a1">
 					<div class="f1">
 						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p101.jpg') }}" alt="★대체텍스트필수" />
+                            @if ($trend->main_image)
+                            <img src="{{ asset('storage/uploads/thumbnail/'.$trend->main_image) }}" alt="{{ $trend->title }}" />
+                            @else
+							<img src="{{ asset('assets/images/inc/noimg1.png') }}" alt="{{ $trend->title }}" />
+
+                            @endif
 						</span>
 						<!-- <i class="ic1 play">Play</i> -->
 					</div>
 					<div class="tg1">
-						<strong class="t1">[3월 2주차] 직장인들의 필수 항목 엑셀</strong>
-						<span class="t2">엑셀 전문 유튜브 채널 전격 분석!!!!!</span>
-						<span class="t3">2020.03.10</span>
+						<strong class="t1">{{ $trend->title }}</strong>
+						<span class="t2">{{ $trend->summary }}</span>
+						<span class="t3">{{ date('Y.m.d', strtotime($trend->writed_at)) }}</span>
 					</div>
 				</a>
 			</div>
 		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="{{ route('sub.community.trend_detail', ['id' => '']) }}" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p102.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<!-- <i class="ic1 play">Play</i> -->
-					</div>
-					<div class="tg1">
-						<strong class="t1">[3월 2주차] EXCEL 자격증 대분석 일이삼사오륙칠팔구십일이삼사오륙칠팔구십</strong>
-						<span class="t2">필요없는 건 하지말자! 일이삼사오륙칠팔구십일이삼사오륙칠팔구십</span>
-						<span class="t3">2020.03.10</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="{{ route('sub.community.trend_detail', ['id' => '']) }}" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p101.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<!-- <i class="ic1 play">Play</i> -->
-					</div>
-					<div class="tg1">
-						<strong class="t1">[3월 2주차] 직장인들의 필수 항목 엑셀</strong>
-						<span class="t2">엑셀 전문 유튜브 채널 전격 분석!!!!!</span>
-						<span class="t3">2020.03.10</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="{{ route('sub.community.trend_detail', ['id' => '']) }}" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p102.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<!-- <i class="ic1 play">Play</i> -->
-					</div>
-					<div class="tg1">
-						<strong class="t1">[3월 2주차] EXCEL 자격증 대분석 일이삼사오륙칠팔구십일이삼사오륙칠팔구십</strong>
-						<span class="t2">필요없는 건 하지말자! 일이삼사오륙칠팔구십일이삼사오륙칠팔구십</span>
-						<span class="t3">2020.03.10</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="{{ route('sub.community.trend_detail', ['id' => '']) }}" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p101.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<!-- <i class="ic1 play">Play</i> -->
-					</div>
-					<div class="tg1">
-						<strong class="t1">[3월 2주차] 직장인들의 필수 항목 엑셀</strong>
-						<span class="t2">엑셀 전문 유튜브 채널 전격 분석!!!!!</span>
-						<span class="t3">2020.03.10</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="{{ route('sub.community.trend_detail', ['id' => '']) }}" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p102.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<!-- <i class="ic1 play">Play</i> -->
-					</div>
-					<div class="tg1">
-						<strong class="t1">[3월 2주차] EXCEL 자격증 대분석 일이삼사오륙칠팔구십일이삼사오륙칠팔구십</strong>
-						<span class="t2">필요없는 건 하지말자! 일이삼사오륙칠팔구십일이삼사오륙칠팔구십</span>
-						<span class="t3">2020.03.10</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="{{ route('sub.community.trend_detail', ['id' => '']) }}" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p101.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<!-- <i class="ic1 play">Play</i> -->
-					</div>
-					<div class="tg1">
-						<strong class="t1">[3월 2주차] 직장인들의 필수 항목 엑셀</strong>
-						<span class="t2">엑셀 전문 유튜브 채널 전격 분석!!!!!</span>
-						<span class="t3">2020.03.10</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="{{ route('sub.community.trend_detail', ['id' => '']) }}" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p102.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<!-- <i class="ic1 play">Play</i> -->
-					</div>
-					<div class="tg1">
-						<strong class="t1">[3월 2주차] EXCEL 자격증 대분석 일이삼사오륙칠팔구십일이삼사오륙칠팔구십</strong>
-						<span class="t2">필요없는 건 하지말자! 일이삼사오륙칠팔구십일이삼사오륙칠팔구십</span>
-						<span class="t3">2020.03.10</span>
-					</div>
-				</a>
-			</div>
-		</div>
-	</div>
+        @endforeach
+        </div>
 	<!-- /lst1 -->
 
 </div>

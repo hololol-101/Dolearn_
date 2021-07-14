@@ -645,11 +645,21 @@ Route::group(['prefix'=>'serviceinquiry', 'as'=>'serviceinquiry.'], function(){
          // 최신 트렌드 목록
         Route::get('index', [ServiceInquiryController::class, 'trendIndex'])->name('index');
 
-        // 최신 트렌드 생성
+        // 최신 트렌드 작성
         Route::get('create', [ServiceInquiryController::class, 'trendCreate'])->name('create');
+
+        // 최신 트렌드 저장
+        Route::post('create', [ServiceInquiryController::class, 'trendCreate'])->name('create');
 
         // 최신 트렌드 삭제
         Route::get('delete', [ServiceInquiryController::class, 'trendDelete'])->name('delete');
+
+        // 최신 트렌드 수정
+        Route::get('edit', [ServiceInquiryController::class, 'trendEdit'])->name('edit');
+
+        // 최신 트렌드 수정 저장
+        Route::post('edit', [ServiceInquiryController::class, 'trendEdit'])->name('edit');
+
 
         // 최신 트렌드 상세
         Route::get('detail', [ServiceInquiryController::class, 'trendDetail'])->name('detail');
