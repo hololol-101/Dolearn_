@@ -37,7 +37,7 @@
 </p>
 
 <!-- 폼아이템들(.cp1form1item1) -->
-<form method="POST" target="route('sub.community.one_to_one')" id="★1form0" enctype="multipart/form-data">
+<form method="POST" action="{{ route('sub.community.one_to_one') }}" id="★1form0" enctype="multipart/form-data">
     @csrf
     <div class="cp1form1item1">
         <div class="dt">

@@ -106,19 +106,18 @@
         @foreach ($faqList as $faq)
         <li class="di1">
 			<a href="javascript:void(0);" class="dt1">
-			{{	$faq->title}}
+			{{ $faq->title }}
 			</a>
 			<div class="dd1">
                 <div class="attach1">
                     @if($faq->attach_file!=null)
                     @foreach (explode(',', $faq->attach_file) as $file)
-
                     <ul>
                         <li>
-                            <a href="{{ asset('storage/uploads/attach/'.$file) }}.'" class="filename">{{ $file }}</a>
-                            <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick = window.open("'.asset('storage/uploads/attach/'.$file).'", "_blank")><i class="ic1"></i> 바로보기</a>
+                            <a href="javascript:void(0)" class="filename" onclick="location.href='{{ route('serviceinquiry.download_attach_file', ['filename'=>$file]) }}'">{{ $file }}</a>
+                            <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick = "window.open('{{ asset('storage/uploads/attach/'.$file) }}', '_blank')"><i class="ic1"></i> 바로보기</a>
                         </li>
-                        </ul>
+                    </ul>
 
                     @endforeach
                     @endif
