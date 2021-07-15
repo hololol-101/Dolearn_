@@ -69,9 +69,10 @@ if(!function_exists("create_notification")){
             $query['created_at']=now();
             if($division =="learning"){
                 $query['program_name']="수강";
+                $query['route']=$url;
             }else if($division == "lecture"){
                 $query['program_name']="운영";
-                $query['route']='/manage/lecture/lecture_info?idx='.$url;
+                $query['route']=$url;
             }if($division=="qna"){
                 $query['program_name']="문의";
                 $query['route']='/sub/community/service_qna';

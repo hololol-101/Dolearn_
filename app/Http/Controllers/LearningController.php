@@ -435,10 +435,10 @@ class LearningController extends Controller{
             ));
             $lectureInfo = DB::table('lecture')->where('idx',$lectureIdx)->get()[0];
 
-            createNotification('learning',$userId, $lectureInfo->title, '질문등록이 완료되었습니다..','/sub/management/my_question_detail?idx='.$qnaIdx.'');
+            createNotification('learning',$userId, $lectureInfo->title, '질문이 등록되었습니다.','/sub/lecture/lecture_detail?idx='.$lectureIdx.'');
             // 학생 알림 추가
 
-            createNotification('lecture',$lectureInfo->owner_id, $lectureInfo->title, '내 강좌에 미해결 질문이 등록되었습니다..', $lectureIdx.'');
+            createNotification('lecture',$lectureInfo->owner_id, $lectureInfo->title, '내 강좌에 미해결 질문이 등록되었습니다.', '/manage/lecture/lecture_info?idx='.$lectureIdx.'');
             // 강좌 미해결 알림 추가
 
             $result['status'] = 'success';
@@ -636,6 +636,9 @@ class LearningController extends Controller{
                 ]);
 
                 $result['status'] = 'success';
+                $lectureInfo = DB::select('select * from lecture where idx = ?', [$lectureIdx])[0];
+                createNotification('lecture', $lectureInfo->owner_id, $lectureInfo->title,'새로운 수강후기가 등록되었습니다.', '/manage/lecture/lecture_info?idx='.$lectureIdx);
+                // 수강후기 생성 알림 추가
             }
 
         } catch(Exception $e) {

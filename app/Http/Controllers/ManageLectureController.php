@@ -178,7 +178,7 @@ class ManageLectureController extends Controller {
                 'updated_at' => now()
             ));
 
-            createNotification('lecture', Auth::user()->email, $title,'강좌가 업데이트되었습니다.',$idx);
+            createNotification('lecture', Auth::user()->email, $title,'강좌가 업데이트 되었습니다.','/manage/lecture/lecture_info?idx='.$idx);
             // 강좌 수정 알림 추가
 
             $result['status'] = 'success';

@@ -641,7 +641,7 @@ class LectureController extends Controller{
             // 강좌 테이블에 수강자 +1
             DB::update('UPDATE lecture SET student_cnt = IFNULL(student_cnt, 0) + 1 WHERE idx = ?', [$idx]);
 
-            createNotification('learning', $userId, $lectureName,'새로운 강의가 추가되었습니다.', '/learning/main?idx='.$idx);
+            createNotification('learning', $userId, $lectureName,'새로운 강의가 추가되었습니다.', '/sub/lecture/lecture_detail?idx='.$idx);
             // 알림 추가
 
             $result['status'] = 'success';
@@ -1313,7 +1313,7 @@ class LectureController extends Controller{
                 ));
             }
 
-            createNotification('lecture', $userId, $tempLectureInfo->title,'강좌가 개설되었습니다..', $idx);
+            createNotification('lecture', $userId, $tempLectureInfo->title,'강좌가 개설되었습니다.', '/manage/lecture/lecture_info?idx='.$idx);
             // 강좌 생성 알림 추가
 
             // 기존 임시 저장된 데이터 모두 삭제
