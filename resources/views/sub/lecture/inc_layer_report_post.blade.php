@@ -4,8 +4,6 @@
 		<!-- lightbox -->
 		<div class="lightbox" style="max-width:445px;">
 			<div class="wrap2">
-
-
 				<!-- ★★(게시글 신고) -->
 				<div class="hg1">
 					<h3 class="h1">게시글 신고</h3>
@@ -34,13 +32,11 @@
 								<input type="radio" name="★1radio2" id="★1radio2e5" /> <label for="★1radio2e5">기타</label>
 							</li>
 						</ul>
-						<button type="submit" class="button primary block">신고하기</button>
+						<button type="button" class="button primary block">신고하기</button>
 					</div>
 					<!-- /cp1form1itemlist1 -->
 				</div>
 				<!-- /★★(게시글 신고) -->
-
-
 			</div>
 		</div>
 		<!-- /lightbox -->

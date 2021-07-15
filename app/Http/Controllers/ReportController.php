@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class ReportController extends Controller{
 
     public function report(Request $request){
+
         $type = $request->post('type');
         $idx = $request->post('idx');
         $content = $request->post('content');

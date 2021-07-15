@@ -557,6 +557,9 @@ class CommunityController extends Controller{
     }
 
     public function reviewAll(Request $request) {
+        $pageNum     = $request->get('page', 1);
+        // view에서 넘어온 현재페이지의 파라미터 값. 페이지 번호가 없으면 1, 있다면 그대로 사용
+
         $keyword = $request->get('keyword', '');
         $query = '';
         $where = '';
@@ -565,14 +568,36 @@ class CommunityController extends Controller{
             $where = ' AND content LIKE "%'.$keyword.'%"';
         }
 
+        $startNum    = ($pageNum-1)*5;
+        // 페이지 내 첫 게시글 번호
+        $writeList    = 5;
+        // 한 페이지당 표시될 글 갯수
+        $pageNumList = 10;
+        // 전체 페이지 중 표시될 페이지 갯수
+        $pageGroup   = ceil($pageNum/$pageNumList);
+        // 페이지 그룹 번호
+        $startPage   = (($pageGroup-1)*$pageNumList)+1;
+        // 페이지 그룹 내 첫 페이지 번호
+        $endPage     = $startPage + $pageNumList-1;
+        // 페이지 그룹 내 마지막 페이지 번호
+        $totalCount =  DB::select('select count(*) count  FROM lecture_review rev, lecture lec WHERE rev.lecture_idx = lec.idx'.$where.'')[0]->count;
+        // 전체 알림 갯수
+
+        $totalPage   = ceil($totalCount/$writeList);
+        // 전체 페이지 갯수
+        if($endPage >= $totalPage) {
+            $endPage = $totalPage;
+        }
+
+
         $query = 'SELECT rev.*, lec.idx AS lecutre_idx, lec.title, lec.save_thumbnail
                     FROM lecture_review rev, lecture lec
                     WHERE rev.lecture_idx = lec.idx'.$where.'
                     ORDER BY rev.writed_at DESC
-                    LIMIT 5';
+                    LIMIT '.$startNum.' ,5';
 
         $reviewList = DB::select($query);
-
-        return view('sub.community.review_all', compact('reviewList'));
+        $pageIndex = getPageIndex($totalCount, $writeList, $pageNumList, $pageNum);
+        return view('sub.community.review_all', compact('reviewList', 'pageIndex'));
     }
 }

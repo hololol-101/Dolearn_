@@ -112,7 +112,8 @@
     @if (count($reviewList) > 0)
         @foreach ($reviewList as $review)
         <li class="li1">
-			<div class="w1">
+            <input type="hidden" value="{{ $review->idx }}">
+            <div class="w1">
 				<div class="w1w1">
 					<div class="w1w1w1">
 						<a href="{{ route('sub.lecture.lecture_detail', ['idx' => $review->lecture_idx]) }}" class="a1">
@@ -149,14 +150,14 @@
 						<div class="cp1menu1 toggle1s1">
 							<strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>
 							<div class="cp1menu1c toggle-c">
-								<a href="#layer1report1post1" class="b2 report toggle" data-send-focus="that"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>
+								<a href="#layer1report1post1" class="b2 report toggle" data-send-focus="that"><i class="b2ic1"></i><span class="b2t1" onclick="clickReport(this)">신고하기</span></a>
 							</div>
 						</div>
 						<!-- /cp1menu1 -->
 					</div>
 					<div class="w1w2w2">
 						<div class="t3">
-							{{ format_date(strtotime($review->writed_at)) }}
+							{{ format_date($review->writed_at) }}
 						</div>
 					</div>
 				</div>
@@ -173,32 +174,7 @@
 
 <!-- infomenu1 -->
 <div class="infomenu1">
-
-	<!-- pagination -->
-	<div class="pagination" title="페이지 수 매기기">
-		<span class="control">
-			<span class="m first"><a title="처음 페이지"><i class="ic">처음</i></a></span>
-			<span class="m prev"><a title="이전 페이지"><i class="ic">이전</i></a></span>
-		</span>
-		<span class="pages">
-			<span class="m on"><a title="현재 1 페이지">1</a></span>
-			<span class="m"><a href="?" title="2 페이지">2</a></span>
-			<span class="m"><a href="?" title="3 페이지">3</a></span>
-			<span class="m"><a href="?" title="4 페이지">4</a></span>
-			<span class="m"><a href="?" title="5 페이지">5</a></span>
-			<span class="m"><a href="?" title="6 페이지">6</a></span>
-			<span class="m"><a href="?" title="7 페이지">7</a></span>
-			<span class="m"><a href="?" title="8 페이지">8</a></span>
-			<span class="m"><a href="?" title="9 페이지">9</a></span>
-			<span class="m"><a href="?" title="10 페이지">10</a></span>
-		</span>
-		<span class="control">
-			<span class="m next"><a href="?" title="다음 페이지"><i class="ic">다음</i></a></span>
-			<span class="m last"><a href="?" title="마지막 페이지"><i class="ic">마지막</i></a></span>
-		</span>
-	</div>
-	<!-- /pagination -->
-
+    {!! $pageIndex['htmlCode'] !!}
 </div>
 <!-- /infomenu1 -->
 
@@ -234,5 +210,47 @@ $('#search_keyword').keydown(function(key) {
         location.href = '/sub/community/review_all?keyword=' + searchKeyword;
     }
 });
+</script>
+
+<script>
+    var idx
+    function clickReport(obj){
+        var my = $(obj);
+        idx = my.parents("li").find("input").val();
+    }
+    $(function(){
+        var my = $('#layer1report1post1');
+        var close = $('.close', my);
+        my.find(':button').on('click', function(e){
+            e.preventDefault();
+            var content = $('input[name="★1radio2"]:checked').siblings('label').text()
+            if(content ==''){
+                alert('신고사유를 선택해주세요!');
+                return false;
+            }
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                dataType: 'json',
+                url: '{{ route('report.report') }}',
+                data: {
+                    'type': "review",
+                    'idx': idx,
+                    'content':content
+                },
+                success: (data) => {
+                    if(data.status=="success"){
+                        alert("신고접수가 완료되었습니다.")
+                    }else{
+                        alert("이미 신고접수를 하셨습니다.")
+                    }
+                    close.trigger('click');
+                }
+            });
+        })
+
+    })
 </script>
 @endsection
