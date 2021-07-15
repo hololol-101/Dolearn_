@@ -84,8 +84,8 @@
         </div>
         <div class="w2">
             <a href="#★" class="cp1switch1 switch toggle fw4"  onclick="location.href = '{{ route('sub.dashboard.dashboard_main') }}'")>
-                <span class="t1 sw-on" >강사 대시보드 OFF</span>
-                <span class="t1 sw-off">강사 대시보드 ON</span>
+                <span class="t1 sw-off" >강사 대시보드 OFF</span>
+                <span class="t1 sw-on">강사 대시보드 ON</span>
                 <i class="ic1"></i>
             </a>
         </div>
