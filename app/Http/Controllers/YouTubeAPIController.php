@@ -70,9 +70,11 @@ class YouTubeAPIController extends Controller{
             if($existChannel>0){//채널이 존재하는 경우
                 $snippet = $res->items[0]->snippet;
                 //이미 회원인지 확인
-                $check=DB::select('select * from users where email = ? and role = "youtuber"', [$me->email]);
+                $check=DB::select('select * from users where email = ? and role != "student" ', [$me->email]);
                 if(count($check)){
-                    return '<script>alert("이미 존재하는 계정입니다.")</script>'.view('account.signup');
+                    if(password_verify('youtube', $check[0]->password)){
+                        return '<script>alert("이미 존재하는 계정입니다.")</script>'.view('account.signup');
+                    }
                 }
                 //url 이미지 DB에 저장
                 $image = file_get_contents($snippet->thumbnails->default->url);
@@ -81,7 +83,7 @@ class YouTubeAPIController extends Controller{
                 file_put_contents( 'storage/uploads/profile/'.$imageStoreName, $image);
 
                 $query = DB::insert('insert into users (email, password, nickname, role, introduction, ori_profile_image, save_profile_image, notification_1, notification_2, notification_4, event_yn, created_at, regist_host)'
-                .' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [$me->email, password_hash('youtuber', PASSWORD_DEFAULT) , $snippet->title, 'youtuber', $snippet->description, $imageName, $imageStoreName, 'Y', 'Y', 'Y', 'Y', now(),  $_SERVER['REMOTE_ADDR']]);
+                .' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [$me->email, password_hash('youtube', PASSWORD_DEFAULT) , $snippet->title, 'youtuber', $snippet->description, $imageName, $imageStoreName, 'Y', 'Y', 'Y', 'Y', now(),  $_SERVER['REMOTE_ADDR']]);
                 $request->session()->put('email', $me->email);
                 $request->session()->put('role', 'youtuber');
                 return redirect()->route('main');
@@ -137,10 +139,13 @@ class YouTubeAPIController extends Controller{
 
         if($me!=""){
         //이미 회원인지 확인
-            $check=DB::select('select * from users where email = ? and role = "youtuber"', [$me->email]);
+            $check=DB::select('select * from users where email = ? and role != "student"', [$me->email]);
 
             if(count($check)>0){
-                Auth::attempt(['email' => $me->email, 'password' => 'youtuber']);
+                if(password_verify('youtube', $check[0]->password)){
+                    Auth::attempt(['email' => $me->email, 'password' => 'youtube']);
+
+                }
                 //탈퇴한 경우
                 if(Auth::user()->status=="withdraw"){
                     Auth::logout();

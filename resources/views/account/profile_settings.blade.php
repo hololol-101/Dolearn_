@@ -257,7 +257,7 @@
 			<span class="vam op06">(이메일 변경 후 재인증 필요)</span>
 			<input type="text" id="★1text1" value={{ $user->email }} class="w100 type1 text-email" disabled/>
 		</div>
-
+        @if($role=='')
 		<div class="form1item1">
 			<label for="★1pw1" class="tt1 fl">비밀번호</label>
 			<a href="#" class="fr bdb1px">비밀번호를 모르신다면?</a>
@@ -265,6 +265,7 @@
 			<input type="password" id="★1pw2" value="" placeholder="새 비밀번호" title="새 비밀번호" class="w100 type1 text-pw2" />
 			<input type="password" id="★1pw3" value="" placeholder="새 비밀번호 확인" title="새 비밀번호 확인" class="w100 type1 text-pw3" />
 		</div>
+        @endif
 		<!-- /폼아이템들 -->
 
 
@@ -303,12 +304,16 @@
 			});
 
 			function chkForm(){
+                @if($role!='')
+                $button.removeAttr('disabled');
+                @else
 				//if( $fc0.val() && $fc1.val() && $fc2.val() && $fc3.val() && $fc4.val() ){
 				if( $fc0.val() && $fc1.val() && $fc2.val() ){ // 새 비밀번호, 새 비밀번호 확인 제외
 					$button.removeAttr('disabled');
 				}else{
 					$button.attr({'disabled': 'disabled'});
 				}
+                @endif
 			}
 			chkForm();
 
@@ -317,6 +322,51 @@
 	});
 </script>
 <script>
+    @if($role!='')
+    $('.button', $('.cp1profile1write1')).on("click", function(){
+        let nickname = $('#★1text0');
+        let email = $('#★1text1');
+        let data= {
+            'nickname':nickname.val(),
+            'email':email.val(),
+            'textarea01': $('#textarea01').val(),
+            'role':'{{ $role }}'
+        }
+        if(email.val().search(/([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/)==-1){
+            alert("이메일 형식이 잘못되었습니다.");
+            email.focus();
+            return false;
+        }
+        $.ajax({
+            headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'POST',
+            dataType: 'json',
+            url: "{{ route('account.profile_update_all')}}",
+            data: data,
+            success: (response) => {
+                if(response.msg == 'ExistNick'){
+                    alert("이미 해당 닉네임이 존재합니다.");
+                    nickname.focus();
+                }
+                else if(response.msg == 'ExistEmail'){
+                    alert("이미 등록된 이메일입니다.");
+                    nickname.focus();
+                }
+                else{
+                    //메인 페이지 이동
+                    alert("프로필 수정이 완료되었습니다. 메인로 이동합니다.");
+                    location.href = "{{ route('main') }}";
+                }
+            },
+            error: (response)=> {
+                alert(response.msg);
+            }
+        });
+        return false;
+    })
+    @else
     $('.button', $('.cp1profile1write1')).on("click", function(){
         let nickname = $('#★1text0');
         let email = $('#★1text1');
@@ -353,36 +403,37 @@
         $.ajax({
             headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        type: 'POST',
-        dataType: 'json',
-        url: "{{ route('account.profile_update_all')}}",
-        data: data,
-        success: (response) => {
-            if(response.msg == 'PasswordError'){
-                alert("비밀번호를 잘못입력하셨습니다.");
-                pwd.focus();
+            },
+            type: 'POST',
+            dataType: 'json',
+            url: "{{ route('account.profile_update_all')}}",
+            data: data,
+            success: (response) => {
+                if(response.msg == 'PasswordError'){
+                    alert("비밀번호를 잘못입력하셨습니다.");
+                    pwd.focus();
+                }
+                else if(response.msg == 'ExistNick'){
+                    alert("이미 해당 닉네임이 존재합니다.");
+                    nickname.focus();
+                }
+                else if(response.msg == 'ExistEmail'){
+                    alert("이미 등록된 이메일입니다.");
+                    nickname.focus();
+                }
+                else{
+                    //메인 페이지 이동
+                    alert("프로필 수정이 완료되었습니다. 메인로 이동합니다.");
+                    location.href = "{{ route('main') }}";
+                }
+            },
+            error: (response)=> {
+                alert(response.msg);
             }
-            else if(response.msg == 'ExistNick'){
-                alert("이미 해당 닉네임이 존재합니다.");
-                nickname.focus();
-            }
-            else if(response.msg == 'ExistEmail'){
-                alert("이미 등록된 이메일입니다.");
-                nickname.focus();
-            }
-            else{
-                //메인 페이지 이동
-                alert("프로필 수정이 완료되었습니다. 메인로 이동합니다.");
-                location.href = "{{ route('main') }}";
-            }
-        },
-        error: (response)=> {
-            alert(response.msg);
-        }
-    });
-    return false;
-})
+        });
+        return false;
+    })
+    @endif
 </script>
 
 

@@ -78,40 +78,50 @@ class AccountController extends Controller{
     }
 
     public function profileSettings() {
-        return view('account.profile_settings');
+        $role='';
+        if(password_verify('youtube', Auth::user()->password)){
+            $role = "youtuber";
+        }
+        return view('account.profile_settings', compact('role'));
     }
 
     public function profileUpdateAll(Request $request) {
         $req = $request->post();
-
         $user = Auth::user();
         $email = $user->email;
         $nickname = $user->nickname;
         $email_verified_at = $user->email_verified_at;
         $password = $user->password;
-        // 비밀번호 확인
-        if(password_verify($req['password'],  $password)){
-            //닉네임이 다를 경우 존재하는 닉네임인지 확인
-            if($nickname!=$req['nickname']){
-                $query = DB::select('select * from users where nickname= ?', [$req['nickname']]);
-                if(count($query)!=0){
-                    return response()->json(array('msg'=> "ExistNick"), 200);
-                }
-                else{
-                    $nickname = $req['nickname'];
-                }
+        $role = $request->post('role');
+
+        //닉네임이 다를 경우 존재하는 닉네임인지 확인
+        if($nickname!=$req['nickname']){
+            $query = DB::select('select * from users where nickname= ?', [$req['nickname']]);
+            if(count($query)!=0){
+                return response()->json(array('msg'=> "ExistNick"), 200);
             }
-            //이메일이 다를 경우 존재하는 이메일인지 확인
-            if($email!=$req['email']){
-                $query = DB::select('select * from users where email= ?', [$req['email']]);
-                if(count($query)!=0){
-                    return response()->json(array('msg'=> "ExistEmail"), 200);
-                }
-                else{
-                    $email =$req['email'];
-                    $email_verified_at="null";
-                }
+            else{
+                $nickname = $req['nickname'];
             }
+        }
+        //이메일이 다를 경우 존재하는 이메일인지 확인
+        if($email!=$req['email']){
+            $query = DB::select('select * from users where email= ?', [$req['email']]);
+            if(count($query)!=0){
+                return response()->json(array('msg'=> "ExistEmail"), 200);
+            }
+            else{
+                $email =$req['email'];
+                $email_verified_at="null";
+            }
+        }
+
+        if($role =="youtuber"){ //유튜브 계정의 정보 수정할 경우
+            $query=DB::update('UPDATE users SET email=?, nickname=?, introduction=?, email_verified_at=?, updated_at=? where id = ?',
+            [$email, $nickname, $req['textarea01'], $email_verified_at, now(), $user->id]);
+
+            return response()->json(array('msg'=> "success"), 200);
+        }else if(password_verify($req['password'],  $password)){    // 일반계정 수정할 경우 비밀번호 확인
             //새 비밀번호를 입력한 경우 비밀번호 변경
             if(isset($req['newPassword'])){
                 $password = password_hash($req['newPassword'], PASSWORD_DEFAULT);
@@ -121,10 +131,10 @@ class AccountController extends Controller{
             [$email, $password, $nickname, $req['textarea01'], $email_verified_at, now(), $user->id]);
 
             return response()->json(array('msg'=> "success"), 200);
-        }
-        else{
+        }else{ //일반계정 비번 다를경우
             return response()->json(array('msg'=> "PasswordError"), 200);
         }
+        return response()->json(array('msg'=> "success"), 200);
     }
     public function saveProfileImage(Request $request){
 
