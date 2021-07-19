@@ -569,26 +569,42 @@ class ManageLectureController extends Controller {
         // GET
         if ($request->isMethod('get')) {
             $lectureIdx = $request->get('idx', '');
+            $page = $request->get('page', 1);
             $orderBy = ' ORDER BY writed_at DESC';
 
         // POST
         } else {
             $lectureIdx = $request->post('lecture_idx', '');
             $type = $request->post('type', '');
+            $page = $request->post('page', 1);
             $sortType = $request->post('sort_type', '');
             $orderBy = ' ORDER BY '.$type.' '.$sortType;
         }
 
+        //페이지 구현
+        $startNum    = ($page-1)*10;
+        // 페이지 내 첫 게시글 번호
+        $writeList    = 10;
+        // 한 페이지당 표시될 글 갯수
+        $pageNumList = 10;
+        // 전체 페이지 중 표시될 페이지 갯수
+        $totalCount  = DB::select('select count(*) count from my_question where lecture_idx = '.$lectureIdx.$where)[0]->count;
+        // 전체 알림 갯수
+
         $where = ' AND solution_yn = "N"';
 
         $query = 'SELECT * FROM my_question WHERE lecture_idx = '.$lectureIdx.$where.$orderBy;
+        $limit=" limit ".$startNum.", ".$writeList." ";
 
         // 미해결 된 질문 목록 조회
-        $qnaList = DB::select($query);
+        $qnaList = DB::select($query.$limit);
+
+        $pageIndex = getPageIndex($totalCount, $pageNumList, $writeList, $page);
+        // 게시판 page nav
 
         // GET
         if ($request->isMethod('get')) {
-            return view('manage.lecture.qna_list', compact('qnaList'));
+            return view('manage.lecture.qna_list', compact('qnaList', 'pageIndex'));
 
         // POST
         } else {
@@ -627,6 +643,8 @@ class ManageLectureController extends Controller {
     public function qnaDetail(Request $request) {
         $lectureIdx = $request->get('idx', '');
         $questionIdx = $request->get('qna_idx', '');
+        $permission = 'Y';
+        //댓글 고정 권한
 
         // 질문 상세 정보 조회(연관된 강의 영상 정보 포함)
         $qnaInfo = DB::select('SELECT myq.*, curri.video_id, curri.new_video_title FROM my_question myq, my_curriculum curri WHERE myq.video_id = curri.video_id AND myq.writer_id = curri.user_id AND myq.idx = '.$questionIdx);
@@ -635,7 +653,7 @@ class ManageLectureController extends Controller {
             $qnaInfo = $qnaInfo[0];
         }
 
-        return view('manage.lecture.qna_detail', compact('qnaInfo'));
+        return view('manage.lecture.qna_detail', compact('qnaInfo', 'permission'));
     }
 
     public function reviewList(Request $request) {
@@ -646,23 +664,36 @@ class ManageLectureController extends Controller {
         // GET
         if ($request->isMethod('get')) {
             $lectureIdx = $request->get('idx', '');
+            $page = $request->get('page', 1);
             $orderBy = ' ORDER BY writed_at DESC';
-
         // POST
         } else {
             $lectureIdx = $request->post('lecture_idx', '');
             $type = $request->post('type', '');
             $sortType = $request->post('sort_type', '');
+            $page = $request->post('page', 1);
             $orderBy = ' ORDER BY '.$type.' '.$sortType;
         }
 
-        $query = 'SELECT * FROM lecture_review WHERE lecture_idx = '.$lectureIdx.$orderBy;
+        //Pagenation
+        $startNum    = ($page-1)*10;
+        // 페이지 내 첫 게시글 번호
+        $writeList    = 10;
+        // 한 페이지당 표시될 글 갯수
+        $pageNumList = 10;
+        // 전체 페이지 중 표시될 페이지 갯수
+        $totalCount  = DB::select('select count(*) count from lecture_review where lecture_idx = '.$lectureIdx.$orderBy)[0]->count;
+        // 전체 알림 갯수
+        $pageIndex = getPageIndex($totalCount, $pageNumList, $writeList, $page);
 
-        $reviewList = DB::select($query);
+
+        $query = 'SELECT * FROM lecture_review WHERE lecture_idx = '.$lectureIdx.$orderBy;
+        $limit=" limit ".$startNum.", ".$writeList." ";
+        $reviewList = DB::select($query.$limit);
 
         // GET
         if ($request->isMethod('get')) {
-            return view('manage.lecture.review_list', compact('reviewList'));
+            return view('manage.lecture.review_list', compact('reviewList', 'pageIndex'));
 
         // POST
         } else {

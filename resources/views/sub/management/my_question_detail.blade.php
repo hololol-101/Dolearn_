@@ -93,7 +93,7 @@
 					<a href="javascript:void(0);" class="a3 del" onclick="deleteQuestion('{{ $myQuestionInfo->idx }}')"><span class="a3t1">삭제</span></a>
 				</div>
 				<div class="eg1">
-					<a href="javascript:void(0);" class="cp1like1"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">0</span></a>
+					<a href="javascript:void(0);" class="cp1like1" onclick="qnaLike()"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">{{ $myQuestionInfo->like_cnt }}</span></a>
 					<!-- cp1menu1 -->
 					<div class="cp1menu1 toggle1s1">
 						<strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>
@@ -106,146 +106,11 @@
 			</div>
 		</div>
 		<!-- /게시글 -->
-		<!-- 댓글작성 -->
-		<div class="w1 item reply">
-			<textarea rows="3" cols="80" title="댓글작성" class="w100 type1"></textarea>
-			<div class="tar">
-				<button type="submit" class="button submit semismall">등록하기</button>
-			</div>
-		</div>
-		<!-- /댓글작성 -->
-		<!-- 댓글 -->
-		<div class="w1 item reply">
-			<b class="g1"><i class="g1ic1"></i><span class="g1t1">강사가 채택한 답변입니다.</span></b>
-			<div class="w1w1">
-				<div class="f1">
-					<span class="f1p1">
-						<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-					</span>
-				</div>
-			</div>
-			<div class="w1w2">
-				<div class="tg1">
-					<span class="t1">강사명</span>
-					<span class="t2">방금</span>
-				</div>
-				<div class="tg2">
-					질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.
-				</div>
-				<div class="eg1">
-					<a href="#★" class="cp1like2"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">0</span></a>
-					<!-- cp1menu1 -->
-					<div class="cp1menu1 toggle1s1">
-						<strong><a href="#★" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>
-						<div class="cp1menu1c toggle-c">
-							<a href="#layer1report1post1" class="b2 report toggle" data-send-focus="that"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>
-						</div>
-					</div>
-					<!-- /cp1menu1 -->
-				</div>
-				<!-- toggle1s1 -->
-				<div class="toggle1s1">
-					<a href="#★" class="b1 toggle-b fsS2">답글</a>
-					<div class="toggle-c">
-						<textarea rows="3" cols="80" title="대댓글작성" class="w100 type1"></textarea>
-						<div class="tar">
-							<button type="button" class="button toggle-close secondary semismall mgr05em">취소</button>
-							<button type="submit" class="button submit semismall">등록</button>
-						</div>
-					</div>
-				</div>
-				<!-- /toggle1s1 -->
-				<!-- toggle1s2 -->
-				<div class="toggle1s2">
-					<a href="#★" class="b1 toggle1s2-b cp1switch2 switch fsS2">
-						<span class="cp1switch2-t1 sw-off">답글 보기</span>
-						<span class="cp1switch2-t1 sw-on">답글 숨기기</span>
-						<i class="ic1"></i>
-					</a>
-					<div class="toggle1s2-c">
+        <div>
+            <div id="commentSrc"></div>
+            <div id="commentPage"></div>
 
-						<!-- 대댓글 -->
-						<div class="w1 item reply2">
-							<div class="w1w1">
-								<div class="f1">
-									<span class="f1p1">
-										<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-									</span>
-								</div>
-							</div>
-							<div class="w1w2">
-								<div class="tg1">
-									<span class="t1">강사명</span>
-									<span class="t2">방금</span>
-								</div>
-								<div class="tg2">
-									좋은 평 감사합니다.
-								</div>
-								<div class="eg1">
-									<a href="#★" class="cp1like2"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">0</span></a>
-									<!-- cp1menu1 -->
-									<div class="cp1menu1 toggle1s1">
-										<strong><a href="#★" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>
-										<div class="cp1menu1c toggle-c">
-											<a href="#layer1report1post1" class="b2 report toggle" data-send-focus="that"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>
-										</div>
-									</div>
-									<!-- /cp1menu1 -->
-								</div>
-							</div>
-						</div>
-						<!-- /대댓글 -->
-
-					</div>
-				</div>
-				<!-- /toggle1s2 -->
-			</div>
-		</div>
-		<!-- /댓글 -->
-		<!-- 댓글 -->
-		<div class="w1 item reply">
-			<div class="w1w1">
-				<div class="f1">
-					<span class="f1p1">
-                        <img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-					</span>
-				</div>
-			</div>
-			<div class="w1w2">
-				<div class="tg1">
-					<span class="t1">누군가</span>
-					<span class="t2">1시간전</span>
-				</div>
-				<div class="tg2">
-					일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-					일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-				</div>
-				<div class="eg1">
-					<a href="#★" class="cp1like2"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">0</span></a>
-					<!-- cp1menu1 -->
-					<div class="cp1menu1 toggle1s1">
-						<strong><a href="#★" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>
-						<div class="cp1menu1c toggle-c">
-							<a href="#layer1report1post1" class="b2 report toggle" data-send-focus="that"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>
-						</div>
-					</div>
-					<!-- /cp1menu1 -->
-				</div>
-				<!-- toggle1s1 -->
-				<div class="toggle1s1">
-					<a href="#★" class="b1 toggle-b fsS2">답글</a>
-					<div class="toggle-c">
-						<textarea rows="3" cols="80" title="대댓글작성" class="w100 type1"></textarea>
-						<div class="tar">
-							<button type="button" class="button toggle-close secondary semismall mgr05em">취소</button>
-							<button type="submit" class="button submit semismall">등록</button>
-						</div>
-					</div>
-				</div>
-				<!-- /toggle1s1 -->
-			</div>
-		</div>
-		<!-- /댓글 -->
+        </div>
 	</div>
 	<!-- /cp1bbs4view1 -->
 
@@ -256,8 +121,8 @@
 
 </div>
 <!-- /width1wrap1 -->
-
-
+<!--(댓글 관련 script)-->
+@include('manage.lecture.commentlist')
 <!-- (레이어팝업.신고하기) -->
 @include('sub.lecture.inc_layer_report_post')
 
@@ -386,5 +251,58 @@ function deleteQuestion(questionIdx) {
         });
     }
 }
+
+//질문 좋아요
+function qnaLike(){
+    var my = $('.cp1bbs4view1 .cp1like1 .cp1like1t2');
+    var cnt = my.html();
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'get',
+        dataType: 'json',
+        url : "{{ route('learning.qna_like') }}",
+        data: {
+            'idx':'{{ $myQuestionInfo->idx }}',
+        },
+        success : (data) => {
+            if(data.status=="like"){
+                my.html(parseInt(cnt)+1);
+            }else if(data.status=="dislike"){
+                my.html(parseInt(cnt)-1);
+            }
+        }
+    });
+}
+$('#layer1report1post1').find(':button').on('click', function(){
+    var my = $('#layer1report1post1');
+    var content = $('input[name="★1radio2"]:checked').siblings('label').text()
+    if(content ==''){
+        alert('신고사유를 선택해주세요!');
+        return false;
+    }
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'POST',
+        dataType: 'json',
+        url : "{{ route('report.report') }}",
+        data: {
+            'type':'qna',
+            'idx':'{{ $myQuestionInfo->idx }}',
+            'content': content
+        },
+        success : (data) => {
+            if(data.status=="success"){
+                alert("신고접수가 완료되었습니다.")
+            }else{
+                alert("이미 신고접수를 하셨습니다.")
+            }
+        }
+    });
+
+    })
 </script>
 @endsection

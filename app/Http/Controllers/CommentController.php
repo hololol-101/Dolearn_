@@ -15,8 +15,12 @@ class CommentController extends Controller
      */
     public function index(Request $request)
     {
-        $postId = $request->get('noticeId');
+        $postId = $request->get('postId');
         //게시글 id
+        $postType = $request->get('postType');
+        //글 타입(notice, question 등)
+        $permission = $request->get('permission', 'N');
+        //댓글 고정 권한
         $pageNum     = $request->get('page', 1);
         // view에서 넘어온 현재페이지의 파라미터 값. 페이지 번호가 없으면 1, 있다면 그대로 사용
         $startNum    = ($pageNum-1)*10;
@@ -25,22 +29,15 @@ class CommentController extends Controller
         // 한 페이지당 표시될 글 갯수
         $pageNumList = 10;
         // 전체 페이지 중 표시될 페이지 갯수
-        $pageGroup   = ceil($pageNum/$pageNumList);
-        // 페이지 그룹 번호
-        $count =  DB::select('select count(*) total_count from comment c where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" order by idx desc', [$postId])[0];
-        // //알림 수 조회 query
-        $totalCount  =$count->total_count;
+        $totalCount  =DB::select('select count(*) count from comment c where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" and c.post_type = ? order by idx desc', [$postId, $postType])[0]->count;
         // 전체 알림 갯수
-        $totalPage   = ceil($totalCount/$writeList);
-        // 전체 페이지 갯수
 
-
-        $commentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" order by idx desc limit '.$startNum.' ,'.$writeList, [$postId]);
-
+        $commentList = DB::select('select c.*, u.nickname, u.save_profile_image from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" and c.post_type =? order by c.status DESC, idx desc limit '.$startNum.' ,'.$writeList, [$postId, $postType]);
+        $result['query'] = 'select * from comment c join users u on c.writer_id = u.email where c.post_id = '.$postId.' and c.is_reply = "N"  and c.status!="delete" and c.post_type ='.$postType.' order by idx desc limit '.$startNum.' ,'.$writeList;
         //commentList에 있는 대댓글 조회
         $inIdx ='';
         if(count($commentList)>0){
-            $inIdx .= " and parent_reply_id IN (".$commentList[0]->idx;
+            $inIdx .= " and reply_id IN (".$commentList[0]->idx;
             for($i =1; $i<count($commentList); $i++){
                 $inIdx .= ",".$commentList[$i]->idx;
             }
@@ -51,6 +48,7 @@ class CommentController extends Controller
         $html = '';
         foreach($commentList as $comment){
             $html.= '<div class="w1 item reply">';
+            if($comment->status=="declaration")$html.='<b class="g1"><i class="g1ic1"></i><span class="g1t1">강사가 채택한 답변입니다.</span></b>';
             $html.='    <div class="w1w1">';
             $html.='        <div class="f1">';
             $html.='            <span class="f1p1">';
@@ -74,6 +72,7 @@ class CommentController extends Controller
             $html.='            <div class="cp1menu1 toggle1s1">';
             $html.='                <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
             $html.='                <div class="cp1menu1c toggle-c">';
+            if($permission =="Y")$html.='						<a href="javascript:void(0)" class="b2 pin" onclick="declaration(this)"><i class="b2ic1"></i><span class="b2t1">고정하기</span></a>';
             $html.='                    <a href="javascript:void(0)" rel="noopener" title="새 창" class="b2 report" onclick="reportClick(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
             $html.='                </div>';
             $html.='            </div>';
@@ -91,7 +90,7 @@ class CommentController extends Controller
             $html.='                </div>';
             $html.='            </div>';
             $html.='        </div>';
-            $keys = array_keys( array_column($recommentList, 'parent_reply_id'),  $comment->idx);
+            $keys = array_keys( array_column($recommentList, 'reply_id'),  $comment->idx);
             if(count($keys)>0){
                 $html.='<div class="toggle1s2">';
                 $html.='    <a href="#★" class="b1 toggle1s2-b cp1switch2 switch fsS2">';
@@ -148,7 +147,7 @@ class CommentController extends Controller
         $result['status'] = "success";
 
         $result['pageIndex'] = getPageIndexInAjax($totalCount, $writeList, $pageNumList, $pageNum, $_SERVER["HTTP_REFERER"]);
-
+        $result['id'] = $request->get('postId');
         return response()->json($result, 200);
         //
     }
@@ -160,7 +159,12 @@ class CommentController extends Controller
      */
     public function create(Request $request)
     {
-        $postId = $request->post('noticeId');
+        $postId = $request->post('postId');
+        //게시글 id
+        $postType = $request->post('postType');
+        //게시글 종류
+        $permission = $request->get('permission', 'N');
+        //강사 계정으로 댓글 답변 or 댓글 고정시 permission = 'Y'
         $parentId =$request->post('parentId');
         $content = $request->post('content');
         $isReply = $request->post('isReply');
@@ -169,8 +173,9 @@ class CommentController extends Controller
 
         DB::table('comment')->insert(array(
             'post_id'=>$postId,
+            'post_type'=>$postType,
             'writer_id'=>Auth::user()->email,
-            'parent_reply_id'=>$parentId,
+            'reply_id'=>$parentId,
             'content'=>$content,
             'writed_at'=>now(),
             'is_reply'=>$isReply,
@@ -185,7 +190,7 @@ class CommentController extends Controller
         // 전체 페이지 중 표시될 페이지 갯수
         $pageGroup   = ceil($pageNum/$pageNumList);
         // 페이지 그룹 번호
-        $count =  DB::select('select count(*) total_count from comment c where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" order by idx desc', [$postId])[0];
+        $count =  DB::select('select count(*) total_count from comment c where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" and c.post_type =? order by idx desc', [$postId, $postType])[0];
         // //알림 수 조회 query
         $totalCount  =$count->total_count;
         // 전체 알림 갯수
@@ -193,12 +198,12 @@ class CommentController extends Controller
         // 전체 페이지 갯수
 
 
-        $commentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" order by idx desc limit '.$startNum.' ,'.$writeList, [$postId]);
+        $commentList = DB::select('select c.*, u.nickname, u.save_profile_image from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" and c.post_type =? order by idx desc limit '.$startNum.' ,'.$writeList, [$postId, $postType]);
 
         //commentList에 있는 대댓글 조회
         $inIdx ='';
         if(count($commentList)>0){
-            $inIdx .= " and parent_reply_id IN (".$commentList[0]->idx;
+            $inIdx .= " and reply_id IN (".$commentList[0]->idx;
             for($i =1; $i<count($commentList); $i++){
                 $inIdx .= ",".$commentList[$i]->idx;
             }
@@ -209,6 +214,7 @@ class CommentController extends Controller
         $html = '';
         foreach($commentList as $comment){
             $html.= '<div class="w1 item reply">';
+            if($comment->status=="declaration")$html.='<b class="g1"><i class="g1ic1"></i><span class="g1t1">강사가 채택한 답변입니다.</span></b>';
             $html.='    <div class="w1w1">';
             $html.='        <div class="f1">';
             $html.='            <span class="f1p1">';
@@ -232,6 +238,8 @@ class CommentController extends Controller
             $html.='            <div class="cp1menu1 toggle1s1">';
             $html.='                <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
             $html.='                <div class="cp1menu1c toggle-c">';
+            if($permission =="Y")$html.='						<a href="javascript:void(0)" class="b2 pin" onclick="declaration(this)"><i class="b2ic1"></i><span class="b2t1">고정하기</span></a>';
+
             $html.='                    <a href="javascript:void(0)" rel="noopener" title="새 창" class="b2 report" onclick="reportClick(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
             $html.='                </div>';
             $html.='            </div>';
@@ -249,7 +257,7 @@ class CommentController extends Controller
             $html.='                </div>';
             $html.='            </div>';
             $html.='        </div>';
-            $keys = array_keys( array_column($recommentList, 'parent_reply_id'),  $comment->idx);
+            $keys = array_keys( array_column($recommentList, 'reply_id'),  $comment->idx);
             if(count($keys)>0){
                 $html.='<div class="toggle1s2">';
                 $html.='    <a href="#★" class="b1 toggle1s2-b cp1switch2 switch fsS2">';
@@ -305,7 +313,11 @@ class CommentController extends Controller
         $result['html'] = $html;
         $result['status'] = "success";
         $result['pageIndex'] = getPageIndexInAjax($totalCount, $writeList, $pageNumList, $pageNum, $_SERVER["HTTP_REFERER"]);
+        if($permission=='Y'){
+            $info = DB::select('SELECT l.title ,l.idx, m.writer_id FROM lecture l , my_question m WHERE l.idx = m.lecture_idx and m.idx =?', [$postId])[0];
+            createNotification('learning', $info->writer_id, $info->title,'내가 작성한 질문에 답변이 등록되었습니다.', '/sub/lecture/lecture_detail?idx='.$info->idx);
 
+        }
         return response()->json($result, 200);
 
     }
@@ -391,21 +403,30 @@ class CommentController extends Controller
             ));
             if($programId == "comment"||$programId =="recomment"){
                 DB::update('update comment set likes = likes+1 where idx =?', [$writingId]);
-                $result['q'] ='update comment set likes = likes+1 where idx ='.$writingId;
             }
             $result['msg'] = "like";
 
         }else{
             DB::delete('delete from my_likes where idx = ?', [$info[0]->idx]);
-            if($programId == "comment"){
-                DB::update('update comment set likes = likes-1 where idx =? ', [$writingId]);
+            if($programId == "comment"||$programId =="recomment"){
+                DB::update('update comment set likes = likes-1 where idx =?', [$writingId]);
             }
-
             $result['msg'] = "dislike";
         }
+        $result['query']='select * from my_likes where user_id = '.$email.' and writing_id = '.$writingId.' and program_id ='.$programId;
         return response()->json($result, 200);
         return response()->json(array("msg"=>"like"), 200);
 
     }
 
+    public function declare(Request $request){
+        $idx = $request->post('idx');
+        $lectureId = $request->post('lectureId');
+        $postWriter = $request->post('postWriter');
+        DB::table('comment')->where('idx', $idx)->update(array('status'=>'declaration'));
+        $lecture_title = DB::select('select title from lecture where idx = ?', [$lectureId])[0]->title;
+        createNotification('learning', $postWriter, $lecture_title,'내가 작성한 질문에 답변이 등록되었습니다.', '/sub/lecture/lecture_detail?idx='.$lectureId);
+        $result['status']="success";
+        return response()->json($result,200);
+    }
 }

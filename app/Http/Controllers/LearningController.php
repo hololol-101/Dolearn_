@@ -465,6 +465,30 @@ class LearningController extends Controller{
 
         return view('learning.learning_qna_detail', compact('myQuestionInfo'));
     }
+    public function qnaLike(Request $request){
+        $questionIdx = $request->get('idx');
+        $email = Auth::user()->email;
+        $likedIdx = DB::select('select idx from my_likes where writing_id = ? and user_id = ?', [$questionIdx, $email]);
+
+        if(count($likedIdx) != 0){
+            $likedIdx = $likedIdx[0]->idx;
+            DB::delete('delete from my_likes where idx = ?', [$likedIdx]);
+            DB::update('update my_question set like_cnt =like_cnt-1 where idx = ?', [$questionIdx]);
+            return response()->json(array('status'=>'dislike'), 200);
+
+        }
+        else{
+            DB::table('my_likes')->insert(array(
+                'user_id'=>Auth::user()->email,
+                'writing_id'=>$questionIdx,
+                'program_id'=>'qna',
+                'conn_host'=>$_SERVER['REMOTE_ADDR'],
+                'conn_time'=>now()
+            ));
+            DB::update('update my_question set like_cnt =like_cnt+ 1 where idx = ?', [$questionIdx]);
+        }
+        return response()->json(array('status'=>'like'), 200);
+    }
 
     public function recommand(Request $request) {
         $videoId = $request->get('uid', '');
@@ -634,7 +658,8 @@ class LearningController extends Controller{
                     'rating'=> $rating,
                     'writed_at'=> now(),
                 ]);
-
+                $avg = DB::select('select avg(rating) as avg from lecture_review where lecture_idx = ?', [$lectureIdx])[0]->avg;
+                DB::table('lecture')->where('idx', $lectureIdx)->update(array('rating'=> $avg) );
                 $result['status'] = 'success';
                 $lectureInfo = DB::select('select * from lecture where idx = ?', [$lectureIdx])[0];
                 createNotification('lecture', $lectureInfo->owner_id, $lectureInfo->title,'새로운 수강후기가 등록되었습니다.', '/manage/lecture/lecture_info?idx='.$lectureIdx);

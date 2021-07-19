@@ -1,50 +1,55 @@
-    <div class="w1 item reply">
-        <textarea rows="3" cols="80" title="댓글작성" class="w100 type1"></textarea>
-        <div class="tar">
-            <button type="submit" class="button submit semismall" onclick="enrollEvent(this)" value="N">등록하기</button>
-        </div>
-    </div>
-    <!-- /댓글작성 -->
-@php
-    $page = isset($_GET['page'])?$_GET['page']:1;
-@endphp
+
 <script>
-function enrollEvent(obj){
-    var my = obj;
-    var content = $(my).parent().siblings('textarea').val();
-    $(my).parent().siblings('textarea').val('')
-    var value = $(my).val();
-    var idx = $(my).siblings('input[type="hidden"]').val();
-    if(typeof(idx) =="undefined") idx = 0;
-    @if (Auth::check())
-        if(content==''){
-            alert("내용을 입력해주세요.");
-            return false;
-        }
-    $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        type: 'POST',
-        dataType: 'json',
-        url : "{{ route('sub.comment.create') }}",
-        data: {
-            'postId': {{ $boardView->idx }},
-            'parentId': idx,
-            'postType':"notice",
-            'content': content,
-            'isReply': value,
-            'page':{{ $page }}
-        },
-        success : (result) => {
-            $('#commentSrc').empty().append(result.html);
-            $('#commentPage').empty().append(result.pageIndex['htmlCode']);
-        }
-    });
-    @else
-        alert("로그인 후 이용해주세요.");
+    var postId = '';
+    @if(isset($_GET['qna_idx']))
+    postId = '{{ $_GET['qna_idx'] }}'
+    @elseif(isset($_GET['idx']))
+    postId = '{{ $_GET['idx'] }}'
     @endif
-}
+    @php
+        $page = isset($_GET['page'])?$_GET['page']:1;
+    @endphp
+    function enrollEvent(obj){
+        var my = obj;
+        var content = $(my).parent().siblings('textarea').val();
+        $(my).parent().siblings('textarea').val('')
+        var value = $(my).val();
+        var idx = $(my).siblings('input[type="hidden"]').val();
+        var permission = 'N';
+
+        if(typeof(idx) =="undefined") idx = 0;
+        @if(isset($permission)) permission = 'Y';@endif
+        @if (Auth::check())
+            if(content==''){
+                alert("내용을 입력해주세요.");
+                return false;
+            }
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                dataType: 'json',
+                url : "{{ route('sub.comment.create') }}",
+                data: {
+                    'postId': postId,
+                    'parentId': idx,
+                    'permission': permission,
+                    'postType':"question",
+                    'content': content,
+                    'isReply': value,
+                    'page':{{ $page }}
+                },
+                success : (result) => {
+                    $('#commentSrc').empty().append(result.html);
+                    $('#commentPage').empty().append(result.pageIndex['htmlCode']);
+                }
+            });
+        @else
+            alert("로그인 후 이용해주세요.");
+        @endif
+    }
 function likeClick(obj){
     @if (Auth::check())
         var my = obj;
@@ -81,6 +86,7 @@ function likeClick(obj){
         alert("로그인 후 이용해주세요.");
     @endif
 }
+
 function reportClick(obj){
     @if (Auth::check())
         var my = obj;
@@ -113,7 +119,8 @@ function reportClick(obj){
 
 }
 $(document).ready(function() {
-
+    var permission = 'N';
+    @if(isset($permission)) permission = 'Y';@endif
     $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -122,16 +129,17 @@ $(document).ready(function() {
         dataType: 'json',
         url : "{{ route('sub.comment.index') }}",
         data: {
-            'postId': {{ $boardView->idx }},
+            'postId': postId,
             'page':{{ $page }},
-            'postType':"notice"
+            'postType':"question",
+            'permission':permission
         },
         success : (result) => {
+            console.log(result.query);
             $('#commentSrc').empty().append(result.html);
             $('#commentPage').empty().append(result.pageIndex['htmlCode']);
         }
     });
-
 
 });
 </script>

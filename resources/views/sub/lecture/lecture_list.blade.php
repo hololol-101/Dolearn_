@@ -229,6 +229,7 @@ $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
                         <div class="ratings">
                             <strong class="t1 blind">별점</strong>
                             <i class="star5rating1">
+
                                 <i class="st-on" style="width:{{ round($lecture->rating * 20, 1) }}%;"><i class="ic1"></i></i><!-- (3.5/5) -->
                                 <i class="st-off" style="width:100%;"><i class="ic2"></i></i><!-- (100-70) -->
                             </i>

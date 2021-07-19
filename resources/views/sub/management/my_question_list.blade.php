@@ -123,7 +123,12 @@
                         <div class="f1">
                             <span class="f1p1">
                                 <!-- <img src="../../img/main/x1/x1p601.jpg" alt="★대체텍스트필수" /> -->
+                                @if(isset(Auth::user()->save_profile_image))
                                 <img src="{{ asset('storage/uploads/profile/'.Auth::user()->save_profile_image) }}" alt="{{ Auth::user()->save_profile_image }}" />
+                                @else
+                                <img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="{{ Auth::user()->save_profile_image }}" />
+
+                                @endif
                             </span>
                         </div>
                     </div>
@@ -143,12 +148,13 @@
                         </div>
                         <div class="tg2">
                             {{-- TODO: --}}
-                            <span class="t4">댓글 3개</span>
+                            <span class="t4">댓글 {{ $myQuestion->comment_cnt }}개</span>
                         </div>
                     </div>
                 </a>
                 <div class="eg1">
-                    <a href="javascript:void(0);" class="cp1like1"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">{{ $myQuestion->like_cnt }}</span></a>
+                    <a href="javascript:void(0);" class="cp1like1"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">
+                        @if ($myQuestion->like_cnt!='') {{ $myQuestion->like_cnt }} @else 0 @endif</span></a>
                 </div>
             </li>
             @endforeach

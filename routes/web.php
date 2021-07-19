@@ -103,6 +103,9 @@ Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
         //좋아요
         Route::get('like', [CommentController::class, 'like'])->name('like');
 
+        //댓글 고정
+        Route::post('declare', [CommentController::class, 'declare'])->name('declare');
+
     });
 
     // 게시판
@@ -359,6 +362,9 @@ Route::group(['prefix'=>'learning', 'as'=>'learning.'], function() {
 
     // 질문 상세
     Route::get('qna_detail', [LearningController::class, 'qnaDetail'])->name('qna_detail');
+
+    // 질문 좋아요
+    Route::get('qna_like', [LearningController::class, 'qnaLike'])->name('qna_like');
 
     // 추천 영상
     Route::get('recommand', [LearningController::class, 'recommand'])->name('recommand');

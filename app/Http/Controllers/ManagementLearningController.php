@@ -64,7 +64,10 @@ class ManagementLearningController extends Controller{
             $myLectureList = DB::select('SELECT lec.idx, lec.title FROM my_lecture mylec, lecture lec WHERE mylec.lecture_idx = lec.idx AND user_id = "'.$userId.'" ORDER BY applicated_at DESC');
 
             // 내 질문 목록 조회
-            $myQuestionList = DB::select('SELECT * FROM my_question WHERE writer_id = "'.$userId.'" AND status="active" ORDER BY writed_at DESC');
+            $myQuestionList = DB::select('SELECT m.*, IFNULL(c.count, 0) AS comment_cnt FROM my_question m LEFT OUTER JOIN (
+                SELECT post_id, COUNT(*) count FROM comment  where is_reply = "N" GROUP BY post_id
+            ) AS c
+            ON m.idx = c.post_id WHERE  m.writer_id = "'.$userId.'" AND m.status="active" group by m.idx ORDER BY m.writed_at DESC');
 
             return view('sub.management.my_question_list', compact('myLectureList', 'myQuestionList'));
 
@@ -91,10 +94,16 @@ class ManagementLearningController extends Controller{
 
                 $orderBy = ' ORDER BY writed_at DESC';
 
-                $query = 'SELECT * FROM my_question WHERE writer_id = "'.$userId.'"'.$where.$where2.$orderBy;
+                $query = 'SELECT m.*, IFNULL(c.count, 0) AS comment_cnt FROM my_question m LEFT OUTER JOIN (
+                    SELECT post_id, COUNT(*) count FROM comment  where is_reply = "N" GROUP BY post_id
+                ) AS c
+                ON m.idx = c.post_id
+                WHERE m.writer_id = "'.$userId.'"'.$where.$where2.$orderBy;
 
                 $myQuestionList = DB::select($query);
-
+                if(count($myQuestionList)==0){
+                    $resData = " <span>질문 내역이 없습니다.</span>";
+                }
                 foreach($myQuestionList as $myQuestion) {
                     $resData .= '<li class="li1">';
                     $resData .=     '<a href="'.route('sub.management.my_question_detail', ['idx' => $myQuestion->idx]).'" class="w1 a1">';
@@ -118,31 +127,11 @@ class ManagementLearningController extends Controller{
 
                     $resData .=             '<div class="tg1">';
                     $resData .=                 '<span class="t1">'.$myQuestion->writer_name.'</span>';
-
-                    // 지난 시간 계산
-                    $resultTime = '';
-                    $t=time()-strtotime($myQuestion->writed_at);
-                    $f=array(
-                        '31536000'=>'년',
-                        '2592000'=>'개월',
-                        '604800'=>'주',
-                        '86400'=>'일',
-                        '3600'=>'시간',
-                        '60'=>'분',
-                        '1'=>'초'
-                    );
-                    foreach ($f as $k=>$v)    {
-                        if (0 !=$c=floor($t/(int)$k)) {
-                            $resultTime =  $c.$v.' 전';
-                            break;
-                        }
-                    }
-
-                    $resData .=                 '<span class="t2">'.$resultTime.'</span>';
+                    $resData .=                 '<span class="t2">'.format_date($myQuestion->writed_at).'</span>';
                     $resData .=             '</div>';
                     $resData .=             '<div class="tg2">';
                     // TODO: 댓글
-                    $resData .=                 '<span class="t4">댓글 3개</span>';
+                    $resData .=                 '<span class="t4">댓글 '.$myQuestion->comment_cnt.'개</span>';
                     $resData .=             '</div>';
                     $resData .=         '</div>';
                     $resData .=     '</a>';
