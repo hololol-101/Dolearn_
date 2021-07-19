@@ -118,28 +118,4 @@ function reportClick(obj){
     @endif
 
 }
-$(document).ready(function() {
-    var permission = 'N';
-    @if(isset($permission)) permission = 'Y';@endif
-    $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        type: 'GET',
-        dataType: 'json',
-        url : "{{ route('sub.comment.index') }}",
-        data: {
-            'postId': postId,
-            'page':{{ $page }},
-            'postType':"question",
-            'permission':permission
-        },
-        success : (result) => {
-            console.log(result.query);
-            $('#commentSrc').empty().append(result.html);
-            $('#commentPage').empty().append(result.pageIndex['htmlCode']);
-        }
-    });
-
-});
 </script>

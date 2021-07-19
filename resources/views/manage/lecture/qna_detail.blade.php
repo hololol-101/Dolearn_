@@ -214,4 +214,35 @@
 
     })
 </script>
+<script>
+    $(document).ready(function() {
+        var postId = '';
+        @if(isset($_GET['qna_idx']))
+            postId = '{{ $_GET['qna_idx'] }}'
+        @elseif(isset($_GET['idx']))
+            postId = '{{ $_GET['idx'] }}'
+        @endif
+        var permission = 'N';
+        @if(isset($permission)) permission = 'Y';@endif
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'GET',
+            dataType: 'json',
+            url : "{{ route('sub.comment.index') }}",
+            data: {
+                'postId': postId,
+                'page':1,
+                'postType':"question",
+                'permission':permission
+            },
+            success : (result) => {
+                console.log(result.query);
+                $('#commentSrc').empty().append(result.html);
+                $('#commentPage').empty().append(result.pageIndex['htmlCode']);
+            }
+        });
+    });
+</script>
 @endsection

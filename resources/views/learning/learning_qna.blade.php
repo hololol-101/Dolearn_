@@ -45,7 +45,7 @@
                         </span>
                         <div class="eg1">
                             {{-- TODO: 댓글 수 --}}
-                            <span class="t3">댓글 3</span>
+                            <span class="t3">댓글 {{ $question->comment_cnt }}</span>
                             <span class="t3">좋아요 {{ $question->like_cnt }}</span>
                         </div>
                     </div>

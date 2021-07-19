@@ -291,8 +291,12 @@ class LearningController extends Controller{
 
         // 해당 강좌의 강의에 등록한 질문 조회
         // 타인의 비공개 질문 제외, 본인의 비공개 질문 포함
-        $query = 'SELECT *
+        $query = 'SELECT *, IFNULL(c.count, 0) AS comment_cnt
                     FROM my_question
+                    LEFT OUTER JOIN (
+                        SELECT post_id, COUNT(*) count FROM comment  where is_reply = "N" GROUP BY post_id
+                    ) AS c
+                    ON idx = c.post_id
                     WHERE lecture_idx = '.$lectureIdx.'
                         AND video_id = "'.$videoId.'"
                         AND public_yn = "Y"

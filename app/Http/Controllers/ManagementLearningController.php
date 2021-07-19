@@ -136,7 +136,7 @@ class ManagementLearningController extends Controller{
                     $resData .=         '</div>';
                     $resData .=     '</a>';
                     $resData .=     '<div class="eg1">';
-                    $resData .=         '<a href="javascript:void(0);" class="cp1like1"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">'.$myQuestion->like_cnt.'</span></a>';
+                    $resData .=         '<a href="javascript:void(0);" class="cp2like1"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">'.$myQuestion->like_cnt.'</span></a>';
                     $resData .=     '</div>';
                     $resData .= '</li>';
                 }

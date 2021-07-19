@@ -42,33 +42,13 @@
             @endif
 			<div class="tg1">
 				<span class="t1">{{ $myQuestionInfo->writer_name }}</span>
-                @php
-                    // 지난 시간 계산 함수
-                    function format_date($time){
-                        $t=time()-$time;
-                        $f=array(
-                            '31536000'=>'년',
-                            '2592000'=>'개월',
-                            '604800'=>'주',
-                            '86400'=>'일',
-                            '3600'=>'시간',
-                            '60'=>'분',
-                            '1'=>'초'
-                        );
-                        foreach ($f as $k=>$v)    {
-                            if (0 !=$c=floor($t/(int)$k)) {
-                                return $c.$v.'전';
-                            }
-                        }
-                    }
-                @endphp
-				<span class="t2">{{ format_date(strtotime($myQuestionInfo->writed_at)) }}</span>
+				<span class="t2">{{ format_date(($myQuestionInfo->writed_at)) }}</span>
 			</div>
 			<div class="tg2">
 				{{ $myQuestionInfo->content }}
 			</div>
 			<div class="eg1">
-				<a href="javascript:void(0);" class="cp2like1"><span class="cp2like1t1">좋아요</span> <span class="cp2like1t2">{{ $myQuestionInfo->like_cnt }}</span></a>
+				<a href="javascript:void(0);" class="cp2like1" onclick="qnaLike()"><span class="cp2like1t1">좋아요</span> <span class="cp2like1t2">{{ $myQuestionInfo->like_cnt }}</span></a>
 				<!-- cp2menu1 -->
 				<div class="cp2menu1 toggle1s1">
 					<strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>
@@ -85,145 +65,11 @@
 	<div class="w1 item reply">
 		<textarea rows="3" cols="80" title="댓글작성"></textarea>
 		<div class="tar">
-			<button type="submit" class="button submit semismall">등록하기</button>
+			<button type="button" class="button submit semismall" value="N" onclick="enrollEvent(this)">등록하기</button>
 		</div>
 	</div>
 	<!-- /댓글작성 -->
-	<!-- 댓글 -->
-	<div class="w1 item reply">
-		<b class="g1"><i class="g1ic1"></i><span class="g1t1">강사가 채택한 답변입니다.</span></b>
-		<div class="w1w1">
-			<div class="f1">
-				<span class="f1p1">
-					<!-- <img src="../../img/main/x1/x1p601.jpg" alt="★대체텍스트필수" /> -->
-					<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-				</span>
-			</div>
-		</div>
-		<div class="w1w2">
-			<div class="tg1">
-				<span class="t1">강사명</span>
-				<span class="t2">방금</span>
-			</div>
-			<div class="tg2">
-				질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.질문 답변입니다.
-			</div>
-			<div class="eg1">
-				<a href="#★" class="cp2like2"><span class="cp2like2t1 blind">좋아요</span> <span class="cp2like2t2">0</span></a>
-				<!-- cp2menu1 -->
-				<div class="cp2menu1 toggle1s1">
-					<strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>
-					<div class="cp2menu1c toggle-c">
-						<a href="#layer1report1post1" class="b2 report toggle" data-send-focus="that"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>
-					</div>
-				</div>
-				<!-- /cp2menu1 -->
-			</div>
-			<!-- toggle1s1 -->
-			<div class="toggle1s1">
-				<a href="#★" class="b1 toggle-b fsS2">답글</a>
-				<div class="toggle-c">
-					<textarea rows="3" cols="80" title="대댓글작성" class="w100 type1"></textarea>
-					<div class="tar">
-						<button type="button" class="button toggle-close secondary semismall mgr05em">취소</button>
-						<button type="submit" class="button submit semismall">등록</button>
-					</div>
-				</div>
-			</div>
-			<!-- /toggle1s1 -->
-			<!-- toggle1s2 -->
-			<div class="toggle1s2">
-				<a href="#★" class="b1 toggle1s2-b cp2switch2 switch fsS2">
-					<span class="cp2switch2-t1 sw-off">답글 보기</span>
-					<span class="cp2switch2-t1 sw-on">답글 숨기기</span>
-					<i class="ic1"></i>
-				</a>
-				<div class="toggle1s2-c">
-
-					<!-- 대댓글 -->
-					<div class="w1 item reply2">
-						<div class="w1w1">
-							<div class="f1">
-								<span class="f1p1">
-									<!-- <img src="../../img/main/x1/x1p601.jpg" alt="★대체텍스트필수" /> -->
-									<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-								</span>
-							</div>
-						</div>
-						<div class="w1w2">
-							<div class="tg1">
-								<span class="t1">강사명</span>
-								<span class="t2">방금</span>
-							</div>
-							<div class="tg2">
-								좋은 평 감사합니다.
-							</div>
-							<div class="eg1">
-								<a href="#★" class="cp2like2"><span class="cp2like2t1 blind">좋아요</span> <span class="cp2like2t2">0</span></a>
-								<!-- cp2menu1 -->
-								<div class="cp2menu1 toggle1s1">
-									<strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>
-									<div class="cp2menu1c toggle-c">
-										<a href="#layer1report1post1" class="b2 report toggle" data-send-focus="that"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>
-									</div>
-								</div>
-								<!-- /cp2menu1 -->
-							</div>
-						</div>
-					</div>
-					<!-- /대댓글 -->
-
-				</div>
-			</div>
-			<!-- /toggle1s2 -->
-		</div>
-	</div>
-	<!-- /댓글 -->
-	<!-- 댓글 -->
-	<div class="w1 item reply">
-		<div class="w1w1">
-			<div class="f1">
-				<span class="f1p1">
-					<!-- <img src="../../img/main/x1/x1p601.jpg" alt="★대체텍스트필수" /> -->
-					<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-				</span>
-			</div>
-		</div>
-		<div class="w1w2">
-			<div class="tg1">
-				<span class="t1">누군가</span>
-				<span class="t2">1시간전</span>
-			</div>
-			<div class="tg2">
-				일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-				일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십
-			</div>
-			<div class="eg1">
-				<a href="javascript:void(0);" class="cp2like2"><span class="cp2like2t1 blind">좋아요</span> <span class="cp2like2t2">0</span></a>
-				<!-- cp2menu1 -->
-				<div class="cp2menu1 toggle1s1">
-					<strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>
-					<div class="cp2menu1c toggle-c">
-						<a href="#layer1report1post1" class="b2 report toggle" data-send-focus="that"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>
-					</div>
-				</div>
-				<!-- /cp2menu1 -->
-			</div>
-			<!-- toggle1s1 -->
-			<div class="toggle1s1">
-				<a href="javascript:void(0);" class="b1 toggle-b fsS2">답글</a>
-				<div class="toggle-c">
-					<textarea rows="3" cols="80" title="대댓글작성" class="w100 type1"></textarea>
-					<div class="tar">
-						<button type="button" class="button toggle-close secondary semismall mgr05em">취소</button>
-						<button type="submit" class="button submit semismall">등록</button>
-					</div>
-				</div>
-			</div>
-			<!-- /toggle1s1 -->
-		</div>
-	</div>
-	<!-- /댓글 -->
+    <div id = "commentSrc"></div>
 </div>
 <!-- /cp2bbs4view1 -->
 
@@ -234,6 +80,7 @@
 
 </div>
 <!-- /aside_content -->
+
 
 <script>
 $(function() {
@@ -246,4 +93,176 @@ $(function() {
 function goBackAndLoadPage() {
     $('#aside').load('/learning/qna?idx={{ $myQuestionInfo->lecture_idx }}&uid={{ $myQuestionInfo->video_id }}');
 }
+function enrollEvent(obj){
+    var postId = {{ $myQuestionInfo->idx }};
+    var my = obj;
+    var content = $(my).parent().siblings('textarea').val();
+    $(my).parent().siblings('textarea').val('')
+    var value = $(my).val();
+    var idx = $(my).siblings('input[type="hidden"]').val();
+    var permission = 'N';
+    if(typeof(idx) =="undefined") idx = 0;
+    if(content==''){
+        alert("내용을 입력해주세요.");
+        return false;
+    }
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'POST',
+        dataType: 'json',
+        url : "{{ route('sub.comment.lecture_side_create') }}",
+        data: {
+            'postId': postId,
+            'parentId': idx,
+            'permission': permission,
+            'postType':"question",
+            'content': content,
+            'isReply': value,
+        },
+        success : (result) => {
+            console.log(result);
+            $('#commentSrc').empty().append(result.html);
+        }
+    });
+}
+$(document).ready(function() {
+    var postId = '{{ $myQuestionInfo->idx }}'
+    var permission = 'N';
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'GET',
+        dataType: 'json',
+        url : "{{ route('sub.comment.lecture_side_index') }}",
+        data: {
+            'postId': postId,
+            'postType':"question",
+            'permission':permission
+        },
+        success : (result) => {
+            $('#commentSrc').empty().append(result.html);
+        }
+    });
+});
+
+function likeClick(obj){
+        var my = obj;
+        var idx = $(my).siblings('input[type="hidden"]').val();
+        var program_id='';
+        if(typeof(idx) =="undefined"){  //댓글의 경우
+            idx = $(my).parent().siblings('.toggle1s1').find('input[type="hidden"]').val();
+            program_id = "comment";
+        }
+        else{ //대댓글의 경우
+            program_id ="recomment"
+        }
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'GET',
+            dataType: 'json',
+            url : "{{ route('sub.comment.like') }}",
+            data: {
+                'writingId':idx,
+                'programId': $(my).data('value'),
+            },
+            success : (result) => {
+                var likenum = $(my).find('.cp2like2t2');
+                if(result.msg =="like"){
+                    likenum.text(parseInt(likenum.text())+1);
+                }else{
+                    likenum.text(parseInt(likenum.text())-1);
+                }
+            }
+        });
+}
+
+
+function reportClick(obj){
+    @if (Auth::check())
+        var my = obj;
+        var idx = $(my).closest('.w1w2').find('input[type="hidden"]').val();
+
+        $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'POST',
+        dataType: 'json',
+        url : "{{ route('report.report') }}",
+        data: {
+            'type':'comment',
+            'idx': idx,
+            'content': ''
+        },
+        success : (data) => {
+            if(data.status=="success"){
+                alert("신고접수가 완료되었습니다.")
+            }else{
+                alert("이미 신고접수를 하셨습니다.")
+            }
+        }
+    });
+
+    @else
+        alert("로그인 후 이용해주세요.");
+    @endif
+
+}
+
+function qnaLike(){
+    var my = $('.cp2bbs4view1 .cp2like1 .cp2like1t2');
+    var cnt = my.html();
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'get',
+        dataType: 'json',
+        url : "{{ route('learning.qna_like') }}",
+        data: {
+            'idx':'{{ $myQuestionInfo->idx }}',
+        },
+        success : (data) => {
+            if(data.status=="like"){
+                my.html(parseInt(cnt)+1);
+            }else if(data.status=="dislike"){
+                my.html(parseInt(cnt)-1);
+            }
+        }
+    });
+}
+$('#layer1report1post1').find(':button').on('click', function(){
+    var my = $('#layer1report1post1');
+    var content = $('input[name="★1radio2"]:checked').siblings('label').text()
+    if(content ==''){
+        alert('신고사유를 선택해주세요!');
+        return false;
+    }
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'POST',
+        dataType: 'json',
+        url : "{{ route('report.report') }}",
+        data: {
+            'type':'qna',
+            'idx':'{{ $myQuestionInfo->idx }}',
+            'content': content
+        },
+        success : (data) => {
+            if(data.status=="success"){
+                alert("신고접수가 완료되었습니다.")
+            }else{
+                alert("이미 신고접수를 하셨습니다.")
+            }
+        }
+    });
+
+})
 </script>

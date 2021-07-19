@@ -106,6 +106,13 @@ Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
         //댓글 고정
         Route::post('declare', [CommentController::class, 'declare'])->name('declare');
 
+        //학습하기 댓글 가져오기
+        Route::get('lecture_side_index', [CommentController::class, 'lectureSideIndex'])->name('lecture_side_index');
+
+        //학습하기 댓글 저장하기
+        Route::post('lecture_side_create', [CommentController::class, 'lectureSideCreate'])->name('lecture_side_create');
+
+
     });
 
     // 게시판
