@@ -593,7 +593,8 @@ class ManageLectureController extends Controller {
 
         $where = ' AND solution_yn = "N"';
 
-        $query = 'SELECT * FROM my_question WHERE lecture_idx = '.$lectureIdx.$where.$orderBy;
+        $query = 'SELECT m.*, u.nickname as writer_name FROM users u, my_question m WHERE m.writer_id = u.email and m.lecture_idx = '.$lectureIdx.$where.'GROUP BY m.idx'.$orderBy;
+        $result['query'] =$query;
         $limit=" limit ".$startNum.", ".$writeList." ";
 
         // 미해결 된 질문 목록 조회
@@ -647,7 +648,7 @@ class ManageLectureController extends Controller {
         //댓글 고정 권한
 
         // 질문 상세 정보 조회(연관된 강의 영상 정보 포함)
-        $qnaInfo = DB::select('SELECT myq.*, curri.video_id, curri.new_video_title FROM my_question myq, my_curriculum curri WHERE myq.video_id = curri.video_id AND myq.writer_id = curri.user_id AND myq.idx = '.$questionIdx);
+        $qnaInfo = DB::select('SELECT myq.*, u.nickname as writer_name, u.save_profile_image, curri.video_id, curri.new_video_title FROM my_question myq, my_curriculum curri, users u WHERE myq.video_id = curri.video_id AND u.email=myq.writer_id AND myq.writer_id = curri.user_id AND myq.idx = '.$questionIdx);
 
         if (count($qnaInfo) > 0) {
             $qnaInfo = $qnaInfo[0];

@@ -288,20 +288,19 @@ class LearningController extends Controller{
         $videoId = $request->get('uid', '');
 
         $userId = Auth::user()->email;
-
         // 해당 강좌의 강의에 등록한 질문 조회
         // 타인의 비공개 질문 제외, 본인의 비공개 질문 포함
-        $query = 'SELECT *, IFNULL(c.count, 0) AS comment_cnt
-                    FROM my_question
+        $query = 'SELECT m.*, u.nickname as writer_name, IFNULL(c.count, 0) AS comment_cnt
+                    FROM users u, my_question m
                     LEFT OUTER JOIN (
                         SELECT post_id, COUNT(*) count FROM comment  where is_reply = "N" GROUP BY post_id
                     ) AS c
-                    ON idx = c.post_id
-                    WHERE lecture_idx = '.$lectureIdx.'
-                        AND video_id = "'.$videoId.'"
-                        AND public_yn = "Y"
-                        AND status = "active"
-                        OR idx IN (
+                    ON m.idx = c.post_id
+                    WHERE m.lecture_idx = '.$lectureIdx.'
+                        AND m.video_id = "'.$videoId.'"
+                        AND m.public_yn = "Y"
+                        AND m.status = "active"
+                        OR m.idx IN (
                             SELECT idx
                             FROM my_question
                             WHERE lecture_idx = '.$lectureIdx.'
@@ -310,6 +309,7 @@ class LearningController extends Controller{
                                 AND public_yn = "N"
                                 AND status = "active"
                         )
+                    GROUP BY m.idx
                     ORDER BY writed_at DESC';
 
         $questionList = DB::select($query);
@@ -327,14 +327,18 @@ class LearningController extends Controller{
 
         // 해당 강좌의 강의에 등록한 질문 조회
         // 타인의 비공개 질문 제외, 본인의 비공개 질문 포함
-        $query = 'SELECT *
-                    FROM my_question
-                    WHERE lecture_idx = '.$lectureIdx.'
-                        AND video_id = "'.$videoId.'"
-                        AND public_yn = "Y"
-                        AND (title LIKE "%'.$keyword.'%" OR content LIKE "%'.$keyword.'%")
-                        AND status = "active"
-                        OR idx IN (
+        $query = 'SELECT m.*, u.nickname writer_name, IFNULL(c.count, 0) AS comment_cnt
+                    FROM users u, my_question m
+                    LEFT OUTER JOIN (
+                        SELECT post_id, COUNT(*) count FROM comment  where is_reply = "N" GROUP BY post_id
+                        ) AS c
+                        ON m.idx = c.post_id
+                    WHERE m.lecture_idx = '.$lectureIdx.'
+                        AND m.video_id = "'.$videoId.'"
+                        AND m.public_yn = "Y"
+                        AND (m.title LIKE "%'.$keyword.'%" OR content LIKE "%'.$keyword.'%")
+                        AND m.status = "active"
+                        OR m.idx IN (
                             SELECT idx
                             FROM my_question
                             WHERE lecture_idx = '.$lectureIdx.'
@@ -344,7 +348,8 @@ class LearningController extends Controller{
                                 AND (title LIKE "%'.$keyword.'%" OR content LIKE "%'.$keyword.'%")
                                 AND status = "active"
                         )
-                    ORDER BY writed_at DESC';
+                    GROUP BY m.idx
+                    ORDER BY m.writed_at DESC';
 
         try {
             $questionList = DB::select($query);
@@ -377,7 +382,7 @@ class LearningController extends Controller{
                     $resData .=             '<span class="t2">'.$question->writer_name.'</span>';
                     $resData .=             '<div class="eg1">';
                                                 // TODO: 댓글 수
-                    $resData .=                 '<span class="t3">댓글 3</span>';
+                    $resData .=                 '<span class="t3">댓글 '.$question->comment_cnt.'</span>';
                     $resData .=                 '<span class="t3">좋아요 '.$question->like_cnt.'</span>';
                     $resData .=             '</div>';
                     $resData .=         '</div>';
@@ -461,7 +466,7 @@ class LearningController extends Controller{
         $questionIdx = $request->get('idx', '');
         $videoId = $request->get('uid', '');
 
-        $myQuestionInfo = DB::select('SELECT * FROM my_question WHERE idx = '.$questionIdx.' AND video_id ="'.$videoId.'"');
+        $myQuestionInfo = DB::select('SELECT m.*, u.nickname as writer_name FROM my_question m, users u WHERE m.writer_id=u.email and m.idx = '.$questionIdx.' AND m.video_id ="'.$videoId.'"');
 
         if ($myQuestionInfo > 0) {
             $myQuestionInfo = $myQuestionInfo[0];

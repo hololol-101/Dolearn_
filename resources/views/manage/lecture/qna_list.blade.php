@@ -214,6 +214,7 @@ function sortQna(type) {
         },
         success: (data) => {
             if (data.status == 'success') {
+                console.log(data)
                 $('#qna_list').empty();
                 $('#qna_list').append(data.resData);
 

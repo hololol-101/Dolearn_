@@ -75,8 +75,12 @@
 		<div class="w1w1">
 			<div class="f1">
 				<span class="f1p1">
-					<!-- <img src="{{ asset('assets/images/main/x1/x1p601.jpg') }}" alt="★대체텍스트필수" /> -->
-					<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
+                    @if ($qnaInfo->save_profile_image)
+                        <img src="{{ asset('storage/uploads/profile/'.$qnaInfo->save_profile_image) }}" alt="$qnaInfo->save_profile_image"/>
+                    @else
+                        <!-- <img src="{{ asset('assets/images/main/x1/x1p601.jpg') }}" alt="★대체텍스트필수" /> -->
+                        <img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
+                    @endif
 				</span>
 			</div>
 		</div>

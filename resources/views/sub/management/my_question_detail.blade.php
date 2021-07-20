@@ -55,8 +55,12 @@
 			<div class="w1w1">
 				<div class="f1">
 					<span class="f1p1">
-						<img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
-					</span>
+                        @if($myQuestionInfo->save_profile_image!='')
+                        <img src="{{ asset('storage/uploads/profile/'.$myQuestionInfo->save_profile_image) }}" alt="이미지 없음" />
+						@else
+                        <img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="이미지 없음" />
+                        @endif
+                    </span>
 				</div>
 			</div>
 			<div class="w1w2">
@@ -83,7 +87,7 @@
 
 				<div class="tg1">
 					<span class="t1">{{ $myQuestionInfo->writer_name }}</span>
-					<span class="t2">{{ format_date(strtotime($myQuestionInfo->writed_at)) }}</span>
+					<span class="t2">{{ format_date($myQuestionInfo->writed_at) }}</span>
 				</div>
 				<div class="tg2" id="content">
 					{{ $myQuestionInfo->content }}
@@ -327,7 +331,6 @@ $(document).ready(function() {
             'permission':permission
         },
         success : (result) => {
-            console.log(result.query);
             $('#commentSrc').empty().append(result.html);
             $('#commentPage').empty().append(result.pageIndex['htmlCode']);
         }

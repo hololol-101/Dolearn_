@@ -64,10 +64,10 @@ class ManagementLearningController extends Controller{
             $myLectureList = DB::select('SELECT lec.idx, lec.title FROM my_lecture mylec, lecture lec WHERE mylec.lecture_idx = lec.idx AND user_id = "'.$userId.'" ORDER BY applicated_at DESC');
 
             // 내 질문 목록 조회
-            $myQuestionList = DB::select('SELECT m.*, IFNULL(c.count, 0) AS comment_cnt FROM my_question m LEFT OUTER JOIN (
+            $myQuestionList = DB::select('SELECT m.*, u.nickname as writer_name, IFNULL(c.count, 0) AS comment_cnt FROM users u, my_question m LEFT OUTER JOIN (
                 SELECT post_id, COUNT(*) count FROM comment  where is_reply = "N" GROUP BY post_id
             ) AS c
-            ON m.idx = c.post_id WHERE  m.writer_id = "'.$userId.'" AND m.status="active" group by m.idx ORDER BY m.writed_at DESC');
+            ON m.idx = c.post_id WHERE m.writer_id=u.email and  m.writer_id = "'.$userId.'" AND m.status="active" group by m.idx ORDER BY m.writed_at DESC');
 
             return view('sub.management.my_question_list', compact('myLectureList', 'myQuestionList'));
 
@@ -160,7 +160,7 @@ class ManagementLearningController extends Controller{
         $questionIdx = $request->get('idx', '');
 
         // 질문 상세 정보 조회(연관된 강의 영상 정보 포함)
-        $myQuestionInfo = DB::select('SELECT myq.*, curri.video_id, curri.new_video_title FROM my_question myq, my_curriculum curri WHERE myq.video_id = curri.video_id AND myq.writer_id = curri.user_id AND myq.idx = '.$questionIdx);
+        $myQuestionInfo = DB::select('SELECT myq.*, curri.video_id, curri.new_video_title, u.nickname as writer_name, u.save_profile_image FROM my_question myq, my_curriculum curri, users u WHERE myq.video_id = curri.video_id AND u.email=myq.writer_id AND myq.writer_id = curri.user_id AND myq.idx = '.$questionIdx);
 
         if (count($myQuestionInfo) > 0) {
             $myQuestionInfo = $myQuestionInfo[0];
