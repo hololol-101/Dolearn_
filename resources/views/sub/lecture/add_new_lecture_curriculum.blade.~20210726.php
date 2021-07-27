@@ -161,10 +161,10 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                         @endforeach
                     @endif
 					<div class="cp1dropzone1" id="dropZone">
-						<!-- <i class="ic1"></i> -->
+						<i class="ic1"></i>
 						<div class="t1">
-							+ 버튼을 클릭하고 <b class="em">URL을 직접 입력하거나</b><br />
-              <b class="em">아래에 추천되는 영상을 </b>강의로 추가해보세요.<br />
+							추천 영상을 <b class="em">직접 선택하거나,</b><br />
+							<b class="em">아래 추가 버튼</b>을 눌러 강의를 추가하세요.<br />
 						</div>
 					</div>
 				</div>

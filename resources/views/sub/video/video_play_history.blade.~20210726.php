@@ -4,7 +4,6 @@
  * 20210102 | @m | 최초 등록
  * 20210205 | @m | 요구반영. 결함개선. 고도화.
  * ~20210205 | @m |
- * 20210708 | @m | 
  */
 -->
 @php
@@ -110,7 +109,7 @@
 <div class="cp1fcard4">
 <div class="wrap1">
 	<div class="dpf-sbc">
-		<h3 class="h1">오늘</h3>
+		<h3 class="hb1 h5">오늘</h3>
 		<div class="mControl">
 			<button type="button" class="m prev"><i class="ic1"></i><span class="blind">추천 영상. 이전 보기</span></button>
 			<button type="button" class="m next"><i class="ic1"></i><span class="blind">추천 영상. 다음 보기</span></button>

@@ -160,25 +160,22 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 					<div>
 						<div class="cp1menu4 mgr05em">
 							<a href="javascript:void(0);" class="m m1 @if (isset($tempInfo)) @if ($tempInfo->free_yn == 'Y') on @endif @else on @endif" onclick="toggleFreeValue('Y');">무료</a>
-							<!-- <a href="javascript:void(0);" class="m m2 @if (isset($tempInfo)) @if ($tempInfo->free_yn == 'N') on @endif @endif" onclick="toggleFreeValue('N');">유료</a> -->
-							<a href="#" class="m m2">유료</a>
+							<a href="javascript:void(0);" class="m m2 @if (isset($tempInfo)) @if ($tempInfo->free_yn == 'N') on @endif @endif" onclick="toggleFreeValue('N');">유료</a>
 						</div>
 						<input type="hidden" id="is_free" name="is_free" @if(isset($tempInfo)) @if ($tempInfo->free_yn == '') value="Y" @else value="{{ $tempInfo->free_yn }}" @endif @else value="Y" @endif />
 						<script>/*<![CDATA[*/
 							$('.cp1menu4 .m').on('click', function(e){
 								e.preventDefault();
-								//$(this).siblings().removeClass('on').end().addClass('on');
-							});
-							$('.cp1menu4 .m2').on('click', function(e){
-								e.preventDefault();
-								alert('유료 강좌 개설은 준비중 입니다.');
+								$(this).siblings().removeClass('on').end().addClass('on');
 							});
 						/*]]>*/</script>
-            <input type="text" id="price" name="price" value="@if (isset($tempInfo)) {{ $tempInfo->price }} @endif" onkeydown="checkInputInteger()" placeholder="원" class="type1 tar w12em" />
+                        <input type="text" id="price" name="price" value="@if (isset($tempInfo)) {{ $tempInfo->price }} @endif" onkeydown="checkInputInteger()" placeholder="원" class="type1 tar w12em" />
 					</div>
-					<!-- <ul class="bi1 mgt0 fsS2">
-					<li class="li1">유료는 유튜브 영상추천 기능을 제공하지 않습니다.</li>
-					</ul> -->
+					<div class="fsS2 op05">
+						<ul class="bi1 mgt0">
+						<li class="li1">유튜브영상만으로 구성된 강좌는 유료로 설정하실 수 없습니다.</li>
+						</ul>
+					</div>
 				</div>
 
 			</div>

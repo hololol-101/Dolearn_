@@ -32,8 +32,11 @@
                     @endif
 				</span>
 			</div>
-            @if (Auth::user()->role == 'youtuber')
-            <a href="{{ route('etc.propose', ['user_idx' => $_GET['user_idx']]) }}" class="b1 button block">제안하기</a>
+            @if (Auth::check())
+                @if (Auth::user()->role == 'youtuber')
+                <a href="{{ route('etc.propose', ['user_idx' => $_GET['user_idx']]) }}" class="b1 button block">제안하기</a>
+                @endif
+
             @endif
 		</div>
 		<div class="w1w2">

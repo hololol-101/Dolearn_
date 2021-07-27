@@ -5,7 +5,6 @@
  * 20210305 | @m | 요구반영. 결함개선. 고도화.
  * ~20210308 | @m |
  * 20210413 | @m | 요구반영
- * 20210708 | @m | 
  */
 -->
 @extends('master_sub')
@@ -402,145 +401,139 @@
 
 
 	</div>
-	<!-- <div class="w5">
-	</div> -->
+	<div class="w5">
 
-	<div class="w3">
 
-		<!-- cp1dash1recent2 -->
-		<div class="cp1dash1recent2">
-			<div class="hg1">
-				<h3 class="h1"><span class="h1t1">수강후기</span> <span class="h1t2">(최근 일주일)</span></h3>
+		<!-- cp1analysis1 -->
+		<div class="cp1analysis1">
+
+			<!-- scroll-x-lt-large -->
+			<div class="scroll-x-lt-large fscroll1-xy">
+			<div style="min-width:590px;">
+
+				<!-- w1table -->
+				<div class="w1table">
+					<table class="t3 w100 ttpdtb1em fsxd lhD tttal ttvam">
+						<caption>
+							<strong class="h1 blind">분석표</strong>
+							<span class="summary1 blind">: 강좌제목(최근 게시한 강좌 7개), 평점(5점 만점), 수강후기 worst, 수강후기 best</span>
+						</caption>
+						<thead>
+						<tr>
+						<th scope="col" style="width:25%;"><strong class="fw4 fsB3">강좌제목</strong> <span class="dpib fs12px">(최근 게시한 강좌 7개)</span></th>
+						<th scope="col" style="width:25%;"><strong class="fw4 fsB3">평점</strong> <span class="dpib fs12px">(5점 만점)</span></th>
+						<th scope="col" style="width:25%;"><strong class="fw4 fsB3">수강후기 worst</strong></th>
+						<th scope="col" style="width:25%;"><strong class="fw4 fsB3">수강후기 best</strong></th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+						<th scope="row">10분 동안 즐기는 딥러닝</th>
+						<td>-</td>
+						<td>-</td>
+						<td>-</td>
+						</tr>
+						<tr>
+						<th scope="row">인공지능에 대해 알아볼까요?</th>
+						<td class="pdl0">
+							<div class="cp1chart1bar3 on">
+								<div class="graph">
+									<i class="track"><i class="bar" style="width: 80%;"><span class="data">4.0</span></i></i>
+								</div>
+							</div>
+						</td>
+						<td class="fs12px">이게 과연 초급자를 기준으로 만들어진 강의가 맞나요...? ㅋㅋ</td>
+						<td class="fs12px">세밀하게 콕콕 집어주셔서 진심으로 고마워요~</td>
+						</tr>
+						<tr>
+						<th scope="row">수학 없는 인공지능 [딥러닝]</th>
+						<td class="pdl0">
+							<div class="cp1chart1bar3 on">
+								<div class="graph">
+									<i class="track"><i class="bar" style="width: 85%;"><span class="data">4.25</span></i></i>
+								</div>
+							</div>
+						</td>
+						<td class="fs12px">음.. 쉬운 설명이 아니네요.</td>
+						<td class="fs12px">중간중간 개념이 애매하게 이해되는 것들이 있었지만 전체적으로 잘 따라오게 설명해...</td>
+						</tr>
+						<tr>
+						<th scope="row">데이터분석과 텍스트마이닝</th>
+						<td class="pdl0">
+							<div class="cp1chart1bar3 on">
+								<div class="graph">
+									<!-- (최소값 s1) -->
+									<i class="track s1"><i class="bar" style="width: 60%;"><span class="data">3.0</span></i></i>
+								</div>
+							</div>
+						</td>
+						<td class="fs12px">이게 과연 초급자를 기준으로 만들어진 강의가 맞나요...? ㅋㅋ</td>
+						<td class="fs12px">세밀하게 콕콕 집어주셔서 진심으로 고마워요~</td>
+						</tr>
+						<tr>
+						<th scope="row">제대로 배우자, Data Mining</th>
+						<td class="pdl0">
+							<div class="cp1chart1bar3 on">
+								<div class="graph">
+									<!-- (최대값 s2) -->
+									<i class="track s2"><i class="bar" style="width: 100%;"><span class="data">5.0</span></i></i>
+								</div>
+							</div>
+						</td>
+						<td class="fs12px">음.. 쉬운 설명이 아니네요.</td>
+						<td class="fs12px">중간중간 개념이 애매하게 이해되는 것들이 있었지만 전체적으로 잘 따라오게 설명해...</td>
+						</tr>
+						<tr>
+						<th scope="row">CSS 기초 이론 강좌</th>
+						<td class="pdl0">
+							<div class="cp1chart1bar3 on">
+								<div class="graph">
+									<i class="track"><i class="bar" style="width: 85%;"><span class="data">4.25</span></i></i>
+								</div>
+							</div>
+						</td>
+						<td class="fs12px">음.. 쉬운 설명이 아니네요.</td>
+						<td class="fs12px">중간중간 개념이 애매하게 이해되는 것들이 있었지만 전체적으로 잘 따라오게 설명해...</td>
+						</tr>
+						<tr>
+						<th scope="row">[중급 예제] HTML + CSS + JQUERY 프론트엔드 퍼블리싱</th>
+						<td class="pdl0">
+							<div class="cp1chart1bar3 on">
+								<div class="graph">
+									<i class="track"><i class="bar" style="width: 90%;"><span class="data">4.5</span></i></i>
+								</div>
+							</div>
+						</td>
+						<td class="fs12px">이게 과연 초급자를 기준으로 만들어진 강의가 맞나요...? ㅋㅋ</td>
+						<td class="fs12px">세밀하게 콕콕 집어주셔서 진심으로 고마워요~</td>
+						</tr>
+						</tbody>
+						<tfoot>
+						<tr>
+						<td></td>
+						<td class="pdl0">
+							<div class="cp1chart1bar3 on">
+								<div class="graph">
+									<i class="track"><i class="bar" style="width: 85%;"><span class="data eg1"><span class="gt1">전체 평균 4.25</span></span></i></i>
+								</div>
+							</div>
+						</td>
+						<td></td>
+						<td></td>
+						</tr>
+						</tfoot>
+					</table>
+
+				</div>
+				<!-- /w1table -->
+
 			</div>
-			<div class="cont">
-				<ul class="lst1">
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 수강후기 내용 01 최근 등록된 수강후기 내용 01 일이삼사오륙칠팔구십</span>
-								<span class="t1t2">새로운 수강후기가 등록된 강좌 제목 01 새로운 수강후기가 등록된 강좌 일이삼사오륙칠팔구십</span>
-							</div>
-							<span class="t2">4분전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 수강후기 내용 02</span>
-								<span class="t1t2">새로운 수강후기가 등록된 강좌 제목 02</span>
-							</div>
-							<span class="t2">1일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 수강후기 내용 03</span>
-								<span class="t1t2">새로운 수강후기가 등록된 강좌 제목 03</span>
-							</div>
-							<span class="t2">2일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 수강후기 내용 04</span>
-								<span class="t1t2">새로운 수강후기가 등록된 강좌 제목 04</span>
-							</div>
-							<span class="t2">4일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 수강후기 내용 05</span>
-								<span class="t1t2">새로운 수강후기가 등록된 강좌 제목 05</span>
-							</div>
-							<span class="t2">5일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 수강후기 내용 06</span>
-								<span class="t1t2">새로운 수강후기가 등록된 강좌 제목 06</span>
-							</div>
-							<span class="t2">6일전</span>
-						</a>
-					</li>
-				</ul>
 			</div>
+			<!-- /scroll-x-lt-large -->
+
 		</div>
-		<!-- /cp1dash1recent2 -->
+		<!-- /cp1analysis1 -->
 
-	</div>
-	<div class="w4">
-
-		<!-- cp1dash1recent2 -->
-		<div class="cp1dash1recent2">
-			<div class="hg1">
-				<h3 class="h1"><span class="h1t1">미해결질문</span> <span class="h1t2">(최근 일주일)</span></h3>
-			</div>
-			<div class="cont">
-				<ul class="lst1">
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 미해결질문 제목 01 최근 등록된 미해결질문 제목 01 일이삼사오륙칠팔구십</span>
-								<span class="t1t2">새로운 미해결질문이 등록된 강좌 제목 01 새로운 미해결질문이 등록된 강좌 일이삼사오륙칠팔구십</span>
-							</div>
-							<span class="t2">4분전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 미해결질문 제목 내용 02</span>
-								<span class="t1t2">새로운 미해결질문이 등록된 강좌 제목  02</span>
-							</div>
-							<span class="t2">1일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 미해결질문 제목 내용 03</span>
-								<span class="t1t2">새로운 미해결질문이 등록된 강좌 제목  03</span>
-							</div>
-							<span class="t2">2일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 미해결질문 제목 내용 04</span>
-								<span class="t1t2">새로운 미해결질문이 등록된 강좌 제목  04</span>
-							</div>
-							<span class="t2">4일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 미해결질문 제목 내용 05</span>
-								<span class="t1t2">새로운 미해결질문이 등록된 강좌 제목  05</span>
-							</div>
-							<span class="t2">5일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 미해결질문 제목 내용 06</span>
-								<span class="t1t2">새로운 미해결질문이 등록된 강좌 제목  06</span>
-							</div>
-							<span class="t2">6일전</span>
-						</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<!-- /cp1dash1recent2 -->
 
 	</div>
 </div>

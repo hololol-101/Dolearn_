@@ -198,12 +198,13 @@ class ManageLectureController extends Controller {
 
         // 강좌 정보 조회
         $lectureInfo = DB::select('SELECT idx, secret_question_yn, certificate_yn, progress_rate FROM lecture WHERE idx = '.$idx);
+        $lectureNoticeList = DB::select('select m.*, u.nickname as writer_name from my_lecture_notice m, users u where  m.writer_id = u.email and lecture_id = ?', [$idx]); //ORDER BY 추가
 
         if (count($lectureInfo) > 0) {
             $lectureInfo = $lectureInfo[0];
         }
 
-        return view('manage.lecture.lecture_settings', compact('lectureInfo'));
+        return view('manage.lecture.lecture_settings', compact('lectureInfo', 'lectureNoticeList'));
     }
 
     public function saveLectureSettings(Request $request) {
@@ -723,4 +724,59 @@ class ManageLectureController extends Controller {
             }
         }
     }
+
+    //공지 리스트
+    public function notice(Request $request){
+        $idx = $request->get('idx');
+        $lectureNoticeList = DB::select('select m.*, u.nickname as writer_name from my_lecture_notice m, users u where lecture_idx = ?', [$idx]); //ORDER BY 추가
+        return view('manage.lecture.lecture_settings', compact('idx', 'lectureNoticeList'));
+    }
+
+    //공지 생성
+    public function createNotice(Request $request){
+        $lectureIdx = $request->post('lectureIdx');
+        $noticeTitle = $request->post('noticeTitle');
+        $noticeContent = $request->post('noticeContent');
+        $idx = $request->post('idx');
+        $email = Auth::user()->email;
+        $file = $request->file('file01');
+        $fileReName ='';
+        if($file){
+            $fileReName =storeAttachFile($file)['fileReName'];
+        }
+        if($idx!=null){
+            //수정
+            DB::table('my_lecture_notice')->where('idx', $idx)->update(array(
+            'lecture_id' => $lectureIdx,
+            'writer_id' => $email,
+            'title' => $noticeTitle,
+            'content'=> $noticeContent,
+            'attach_file' => $fileReName,
+            'updated_at' => now()
+        ));
+
+        }else{
+        //공지 생성
+        DB::table('my_lecture_notice')->insert(array(
+            'lecture_id' => $lectureIdx,
+            'writer_id' => $email,
+            'title' => $noticeTitle,
+            'content'=> $noticeContent,
+            'attach_file' => $fileReName,
+            'write_at' => now()
+        ));
+
+        }
+        return redirect()->route('manage.lecture.lecture_settings', ['idx'=>$lectureIdx]);
+    }
+
+    //공지 삭제
+    public function removeNotice(Request $request){
+        $checkArr = $request->get('checkArr');
+        DB::table('my_lecture_notice')->whereIn('idx', $checkArr)->delete();
+        $result['status'] = "success";
+        return response()->json($result, 200);
+    }
+
+
 }

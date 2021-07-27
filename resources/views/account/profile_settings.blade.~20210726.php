@@ -5,7 +5,6 @@
  * 20210209 | @m | 요구반영. 결함개선. 고도화.
  * ~20210210~20210217 | @m |
  * 20210407 | @m | 요구반영
- * 20210708 | @m | 
  */
 -->
 @extends('master_sub')
@@ -255,8 +254,8 @@
 		</div>
 		<div class="form1item1">
 			<label for="★1text1" class="tt1">이메일</label>
-			<!-- <span class="vam op06">(이메일 변경 후 재인증 필요)</span> -->
-			<input type="text" id="★1text1" value={{ $user->email }} class="w100 type1 text-email" disabled="disabled" />
+			<span class="vam op06">(이메일 변경 후 재인증 필요)</span>
+			<input type="text" id="★1text1" value={{ $user->email }} class="w100 type1 text-email" disabled/>
 		</div>
         @if($role=='')
 		<div class="form1item1">

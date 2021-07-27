@@ -5,7 +5,9 @@
  * 20210224 | @m | 요구반영. 결함개선. 고도화.
  * ~20210302 | @m |
  * 20210412 | @m | 요구반영
- * 20210525 | @m |
+ * 20210525 | @m | 
+ * 20210708 | @m | 
+ * 20210721 | @m | makeDrag1() 드래그앤드롭에 스크롤 추가
  */
 -->
 
@@ -183,10 +185,10 @@ if ($isFree != '') {
                         @endif
                     @endif
 					<div class="cp1dropzone1" id="dropZone">
-						<i class="ic1"></i>
+						<!-- <i class="ic1"></i> -->
 						<div class="t1">
-							영상을 <b class="em">여기에 끌어다 놓거나,</b><br />
-							<b class="em">아래 추가 버튼</b>을 눌러 강의를 추가하세요.<br />
+							+ 버튼을 클릭하고 <b class="em">URL을 직접 입력하거나</b><br />
+              <b class="em">아래에 추천되는 영상을 </b>강의로 추가해보세요.<br />
 						</div>
 					</div>
 				</div>
@@ -493,9 +495,13 @@ if ($isFree != '') {
 		})();
 
 
-		/** ◇◆ 드래그앤드롭(마우스+터치) 순서이동. 20210217. @m.
+		/** ◇◆ 드래그앤드롭(마우스+터치) 순서이동. 20210217. 20210716. 20210721. @m.
 		 * [IE9+]
 		 * Use) makeDrag1('.cp1curriculum1');
+		 * 20210716. 스크롤 추가
+		 * o) 스크롤 도중 반대로 드래그 가능
+		 * o) 드래그 도중 반대로 스크롤 가능
+		 * 20210721. 모바일. 스크롤 되는 동안 반대로 드래그 안되는 결함 해결
 		 */
 
 		// 호출
@@ -503,61 +509,110 @@ if ($isFree != '') {
 
 		// 드래그앤드롭 만들기
 		function makeDrag1(selector){
-			var sy = ey = 0;
+			var sy = ey = 0, // 마우스 시작 위치, 위치 변화
+				oldY = 0, // 마우스 직전 위치
+				interval, // 스크롤 이동용
+				scrolling = 0, // 스크롤 중인가? (0 스크롤 동작 호출 가능)
+				sScrollTop = 0, // 시작 scrollTop (드래그 시작)
+				nScrollTop = 0, // 현재 scrollTop (드래그 중)
+				sh = 0, // 스크롤 영역 높이
+				ih = 0, // 스크롤 내부 내용 높이
+				sTop = 0, // 최초 스크롤 위치
+				cTop = 0, // 드래그 중인거 상단
+				cBtm = 0, // 드래그 중인거 하단
+				n = 0; // 스크롤 증감값
+
 			var my = selector,
 				item =  '.item',
-				mv = '.control.move';
+				mv = '.control.move'; // touchstart 할 요소
 
-			// 미래 요소 이벤트 연결
-			// $(document).on('mousedown touchstart', mv, function(e){}); 이건 모바일 결함 있어 아래처럼 수정
+			var $c, // 아이템
+				$cs, // 아이템 형제들
+				$cont; // 스크롤 영역
+
+			// 미래 요소 이벤트 연결 (마우스 다운 | 터치 시작)
+			// $(document).on(~); 이건 모바일 결함 있어 아래처럼 수정
 			$(my).on('mousedown touchstart', mv, function(e){
 				e.preventDefault(); // img 등 'mousedown' 동작 끊김 방지
-				doDragDrop(e, $(this).closest(item));
+
+				if(e.originalEvent.touches || e.originalEvent.changedTouches){ // 터치 있으면
+					var e = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0]; // 싱글 터치
+				}else{
+					var e = e || window.event;
+				}
+
+				$c = $(this).closest(item); // 아이템
+				$cont = $c.closest('.cont'); // 스크롤 영역
+
+				doDragDrop(e, $c);
 			});
 
 			// 드래그앤드롭 동작
 			function doDragDrop(e, $c){
-				if(e.originalEvent.touches || e.originalEvent.changedTouches){ // 터치 있으면
-					var e = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0]; // 싱글 터치
-				}else{
-					var e = e || window.event;
-				}
-				sy = e.clientY;
+				sy = e.clientY; // 드래그 시작 이벤트Y
+				sScrollTop = $cont.scrollTop(); // 드래그 시작 scrollTop
 
-				//console.log(e.type, $c.index(), sy);
+				$('.cp1curriculum1 .w1w2 .test').text( '터치스타트' + ' | ' + e.type + ' | ' + e.clientY );
 
+				// 마우스업 | 터치 끝
 				$(document).on('mouseup touchend', function(e){
 					doDrop(e, $c);
+					clearInterval(interval); // 스크롤 멈춤. 20210716
+					scrolling = 0;
+
+					$('.cp1curriculum1 .w1w2 .test').text( '터치엔드' + ' | ' + e.type + ' | ' + e.clientY );
 				});
+
+				// 마우스 이동 | 터치 이동
 				$(document).on('mousemove touchmove', function(e){
-					doDrag(e, $c);
+
+					// 20210721	
+					if(e.originalEvent.touches || e.originalEvent.changedTouches){ // 터치 있으면
+						var e = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0]; // 싱글 터치
+					}else{
+						var e = e || window.event;
+					}
+
+					if(!scrolling){ // 스크롤중 아닐 때만
+						doDrag(e, $c);
+						doScroll1(e, ey, $c); // 스크롤 호출. 20210716
+					}
+					if( (scrolling == 1) && (e.clientY < oldY)  ){ // console.log('아래로스크롤멈춤');
+						clearInterval(interval); // 스크롤 멈춤. 20210716
+						scrolling = 0;
+						//$c.css({boxShadow: '0 0 .5em 0 rgba(255,0,0, 1)'}); // 확인용
+					}
+					if( (scrolling == -1) && (e.clientY > oldY)  ){ // console.log('위로스크롤멈춤');
+						clearInterval(interval); // 스크롤 멈춤. 20210716
+						scrolling = 0;
+						//$c.css({boxShadow: '0 0 .5em 0 rgba(0,255,0, 1)'}); // 확인용
+					}
+
+					oldY = e.clientY; // 마우스 위치 기억
+
 				});
+
 			}
 
 			// 드래그 동작
 			function doDrag(e, $c){
-				if(e.originalEvent.touches || e.originalEvent.changedTouches){ // 터치 있으면
-					var e = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0]; // 싱글 터치
-				}else{
-					var e = e || window.event;
-				}
-				ey = e.clientY - sy;
+				ey = e.clientY - sy; 
+				nScrollTop = $cont.scrollTop(); // 현재 scrollTop 값
+				ey = ey + nScrollTop - sScrollTop; // 스크롤 위치 변경값 더하여 계산
+
 				$c.css({
 					zIndex: '1',
-					transform: 'translateY(' + ey + 'px)'
+					transform: 'translateY(' + ey + 'px)',
+					//boxShadow: '0 0 .5em 0 rgba(255,255,255, 1)'
 				});
+				$c.addClass('dragging'); // 스타일 클래스 추가
 			}
 
 			// 드롭 동작 (순서변경)
 			function doDrop(e, $c){
 				$(document).off('mouseup mousemove touchend touchmove');
 
-				//var $cs = $c.closest('.w1item').children();
-				var $cs = $c.parent().children();
-				var ofs = {
-					zIndex: '',
-					transform: 'none'
-				};
+				$cs = $c.parent().children();
 
 				if( $c.position().top > $cs.last().position().top ){
 					$cs.last().after( $c );
@@ -569,9 +624,61 @@ if ($isFree != '') {
 						}
 					}
 				}
-				$c.css(ofs);
+
+				$c.css({
+					zIndex: '',
+					transform: 'none',
+					//boxShadow: 'none'
+				});
+				$c.removeAttr('style');
+				$c.removeClass('dragging'); // 스타일 클래스 제거
 			}
-		}
+
+			// 스크롤 (스크롤). 20210716
+			function doScroll1(e, ey, $c){
+
+				sh = $cont.outerHeight(), // 스크롤 영역 높이
+				ih = $c.closest('.w1item').outerHeight(); // 스크롤 내부 내용 높이
+
+				sTop = $cont.scrollTop(), // 최초 스크롤 위치
+				cTop = $c.position().top, // 드래그 중인거 상단
+				cBtm = $c.position().top + $c.outerHeight(); // 드래그 중인거 하단
+				n = 0; // 스크롤값 초기화
+
+				// 아래로 드래그 중인게 영역끝 벗어나면
+				//if( ( ey > 0 ) && ( cBtm > ( sh + $cont.scrollTop() ) ) ){ // ey 값은 스크롤에 따라 변하므로 +- 값으로 드래그 방향 알 수 없다!!
+				if( cBtm > ( sh + $cont.scrollTop() ) ){
+					scrolling = 1;
+					interval = setInterval(function(){
+						n += 2;
+						if( $cont.scrollTop() < (ih - sh) ){ // 스크롤 맨끝 아니면
+							$cont.scrollTop(sTop + n);
+							$c.css({
+								transform: 'translateY(' + (ey + n) + 'px)' // 스크롤 만큼 위치 조정
+							});
+						}
+					}, 5);
+				}
+
+				// 위로 드래그 중인게 영역 처음 벗어나면
+				//if( ( ey < 0 ) && ( cTop < $cont.scrollTop() ) ){
+				if( cTop < $cont.scrollTop() ){
+					scrolling = -1;
+					interval = setInterval(function(){
+						n -= 2;
+						if( $cont.scrollTop() > 0 ){ // 스크롤 맨처음 아니면
+							$cont.scrollTop(sTop + n);
+							$c.css({
+								transform: 'translateY(' + (ey + n) + 'px)' // 스크롤 만큼 위치 조정
+							});
+						}
+					}, 5);
+				}
+
+			} // /doScroll1()
+
+		} // /makeDrag1()
+
 
 	});
 /*]]>*/</script>

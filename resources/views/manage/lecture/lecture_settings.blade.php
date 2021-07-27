@@ -142,7 +142,7 @@
 			<button type="button" class="button small del-check">선택 삭제</button>
 		</div>
 		<div class="right">
-			<a href="#layer1notice1write1" class="button small toggle" data-send-focus="that">+ 새 공지</a>
+			<a href="#layer1notice1write1" class="button small toggle" data-send-focus="that" onclick="$('#noticeTitle').val(''); $('#editor').empty(); $('#idx').val('');">+ 새 공지</a>
 		</div>
 	</div>
 	<!-- /infomenu1 -->
@@ -175,34 +175,22 @@
 		</tr>
 		</thead>
 		<tbody class="w1item">
-		<tr class="item">
-		<td><input type="checkbox" name="★1checkbox1" title="선택" /></td>
-		<td class="tal"><a href="?#★">엑셀 초급 강의 실시간 화상 강의 일시 공지</a></td>
-		<td>강사명</td>
-		<td>2021/02/23 15:44</td>
-		<td><a href="#layer1notice1write1" class="b2 button small secondary edit toggle" data-send-focus="that">수정</a></td>
-		</tr>
-		<tr class="item">
-		<td><input type="checkbox" name="★1checkbox1" title="선택" /></td>
-		<td class="tal"><a href="?#★">일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십일이삼사오륙칠팔구십</a></td>
-		<td>강사명</td>
-		<td>2021/02/23 15:44</td>
-		<td><a href="#layer1notice1write1" class="b2 button small secondary edit toggle" data-send-focus="that">수정</a></td>
-		</tr>
-		<tr class="item">
-		<td><input type="checkbox" name="★1checkbox1" title="선택" /></td>
-		<td class="tal"><a href="?#★">일이삼사오륙칠팔구십</a></td>
-		<td>강사명</td>
-		<td>2021/02/23 15:44</td>
-		<td><a href="#layer1notice1write1" class="b2 button small secondary edit toggle" data-send-focus="that">수정</a></td>
-		</tr>
+        @foreach ($lectureNoticeList as $lectureNotice )
+            <tr class="item">
+            <td><input type="checkbox" name="★1checkbox1" title="선택" value="{{ $lectureNotice->idx }}"/></td>
+            <td class="tal"><a href="#">{{ $lectureNotice->title }}</a></td>
+            <td>{{ $lectureNotice->writer_name }}</td>
+            <td>{{ $lectureNotice->write_at }}</td>
+            <td><a href="#layer1notice1write1" class="b2 button small secondary edit toggle" data-send-focus="that" data-idx="{{ $lectureNotice->idx }}" data-title="{{ $lectureNotice->title }}" data-content="{{ $lectureNotice->content }}" >수정</a></td>
+            </tr>
+        @endforeach
 		</tbody>
 	</table>
 
 </div>
 <!-- /bbs1table1 -->
 
-<!-- (레이어팝업. 시험/과제 등록) -->
+<!-- (레이어팝업. 공지사항 등록) -->
 @include('manage.lecture.inc_layer_add_notice')
 
 <script>/*<![CDATA[*/
@@ -246,15 +234,37 @@
 			$(my).on('click', delck, function(e){
 				e.preventDefault();
 				if( confirm('선택한 항목을 삭제하시겠습니까?') ){
-					$(my).find(ck).filter(':checked:not(".all")').closest(item).remove();
-				}else{
-					return false;
-				}
+                    var chk_arr=[];
+                    $(my).find(ck).filter(':checked:not(".all")').each(function(){
+                        var chk =$(this).closest(item).find("input").val();
+                        chk_arr.push(chk);
+                    })
+                    $.ajax({
+                        headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        url: "{{ route('manage.lecture.remove_notice')}}",
+                        data: {'checkArr': chk_arr},
+                        success: (response) => {
+                            if(response.status=='success'){
+                                console.log(response.query)
+                                $(my).find(ck).filter(':checked:not(".all")').closest(item).remove();
+                            }
+                        },
+                        error: (response)=> {
+                            alert(response.msg);
+                        }
+                    });
+                }
+
 			});
 
 			// 미래 개별 삭제 클릭
 			$(my).on('click', del, function(){
 				if( confirm('삭제하시겠습니까?') ){
+
 					$(this).closest(item).remove();
 				}
 			});
@@ -314,6 +324,8 @@ function saveLectureSettings() {
     var secretQuestionYn = $('input[name=secret_question_yn]:checked').val();
     var certificateYn = $('input[name=certificate_yn]:checked').val();
     var progressRate = $('#progress_rate').val();
+    var idx = $('idx').val();
+
 
     $.ajax({
         headers: {
@@ -344,5 +356,23 @@ function saveLectureSettings() {
         }
     });
 }
+
+$(function(){
+    setTimeout(function(){
+        $('.secondary.edit').click(function(){
+            var content = $(this).data('content');
+            var title = $(this).data('title');
+            var idx = $(this).data('idx');
+            //TODO: content 안나옴
+            $('#noticeTitle').val(title);
+            $('#editor').val(content);
+            $('#idx').val(idx);
+
+        })
+
+    }, 100);
+
+})
+
 </script>
 @endsection

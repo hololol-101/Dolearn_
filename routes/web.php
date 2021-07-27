@@ -495,6 +495,20 @@ Route::group(['prefix'=>'manage', 'as'=>'manage.'], function() {
         // 수강후기 목록 정렬 조회
         Route::post('review_list', [ManageLectureController::class, 'reviewList'])->name('review_list');
 
+        // 강좌 공지사항 목록
+        Route::get('notice', [ManageLectureController::class, 'notice'])->name('notice');
+
+        // 강좌 공지사항 생성
+        Route::post('create_notice', [ManageLectureController::class, 'createNotice'])->name('create_notice');
+
+        // 강좌 공지사항 삭제
+        Route::get('remove_notice', [ManageLectureController::class, 'removeNotice'])->name('remove_notice');
+
+        // 강좌 공지사항 수정
+        Route::post('edit_notice', [ManageLectureController::class, 'editNotice'])->name('edit_notice');
+
+
+
     });
 
     // 영상 관리 - 유튜버

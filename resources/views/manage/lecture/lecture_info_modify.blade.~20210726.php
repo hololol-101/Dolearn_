@@ -4,7 +4,6 @@
  * 20210219 | @m | 최초 등록
  * 20210222 | @m | 요구반영. 결함개선. 고도화.
  * ~20210302 | @m |
- * 20210708 | @m |  
  */
 -->
 @extends('master_manage')
@@ -194,26 +193,21 @@
 					<label for="★1price1" class="tt1">가격 <i class="required" title="필수항목">*</i></label>
 					<div>
 						<div class="cp1menu4 mgr05em">
-							<a href="javascript:void(0);" class="m m1 @if (isset($lectureInfo)) @if ($lectureInfo->free_yn == 'Y') on @endif @else on @endif" onclick="toggleFreeValue('Y');">무료</a>
-							<!-- <a href="javascript:void(0);" class="m m2 @if (isset($lectureInfo)) @if ($lectureInfo->free_yn == 'N') on @endif @endif" onclick="toggleFreeValue('N');">유료</a> -->
-							<a href="#" class="m m2">유료</a>
+                            <a href="javascript:void(0);" class="m m1 @if (isset($lectureInfo)) @if ($lectureInfo->free_yn == 'Y') on @endif @else on @endif" onclick="toggleFreeValue('Y');">무료</a>
+							<a href="javascript:void(0);" class="m m2 @if (isset($lectureInfo)) @if ($lectureInfo->free_yn == 'N') on @endif @endif" onclick="toggleFreeValue('N');">유료</a>
 						</div>
-						<input type="hidden" id="is_free" name="is_free" @if(isset($lectureInfo)) @if ($lectureInfo->free_yn == '') value="Y" @else value="{{ $lectureInfo->free_yn }}" @endif @else value="Y" @endif />
+                        <input type="hidden" id="is_free" name="is_free" @if(isset($lectureInfo)) @if ($lectureInfo->free_yn == '') value="Y" @else value="{{ $lectureInfo->free_yn }}" @endif @else value="Y" @endif />
 						<script>/*<![CDATA[*/
 							$('.cp1menu4 .m').on('click', function(e){
 								e.preventDefault();
-								//$(this).siblings().removeClass('on').end().addClass('on');
-							});
-							$('.cp1menu4 .m2').on('click', function(e){
-								e.preventDefault();
-								alert('유료 강좌 개설은 준비중 입니다.');
+								$(this).siblings().removeClass('on').end().addClass('on');
 							});
 						/*]]>*/</script>
 						<input type="text" id="price" name="price" value="@if (isset($lectureInfo)) {{ $lectureInfo->price }} @endif" onkeydown="checkInputInteger()" placeholder="원" class="type1 tar w12em" />
 					</div>
-					<!-- <ul class="bi1 mgt0 fsS2">
+					<ul class="bi1 mgt0 fsS2">
 					<li class="li1">유료는 유튜브 영상추천 기능을 제공하지 않습니다.</li>
-					</ul> -->
+					</ul>
 				</div>
 
 			</div>

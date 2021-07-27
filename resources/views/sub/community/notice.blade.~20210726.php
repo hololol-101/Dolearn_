@@ -4,7 +4,6 @@
  * 20210102 | @m | 최초 등록
  * 20210311 | @m | 요구반영. 결함개선. 고도화.
  * ~20210311 | @m |
- * 20210708 | @m | 
  */
 -->
 @extends('master_sub')
@@ -29,11 +28,11 @@
 	</div>
 	<div class="w2">
 
-		<!-- <select class="select" title="선택옵션">
+		<select class="select" title="선택옵션">
 			<option value="">최신순</option>
 			<option value="">좋아요수</option>
 			<option value="">조회수</option>
-		</select> -->
+		</select>
 
 	</div>
 </div>

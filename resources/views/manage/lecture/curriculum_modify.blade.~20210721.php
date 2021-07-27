@@ -1,32 +1,75 @@
+<!--
+/**
+ * SubPage Template
+ * 20210219 | @m | 최초 등록
+ * 20210224 | @m | 요구반영. 결함개선. 고도화.
+ * ~20210302 | @m |
+ * 20210412 | @m | 요구반영
+ * 20210525 | @m |
+ */
+-->
+
 @php
-$step = isset($_GET['step']) ? $_GET['step'] : '';
+$lectureIdx = isset($_GET['idx']) ? $_GET['idx'] : '';
 $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
+$title = '강좌관리상세 - 커리큘럼 수정';
+
+// 유/무료에 따라 분기 : title, url로 영상 등록, 영상 검색 결과
+if ($isFree != '') {
+    if ($isFree == 'Y') {
+        $title = '강좌관리상세 - 커리큘럼 수정(무료강좌)';
+
+    } else if ($isFree == 'N') {
+        $title = '강좌관리상세 - 커리큘럼 수정(유료강좌)';
+    }
+}
 @endphp
 
-@extends('sub.lecture.add_new_lecture')
+@extends('master_manage')
 
-@section('sub_content')
+@section('title', $title)
 
-<div class="tac fsB4 wwbw wbka">
-	<i class="ic1 indy ic40notice1"></i>
-	<div class="mgt05em mgb2em">
-		커리큘럼을 생성합니다.<br />
-		대단원 &gt; 소단원 &gt; 강의 순으로 생성하고 <span class="dpib">대표 동영상을 선택해 주세요.</span><br />
-		영상에 대한 설명은 강좌 생성 후 관리 페이지에서 입력하실 수 있습니다.<br />
+@section('content')
+
+<? $d1n = '1'; $d2n = '3'; // 1차2차활성 ?>
+
+<!-- #body -->
+<div id="body" tabindex="-1">
+<!-- container -->
+<div class="container clearfix">
+<!-- #body_head -->
+<div id="body_head">
+<!-- container -->
+<div class="container clearfix">
+
+
+<!-- body_title -->
+<div id="body_title">
+	<div class="hg1">
+		<i class="ic1"></i>
+		<h2 class="h1">커리큘럼 수정</h2>
+	</div>
+	<div class="eg1">
+		<a href="javascript:history.back();" class="b1 button">뒤로가기</a>
+		<a href="javascript:void(0);" class="b2 button primary" onclick="saveCurriculum()">저장하기</a>
 	</div>
 </div>
+<!-- /body_title -->
 
 
-<hr class="bdt1px mgt125em mgb125em" />
-
-
-<!-- <p class="tar"><i class="required" title="필수항목">*</i> 는 필수 입력 <span class="dpib">항목입니다.</span></p> -->
-
+</div>
+<!-- /container -->
+</div>
+<!-- /#body_head -->
+<!-- #body_content -->
+<div id="body_content">
+<!-- container -->
+<div class="container clearfix">
 
 <!-- even-grid -->
 <div class="form1item1 even-grid gap0 vgap00 mgb2em">
 	<div class="small-12 column">
-		<strong class="tt1 mgr05em fw4 fsB8 vam">대표 동영상</strong>
+		<strong class="tt1 mgr05em fw5 fsB8 vam">대표 동영상</strong>
 		<div class="bi1 dpib fsS1 vam">
 			<a href="javascript:void(0);" class="li1 tooltip1">
 				<span class="tooltip1c">
@@ -45,41 +88,18 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 </div>
 <!-- /even-grid -->
 
-
-<script>/*<![CDATA[*/
-	$(function(){
-		/** ◇◆ 툴팁 고도화. 20210218. @m.
-		 */
-		// 툴팁 z-index 는 select option 보다 위에 올 수 없어 아래처럼 처리
-		$('.tooltip1').hover(function(){
-			$('select').blur();
-		});
-	});
-/*]]>*/</script>
-
-
 <!-- cp1curriculum1 -->
 <div class="cp1curriculum1">
-	<strong class="tt1 mgr05em fw4 fsB8 vam">커리큘럼</strong>
+	<strong class="tt1 mgr05em fw5 fsB8 vam">커리큘럼</strong>
 	<div class="w1">
 		<div class="w1w w1w1">
 			<strong class="tt2">대단원(PART)</strong>
 			<div class="cont fscroll1-xy">
 				<div class="w1item" id="div_bchap">
-                    @empty($bchapterList)
-                    <!-- 대단원 default -->
-                    <div class="w1item" id="div_bchap_default">
-                        <div class="item2" style="margin-left: 15px">
-                            <div class="tg1">
-                                <span class="t1 form-static1">대단원을 생성해주세요.</span>
-                            </div>
-                        </div>
-                    </div>
-                    @endempty
 					<!-- 대단원 추가 -->
                     @if (isset($bchapterList))
                         @foreach ($bchapterList as $bchapter)
-                        <div class="item" style="cursor: pointer">
+                        <div class="item" style="cursor:pointer">
                             <div class="control move" title="끌어서 놓기로 순서 이동"></div>
                             <div class="tg1">
                                 <span class="t1 form-static1" bchap_id="{{ $bchapter->bchap_id }}">{{ $bchapter->bchap_name }}</span>
@@ -102,15 +122,15 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                 <div class="w1item" id="div_schap_default">
                     <div class="item2" style="margin-left: 15px">
                         <div class="tg1">
-                            <span class="t1 form-static1">@if (isset($schapterList)) 대단원을 선택해주세요. @else 소단원을 생성해주세요. @endif</span>
+                            <span class="t1 form-static1">대단원을 선택해주세요.</span>
                         </div>
                     </div>
                 </div>
 				<div class="w1item" id="div_schap">
-                    <!-- 소단원 추가 -->
+					<!-- 소단원 추가 -->
                     @if (isset($schapterList))
                         @foreach ($schapterList as $schapter)
-                        <div class="item" style="cursor: pointer">
+                        <div class="item" style="cursor:pointer">
                             <div class="control move" title="끌어서 놓기로 순서 이동"></div>
                             <div class="tg1">
                                 <span class="t1 form-static1" bchap_id="{{ $schapter->bchap_id }}" schap_id="{{ $schapter->schap_id }}">{{ $schapter->schap_name }}</span>
@@ -129,7 +149,6 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 		<div class="w1w w1w3">
 			<strong class="tt2">강의</strong>
 			<div class="cont fscroll1-xy">
-                @if (isset($videoInfoList))
                 <!-- 강의 default -->
                 <div class="w1item" id="div_video_default">
                     <div class="item2" style="margin-left: 15px">
@@ -138,41 +157,46 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                         </div>
                     </div>
                 </div>
-                @endif
 				<div class="w1item" id="div_video">
-                    <!-- 강의 추가 -->
-                    @if (isset($videoInfoList))
-                        @foreach ($videoInfoList as $videoInfo)
-                        <div class="item" style="cursor: pointer">
-                            <div class="control move" title="끌어서 놓기로 순서 이동"></div>
-                            <div class="tg1">
-                                <span class="t1 form-static1" bchap_id="{{ $videoInfo->bchap_id }}" schap_id="{{ $videoInfo->schap_id }}" video_id="{{ $videoInfo->uid }}" analysis_yn="{{ $videoInfo->analysis_yn }}" preview_yn="{{ $videoInfo->preview_yn }}">{{ $videoInfo->new_video_title }}</span>
+                    <!-- 유료일 경우 보이지 않음 -->
+                    @if ($isFree == 'Y')
+                        <!-- 강의 추가 -->
+                        @if (isset($videoInfoList))
+                            @foreach ($videoInfoList as $videoInfo)
+                            <div class="item" style="cursor:pointer">
+                                <div class="control move" title="끌어서 놓기로 순서 이동"></div>
+                                <div class="tg1">
+                                    <span class="t1 form-static1" bchap_id="{{ $videoInfo->bchap_id }}" schap_id="{{ $videoInfo->schap_id }}" video_id="{{ $videoInfo->uid }}" preview_yn="{{ $videoInfo->preview_yn }}">{{ $videoInfo->new_video_title }}</span>
+                                    {{-- <span class="t1 form-static1" bchap_id="{{ $videoInfo->bchap_id }}" schap_id="{{ $videoInfo->schap_id }}" video_id="{{ $videoInfo->uid }}" analysis_yn="{{ $videoInfo->analysis_yn }}" preview_yn="{{ $videoInfo->preview_yn }}">{{ $videoInfo->new_video_title }}</span> --}}
+                                </div>
+                                <div class="eg1">
+                                    @if ($videoInfo->preview_yn == 'Y')
+                                    <a href="javascript:void(0);" class="b1 preview tooltip1"><span class="tooltip1c">미리보기 영상</span></a>
+                                    @else
+                                    <a class="b1 preview"><span class="b1t1">미리보기 영상 없음</span></a>
+                                    @endif
+                                    <button type="button" class="b1 edit"><span class="b1t1">수정</span></button>
+                                    <button type="button" class="b1 del"><span class="b1t1">삭제</span></button>
+                                </div>
                             </div>
-                            <div class="eg1">
-                                @if ($videoInfo->preview_yn == 'Y')
-                                <a href="javascript:void(0);" class="b1 preview tooltip1"><span class="tooltip1c">미리보기 영상</span></a>
-                                @else
-                                <a class="b1 preview"><span class="b1t1">미리보기 영상 없음</span></a>
-                                @endif
-                                <button type="button" class="b1 edit"><span class="b1t1">수정</span></button>
-                                <button type="button" class="b1 del"><span class="b1t1">삭제</span></button>
-                            </div>
-                        </div>
-                        @endforeach
+                            @endforeach
+                        @endif
                     @endif
 					<div class="cp1dropzone1" id="dropZone">
-						<!-- <i class="ic1"></i> -->
+						<i class="ic1"></i>
 						<div class="t1">
-							+ 버튼을 클릭하고 <b class="em">URL을 직접 입력하거나</b><br />
-              <b class="em">아래에 추천되는 영상을 </b>강의로 추가해보세요.<br />
+							영상을 <b class="em">여기에 끌어다 놓거나,</b><br />
+							<b class="em">아래 추가 버튼</b>을 눌러 강의를 추가하세요.<br />
 						</div>
 					</div>
 				</div>
 				<div class="toggle1s1">
 					<button type="button" class="b3 add toggle-b"><i class="b3ic1"></i> <span class="b3t1">(추가메뉴 여닫기)</span></button>
 					<div class="toggle-c addmenu">
-                        @if ($_GET['is_free'] == 'Y')
-                            <a href="#layer1add1url1" class="a2 toggle" data-send-focus="that">URL로 영상 등록</a>
+                        @if (isset($_GET['is_free']))
+                            @if ($_GET['is_free'] == 'Y')
+                                <a href="#layer1add1url1" class="a2 toggle" data-send-focus="that">URL로 영상 등록</a>
+                            @endif
                         @endif
 						<a href="#layer1add1playlist1" class="a2 toggle" data-send-focus="that">재생목록 영상 등록</a>
 						{{-- <hr class="hr" />
@@ -187,28 +211,33 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 
 
 <!-- (레이어팝업. URL로 영상 등록) -->
+{{-- @include('manage.lecture.inc_layer_add_url') --}}
 @include('sub.lecture.inc_layer_add_url')
+
 <!-- (레이어팝업. 재생목록 영상 등록) -->
+{{-- @include('manage.lecture.inc_layer_add_playlist') --}}
 @include('sub.lecture.inc_layer_add_playlist')
+
 <!-- (레이어팝업. 시험/과제 등록) -->
+{{-- @include('manage.lecture.inc_layer_add_exam') --}}
 @include('sub.lecture.inc_layer_add_exam')
 
 <script>/*<![CDATA[*/
-    $(function(){
-        // 레이어팝업 템플릿 바로 확인
-        //$('[href="#layer1add1url1"]').first().triggerHandler('click');
-        //$('[href="#layer1add1playlist1"]').first().triggerHandler('click');
-        //$('[href="#layer1add1exam1"]').first().triggerHandler('click');
-    });
+	$(function(){
+		// 레이어팝업 템플릿 바로 확인
+		//$('[href="#layer1add1url1"]').first().triggerHandler('click');
+		//$('[href="#layer1add1playlist1"]').first().triggerHandler('click');
+		//$('[href="#layer1add1exam1"]').first().triggerHandler('click');
+	});
 /*]]>*/</script>
 
 
 <script>/*<![CDATA[*/
 	$(function(){
 
-		/** ◇◆ 커리큘럼. 추가.취소.저장.수정.삭제. 20210217. ~20210601. @m.
+		/** ◇◆ 커리큘럼. 추가.취소.저장.수정.삭제. 20210302. @m.
 		 */
-		(function(){
+        (function(){
 			var my = '.cp1curriculum1 .w1w', // 대단원, 소단원, 강의 공통
 				w1item = '.w1item',
 				item = '.item',
@@ -219,7 +248,7 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 				del = '.del',
 				preview = '.preview';
 			var _input = ''; // 폼항목 태그
-				_input += '<div class="item" style="cursor: pointer">';
+				_input += '<div class="item" style="cursor:pointer;">';
 				_input += '	<div class="control move" title="끌어서 놓기로 순서 이동"></div>';
 				_input += '	<div class="tg1">';
 				_input += '		 <input type="text" value="" placeholder="대단원 제목을 입력하세요." title="대단원 제목" class="w100 type1 text" />';
@@ -230,7 +259,7 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 				_input += '	</div>';
 				_input += '</div>';
 			var _item = ''; // 항목 태그
-				_item += '<div class="item" style="cursor: pointer">';
+				_item += '<div class="item" style="cursor:pointer;">';
 				_item += '	<div class="control move" title="끌어서 놓기로 순서 이동"></div>';
 				_item += '	<div class="tg1">';
 				_item += '		 <span class="t1 form-static1">무제</span>';
@@ -272,8 +301,7 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 
                         // $('#dropZone').show();
 
-                    //} else {  // 소단원이면
-                    } else if( !!$(this).closest('.w1w2').length ) {  // 소단원이면. 20210601
+                    } else if( !!$(this).closest('.w1w2').length ){  // 소단원이면
                         var _schapId = $('#div_schap div.on').find('.t1').attr('schap_id');
 
                         $('#div_video_default').hide();
@@ -293,17 +321,17 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 			$(my).on('click', add, function(){
 				if( !!$(this).closest('.w1w1').length || !!$(this).closest('.w1w2').length ){ // 대단원 또는 소단원이면 (강의 미포함)
 					var $_input = $(_input);
+
 					if( !!$(this).closest('.w1w2').length ){ // 소단원이면
+                        var _schapId = $('#div_schap div.on').find('.t1').attr('schap_id');
 
                         // 대단원을 선택했을 경우에만 소단원 추가 가능
                         if (!!$('#div_bchap div.on').find('.t1').length) {
-                            $('#div_schap_default').hide();
-
                             $_input.find('input[type="text"]').attr({
                                 placeholder: "소단원 제목을 입력하세요.",
                                 title: "소단원 제목",
                                 bchap_id: $('div.on .t1').attr('bchap_id'),
-                                schap_id: schapId
+                                schap_id: parseInt(_schapId) + 1
                             });
                             schapId++;
 
@@ -313,30 +341,23 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                         }
 
 					} else { // 대단원이면
-                        $('#div_bchap_default').hide();
+                        var _bchapId = $('#div_bchap div.on').find('.t1').attr('bchap_id');
 
                         $_input.find('input[type="text"]').attr({
-                            bchap_id: bchapId
+                            bchap_id: parseInt(_bchapId) + 1
 						});
                         bchapId++;
                     }
 					$_input.appendTo( $(this).parent().find(w1item) );
                     // $_input.find('input[type="text"]').focus();
-
-				} else {  // 강의 이면
-                    // 소단원을 선택했을 경우에만 강의 영상 추가 가능
-                    if (!$('#div_schap div.on').find('.t1').length) {
-                        alert('소단원을 선택해주세요.');
-                        return false;
-                    }
-                }
+				}
 			});
 
 			// 미래 취소 클릭
 			$(my).on('click', cancel, function(){
-                var $myItem = $(this).closest(item); // 폼항목
-                $myItem.prev(item+':hidden').show(); // 기존 요소 보임
-                $myItem.remove(); // 폼항목 제거
+				var $myItem = $(this).closest(item); // 폼항목
+				$myItem.prev(item+':hidden').show(); // 기존 요소 보임
+				$myItem.remove(); // 폼항목 제거
 			});
 
 			// 미래 저장 클릭
@@ -356,24 +377,24 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 				if( $myItem.prev(item).is(':hidden') && $myItem.prev(item).hasClass('modify')){ // 기존 요소 수정
 					$_item = $myItem.prev(item).find('.t1').text( str ).end().show();
 
-				} else { // 새 요소 추가
+				}else{ // 새 요소 추가
 					$_item.insertAfter( $myItem ).find('.t1').text( str );
 
-                    if( !!$(this).closest('.w1w2').length ){  // 소단원일 때
+                    if( !!$(this).closest('.w1w2').length ){ // 소단원일 때
                         $_item.insertAfter( $myItem ).find('span').attr({
                             bchap_id: _bchapId,
                             schap_id: _schapId
                         });
                         getRecommandVideoData('curriculum', str);
 
-                    } else if ( !!$(this).closest('.w1w1').length ){  // 대단원일 때
+                    } else if ( !!$(this).closest('.w1w1').length ){ // 대단원일 때
                         $_item.insertAfter( $myItem ).find('span').attr({
                             bchap_id: _bchapId
                         });
                         getRecommandVideoData('curriculum', str);
 
                     } else {  // 강의 영상일 때
-                        $myItem.insertAfter( $myItem ).find('span').attr({
+                        $_item.insertAfter( $myItem ).find('span').attr({
                             bchap_id: _bchapId,
                             schap_id: _schapId,
                             video_id: _videoId
@@ -386,21 +407,23 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 					$_item.addClass('on');
 				}
 				$myItem.remove(); // 폼항목 제거
+
 			});
 
 			// 미래 수정 클릭
 			$(my).on('click', edit, function(){
 				var $_input = $(_input);
 				var $myItem = $(this).closest(item);
+                var str = $myItem.find('input[type="text"]').val();
 
                 $myItem.addClass('modify');
 				$myItem.hide(); // 기존 항목 감춤
 
-				if( !!$(this).closest('.w1w2').length ){ // 소단원
-                    $_input.find('input[type="text"]').attr({
-                        placeholder: "소단원 제목을 입력하세요.",
-                        title: "소단원 제목"
-                    });
+				if( !!$(this).closest('.w1w2').length ){ // 소단원이면
+					$_input.find('input[type="text"]').attr({
+						placeholder: "소단원 제목을 입력하세요.",
+						title: "소단원 제목"
+					});
 
 				} else if (!!$(this).closest('.w1w3').length){  // 강의
                     $_input.find('input[type="text"]').attr({
@@ -409,19 +432,48 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                     });
 				}
 
-                $_input.insertAfter( $myItem ); // 폼항목 추가
-                $_input.find('input[type="text"]').val( $myItem.find('.t1').text() ); // 기존 항목 값 가져옴
+				$_input.insertAfter( $myItem ); // 폼항목 추가
+				$_input.find('input[type="text"]').val( $myItem.find('.t1').text() ); // 기존 항목 값 가져옴
 
                 // 기존 활성이면 활성
-                if( $myItem.is('.on') ){
-                    $_input.addClass('on');
-                }
+				if( $myItem.is('.on') ){
+					$_input.addClass('on');
+				}
 			});
 
-            // 미래 삭제 클릭
+			// 미래 삭제 클릭
 			$(my).on('click', del, function(){
-				if( confirm('삭제하시겠습니까?') ){
-					$(this).closest(item).remove();
+				if(confirm('삭제하시겠습니까?')){
+                    var $myItem = $(this).closest(item);
+                    var _bchapId = $myItem.find('.t1').attr('bchap_id');
+                    var _schapId = $myItem.find('.t1').attr('schap_id');
+
+                    if (!!$(this).closest('.w1w1').length){  // 대단원일 경우
+                        // 해당 대단원의 하위 소단원 아이템 삭제
+                        $('#div_schap').find('.item').each(function() {
+                            if ($(this).find('.t1').attr('bchap_id') == _bchapId) {
+                                $(this).remove();
+                            }
+                        });
+
+                        // 해당 대단원의 하위 강의 아이템 삭제
+                        $('#div_video').find('.item').each(function() {
+                            if ($(this).find('.t1').attr('bchap_id') == _bchapId) {
+                                $(this).remove();
+                            }
+                        });
+
+                    } else if (!!$(this).closest('.w1w2').length) {  // 소단원일 경우
+                        // 해당 소단원의 하위 강의 아이템 삭제
+                        $('#div_video').find('.item').each(function() {
+                            if ($(this).find('.t1').attr('bchap_id') == _bchapId && $(this).find('.t1').attr('schap_id') == _schapId) {
+                                $(this).remove();
+                            }
+                        });
+                    }
+
+                    // 해당 아이템 삭제
+                    $myItem.remove();
 				}
 			});
 
@@ -438,17 +490,12 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                 }
                 getMainVideoList();
             });
-
 		})();
 
 
-		/** ◇◆ 드래그앤드롭(마우스+터치) 순서이동. 20210217. 20210716. 20210721. @m.
+		/** ◇◆ 드래그앤드롭(마우스+터치) 순서이동. 20210217. @m.
 		 * [IE9+]
 		 * Use) makeDrag1('.cp1curriculum1');
-		 * 20210716. 스크롤 추가
-		 * o) 스크롤 도중 반대로 드래그 가능
-		 * o) 드래그 도중 반대로 스크롤 가능
-		 * 20210721. 모바일. 스크롤 되는 동안 반대로 드래그 안되는 결함 해결
 		 */
 
 		// 호출
@@ -456,110 +503,61 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 
 		// 드래그앤드롭 만들기
 		function makeDrag1(selector){
-			var sy = ey = 0, // 마우스 시작 위치, 위치 변화
-				oldY = 0, // 마우스 직전 위치
-				interval, // 스크롤 이동용
-				scrolling = 0, // 스크롤 중인가? (0 스크롤 동작 호출 가능)
-				sScrollTop = 0, // 시작 scrollTop (드래그 시작)
-				nScrollTop = 0, // 현재 scrollTop (드래그 중)
-				sh = 0, // 스크롤 영역 높이
-				ih = 0, // 스크롤 내부 내용 높이
-				sTop = 0, // 최초 스크롤 위치
-				cTop = 0, // 드래그 중인거 상단
-				cBtm = 0, // 드래그 중인거 하단
-				n = 0; // 스크롤 증감값
-
+			var sy = ey = 0;
 			var my = selector,
 				item =  '.item',
-				mv = '.control.move'; // touchstart 할 요소
+				mv = '.control.move';
 
-			var $c, // 아이템
-				$cs, // 아이템 형제들
-				$cont; // 스크롤 영역
-
-			// 미래 요소 이벤트 연결 (마우스 다운 | 터치 시작)
-			// $(document).on(~); 이건 모바일 결함 있어 아래처럼 수정
+			// 미래 요소 이벤트 연결
+			// $(document).on('mousedown touchstart', mv, function(e){}); 이건 모바일 결함 있어 아래처럼 수정
 			$(my).on('mousedown touchstart', mv, function(e){
 				e.preventDefault(); // img 등 'mousedown' 동작 끊김 방지
+				doDragDrop(e, $(this).closest(item));
+			});
 
+			// 드래그앤드롭 동작
+			function doDragDrop(e, $c){
 				if(e.originalEvent.touches || e.originalEvent.changedTouches){ // 터치 있으면
 					var e = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0]; // 싱글 터치
 				}else{
 					var e = e || window.event;
 				}
+				sy = e.clientY;
 
-				$c = $(this).closest(item); // 아이템
-				$cont = $c.closest('.cont'); // 스크롤 영역
+				//console.log(e.type, $c.index(), sy);
 
-				doDragDrop(e, $c);
-			});
-
-			// 드래그앤드롭 동작
-			function doDragDrop(e, $c){
-				sy = e.clientY; // 드래그 시작 이벤트Y
-				sScrollTop = $cont.scrollTop(); // 드래그 시작 scrollTop
-
-				$('.cp1curriculum1 .w1w2 .test').text( '터치스타트' + ' | ' + e.type + ' | ' + e.clientY );
-
-				// 마우스업 | 터치 끝
 				$(document).on('mouseup touchend', function(e){
 					doDrop(e, $c);
-					clearInterval(interval); // 스크롤 멈춤. 20210716
-					scrolling = 0;
-
-					$('.cp1curriculum1 .w1w2 .test').text( '터치엔드' + ' | ' + e.type + ' | ' + e.clientY );
 				});
-
-				// 마우스 이동 | 터치 이동
 				$(document).on('mousemove touchmove', function(e){
-
-					// 20210721	
-					if(e.originalEvent.touches || e.originalEvent.changedTouches){ // 터치 있으면
-						var e = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0]; // 싱글 터치
-					}else{
-						var e = e || window.event;
-					}
-
-					if(!scrolling){ // 스크롤중 아닐 때만
-						doDrag(e, $c);
-						doScroll1(e, ey, $c); // 스크롤 호출. 20210716
-					}
-					if( (scrolling == 1) && (e.clientY < oldY)  ){ // console.log('아래로스크롤멈춤');
-						clearInterval(interval); // 스크롤 멈춤. 20210716
-						scrolling = 0;
-						//$c.css({boxShadow: '0 0 .5em 0 rgba(255,0,0, 1)'}); // 확인용
-					}
-					if( (scrolling == -1) && (e.clientY > oldY)  ){ // console.log('위로스크롤멈춤');
-						clearInterval(interval); // 스크롤 멈춤. 20210716
-						scrolling = 0;
-						//$c.css({boxShadow: '0 0 .5em 0 rgba(0,255,0, 1)'}); // 확인용
-					}
-
-					oldY = e.clientY; // 마우스 위치 기억
-
+					doDrag(e, $c);
 				});
-
 			}
 
 			// 드래그 동작
 			function doDrag(e, $c){
-				ey = e.clientY - sy; 
-				nScrollTop = $cont.scrollTop(); // 현재 scrollTop 값
-				ey = ey + nScrollTop - sScrollTop; // 스크롤 위치 변경값 더하여 계산
-
+				if(e.originalEvent.touches || e.originalEvent.changedTouches){ // 터치 있으면
+					var e = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0]; // 싱글 터치
+				}else{
+					var e = e || window.event;
+				}
+				ey = e.clientY - sy;
 				$c.css({
 					zIndex: '1',
-					transform: 'translateY(' + ey + 'px)',
-					//boxShadow: '0 0 .5em 0 rgba(255,255,255, 1)'
+					transform: 'translateY(' + ey + 'px)'
 				});
-				$c.addClass('dragging'); // 스타일 클래스 추가
 			}
 
 			// 드롭 동작 (순서변경)
 			function doDrop(e, $c){
 				$(document).off('mouseup mousemove touchend touchmove');
 
-				$cs = $c.parent().children();
+				//var $cs = $c.closest('.w1item').children();
+				var $cs = $c.parent().children();
+				var ofs = {
+					zIndex: '',
+					transform: 'none'
+				};
 
 				if( $c.position().top > $cs.last().position().top ){
 					$cs.last().after( $c );
@@ -571,77 +569,25 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 						}
 					}
 				}
-
-				$c.css({
-					zIndex: '',
-					transform: 'none',
-					//boxShadow: 'none'
-				});
-				$c.removeAttr('style');
-				$c.removeClass('dragging'); // 스타일 클래스 제거
+				$c.css(ofs);
 			}
-
-			// 스크롤 (스크롤). 20210716
-			function doScroll1(e, ey, $c){
-
-				sh = $cont.outerHeight(), // 스크롤 영역 높이
-				ih = $c.closest('.w1item').outerHeight(); // 스크롤 내부 내용 높이
-
-				sTop = $cont.scrollTop(), // 최초 스크롤 위치
-				cTop = $c.position().top, // 드래그 중인거 상단
-				cBtm = $c.position().top + $c.outerHeight(); // 드래그 중인거 하단
-				n = 0; // 스크롤값 초기화
-
-				// 아래로 드래그 중인게 영역끝 벗어나면
-				//if( ( ey > 0 ) && ( cBtm > ( sh + $cont.scrollTop() ) ) ){ // ey 값은 스크롤에 따라 변하므로 +- 값으로 드래그 방향 알 수 없다!!
-				if( cBtm > ( sh + $cont.scrollTop() ) ){
-					scrolling = 1;
-					interval = setInterval(function(){
-						n += 2;
-						if( $cont.scrollTop() < (ih - sh) ){ // 스크롤 맨끝 아니면
-							$cont.scrollTop(sTop + n);
-							$c.css({
-								transform: 'translateY(' + (ey + n) + 'px)' // 스크롤 만큼 위치 조정
-							});
-						}
-					}, 5);
-				}
-
-				// 위로 드래그 중인게 영역 처음 벗어나면
-				//if( ( ey < 0 ) && ( cTop < $cont.scrollTop() ) ){
-				if( cTop < $cont.scrollTop() ){
-					scrolling = -1;
-					interval = setInterval(function(){
-						n -= 2;
-						if( $cont.scrollTop() > 0 ){ // 스크롤 맨처음 아니면
-							$cont.scrollTop(sTop + n);
-							$c.css({
-								transform: 'translateY(' + (ey + n) + 'px)' // 스크롤 만큼 위치 조정
-							});
-						}
-					}, 5);
-				}
-
-			} // /doScroll1()
-
-		} // /makeDrag1()
-
+		}
 
 	});
 /*]]>*/</script>
 
 <!-- 유료일 경우 보이지 않음 -->
 @if ($isFree == 'Y')
+
 <!-- cp1tag2 -->
 <div class="cp1tag2">
 	<div class="cont w1">
 		<div class="w1w1">
 			<div class="eg1">
-				<input type="text" value="" placeholder="키워드를 추가해서 최적의 영상을 찾아보세요!" title="추가 키워드" class="text1 type1" id="input_subject"/>
+				<input type="text" value="" placeholder="키워드를 추가해서 최적의 영상을 찾아보세요!" title="추가 키워드" class="text1 type1"  id="input_subject"/>
 				<button type="button" class="b1 add button gray4">추가</button>
 			</div>
 			<div class="tg1">
-                {{-- 추가 버튼 클릭 시 주제가 해당 위치에 추가됨 --}}
 			</div>
 		</div>
 		<div class="w1w2">
@@ -658,7 +604,7 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 
 		/** ◇◆ 강좌 주제 제거 추가. 20210302. @m.
 		 */
-		(function(){
+        (function(){
 			var my = '.cp1tag2',
 				tg1 = '.tg1', // 주제 그룹
 				a1on = '.a1.on', // 주제
@@ -673,6 +619,11 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 				});
 
 				// 미래 추가 클릭
+				// $(my).on('click', b1add, function(){
+				// 	//var $last = $(this).closest(my).find(a1on).last();
+				// 	$('<a href="?#★" class="a1 on" />').appendTo( $(this).closest(my).find(tg1) ).text( $(this).prevAll('.text1').val() );
+				// });
+
                 $(my).on('click', b1add, function(){
                     if ($('#input_subject').val() != '') {
                         var $last = $(this).closest(my).find(a1on).last();
@@ -681,11 +632,6 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                     }
                     $('#input_subject').focus();
                 });
-
-                // $(my).on('click', b1add, function(){
-				// 	//var $last = $(this).closest(my).find(a1on).last();
-				// 	$('<a href="?#★" class="a1 on" />').appendTo( $(this).closest(my).find(tg1) ).text( $(this).prevAll('.text1').val() );
-				// });
 
                 // 엔터키 입력 이벤트로 주제 추가
                 $('#input_subject').keydown(function(key) {
@@ -697,39 +643,38 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                     $('#input_subject').focus();
                 });
 		})();
-
 	});
 /*]]>*/</script>
 
 <!-- 유료일 경우 보이지 않음 -->
 @if ($isFree == 'Y')
-<!-- cp1tag5 -->
-<div class="cp1tag5">
-	<strong class="h1">태그</strong>
+
+<!-- cp1tag1 -->
+<div class="cp1tag1 mgt4em mgb4em">
 	<div class="tags" id="div_tag_list">
-    @if (isset($videoTagArr))
+	@if (isset($videoTagArr))
         @foreach ($videoTagArr as $tag)
             @if ($tag != '')
             <a href="javascript:void(0);" class="a1" tag_idx="{{ $tag->idx }}">#{{ $tag->tag }}</a>
             @endif
         @endforeach
     @endif
-	</div>
-    @if (isset($videoTagArr) && count($videoTagArr) >= 20)
+    </div>
+	@if (isset($videoTagArr) && count($videoTagArr) >= 20)
 	<a href="javascript:void(0);" class="more" id="more_tag_btn">더보기</a>
     @endif
 </div>
-<!-- /cp1tag5 -->
+<!-- /cp1tag1 -->
 @endif
 <!-- /유료일 경우 보이지 않음 -->
 
 <script>/*<![CDATA[*/
 	$(function(){
 
-        /** ◇◆ 태그선택. 20210330. @m
+		/** ◇◆ 태그선택. 20210330. @m
 		 */
-		(function(){
-			var my = '.cp1tag5',
+        (function(){
+			var my = '.cp1tag1',
 				m = '.a1';
 			// 클릭
 			$(my).on('click', m, function(e){
@@ -761,7 +706,7 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                         }
                     }
                 });
-                // console.log(tagNameLiast);
+                // console.log(tagNameList);
 
                 getRecommandVideoData('tag', tagNameList);
 			});
@@ -780,8 +725,8 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                 url: "{{ route('sub.video.get_more_tags') }}",
                 data: {
                     'last_tag_idx': lastTagIdx,
-                    'bcate_id': '{{ $tempInfo->main_bcate_id }}',
-                    'scate_id': '{{ $tempInfo->main_scate_id }}',
+                    'bcate_id': '{{ $lectureInfo->bcate_id }}',
+                    'scate_id': '{{ $lectureInfo->scate_id }}',
                 },
                 // contentType: false,
                 // processData: false,
@@ -790,7 +735,7 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                         // alert('done!');
 
                         // 쿼리 확인용
-                        // console.log(data.query);
+                        console.log(data.query);
 
                         if (data.resData.length != 0) {
                             // console.log(data.resData);
@@ -824,6 +769,7 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                 }
             });
         });
+
 	});
 /*]]>*/</script>
 
@@ -841,7 +787,7 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 
 	<!-- lst1 -->
 	<div class="lst1 even-grid evenmix-234" id="div_video_list">
-        @if (isset($videoList))
+		@if (isset($videoList))
             @foreach ($videoList as $video)
             <div class="item column">
                 <div class="w1">
@@ -859,7 +805,6 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                         </div>
                         <div class="tg2">
                             <span class="t2">{{ $video->channel }} · 조회수 {{ $video->hit_cnt }}회</span>
-                            {{-- TODO: 정확도??? --}}
                             <span class="t4">정확도 80%</span>
                         </div>
                     </a>
@@ -884,7 +829,6 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 </div>
 </div>
 <!-- /cp1fcard3 -->
-
 @endif
 <!-- /유료일 경우 보이지 않음 -->
 
@@ -892,7 +836,7 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 <script>/*<![CDATA[*/
 	$(function(){
 
-        // 영상 더보기
+		// 영상 더보기
         $('#more_video_btn').on('click', function(){
             var lastVideoIdx = $('#div_video_list .a1').last().attr('video_idx');
             var onTags = $('.tags').find('.on');
@@ -927,8 +871,8 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                 data: {
                     'last_video_idx': lastVideoIdx,
                     'tag_name_list': tagNameList,
-                    'bcate_id': '{{ $tempInfo->main_bcate_id }}',
-                    'scate_id': '{{ $tempInfo->main_scate_id }}',
+                    'bcate_id': '{{ $lectureInfo->bcate_id }}',
+                    'scate_id': '{{ $lectureInfo->scate_id }}',
                 },
                 // contentType: false,
                 // processData: false,
@@ -937,7 +881,7 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
                         // alert('done!');
 
                         // 쿼리 확인
-                        // console.log(data.query);
+                        console.log(data.query);
 
                         if (data.resData.length != 0) {
                             // console.log(data.resData);
@@ -971,21 +915,25 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
             });
         });
 
-        /** ◇◆ 다중선택. 20210525. @m.
-            */
-        (function(){
-            // 미래 요소 클릭
-            $('#cp1fcard3a1').on('click', '.item', function(e){
-                e.preventDefault();
-                $(this).toggleClass('on');
-            });
-        })();
-    });
+
+		/** ◇◆ 다중선택. 20210525. @m.
+		 */
+		(function(){
+			// 미래 요소 클릭
+			$('#cp1fcard3a1').on('click', '.item', function(e){
+				e.preventDefault();
+				$(this).toggleClass('on');
+			});
+		})();
+
+
+	});
 /*]]>*/</script>
 
 
 <!-- 유료일 경우 보이지 않음 -->
 @if ($isFree == 'Y')
+
 <a href="#cp1fcard3a2" class="cp1switch1 switch toggle fw4">
 	<span class="t1">유튜브에서 검색</span>
 	<span class="t1 sw-off">OFF</span>
@@ -997,14 +945,14 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 <div id="cp1fcard3a2" class="cp1fcard3 mgt0 mgb2em pdt1em pdb1em">
 <div class="wrap1">
 
+    {{-- TODO: 유튜브에서 검색결과 --}}
 	<h3 class="fw6 fsB10">유튜브에서 검색결과</h3>
 
 	<!-- lst1 -->
 	<div class="lst1 even-grid evenmix-234">
-        <!-- TODO: loop -->
 		<div class="item column">
 			<div class="w1">
-				<a href="#layer1video1preview1" class="a1 toggle" data-send-focus="that">
+				<a href="?#★" class="a1">
 					<div class="f1">
 						<span class="f1p1">
 							<img src="{{ asset('assets/images/main/x1/x1p001.jpg') }}" alt="★대체텍스트필수" />
@@ -1026,7 +974,7 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 
 	<!-- cp1more1 -->
 	<div class="cp1more1">
-		<a href="javascript:void(0);" class="more">
+		<a href="#★" class="more">
 			<span class="t1">더보기</span>
 			<i class="ic1"></i>
 		</a>
@@ -1039,10 +987,11 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
 @endif
 <!-- /유료일 경우 보이지 않음 -->
 
+
 <script>/*<![CDATA[*/
 	$(function(){
 
-        /** ◇◆ 더보기클릭샘플. 20210217. 20210312. @m
+		/** ◇◆ 더보기클릭샘플. 20210217. 20210312. @m
         * 이건 그냥 보여주기 샘플. 개발자 동작 처리 필요!
         */
         (function(){
@@ -1060,22 +1009,21 @@ $isFree = isset($_GET['is_free']) ? $_GET['is_free'] : '';
             });
         })();
 
-    });
-/*]]>*/</script>
-
-<!-- (레이어팝업. 영상미리보기) -->
-@include('sub.lecture.inc_layer_video_preview')
-
-<script>/*<![CDATA[*/
-	$(function(){
-		// 레이어팝업 템플릿 바로 확인
-		//$('[href="#layer1video1preview1"]').first().triggerHandler('click');
 	});
 /*]]>*/</script>
 
+
+</div>
+<!-- /container -->
+</div>
+<!-- /#body_content -->
+</div>
+<!-- /container -->
+</div>
+<!-- /#body -->
 @endsection
 
-@section('sub_script')
+@section('script')
 <script>
 $(function() {
     // 페이지 로딩 시 소단원 목록 숨김
@@ -1100,7 +1048,7 @@ function getMainVideoList() {
         var $_title = $(this).siblings('.tg1').find('.t1');
 
         if ($(this).children().is('[href]')) {
-            if ($_title.attr('video_id') == '{{ $tempInfo->main_video_id }}') {
+            if ($_title.attr('video_id') == '{{ $lectureInfo->main_video_id }}') {
                 html += '<option value="' + $_title.attr('video_id') + '" selected>' + $_title.text() + '</option>';
             } else {
                 html += '<option value="' + $_title.attr('video_id') + '">' + $_title.text() + '</option>';
@@ -1113,11 +1061,180 @@ function getMainVideoList() {
     $('#main_video').append(html);
 }
 
-// 입력 정보 저장 후 다음 단계로 이동
-function saveAndGoNextStep(nextStep) {
+// 추천 강의 영상 조회
+function getRecommandVideoData(searchMethod, searchData) {
+    if (searchMethod == 'keyword') {
+        var keywordList = [];
+        var onTags = $('.tg1').find('.on');
+
+        // 선택된 주제 이름 배열로 저장
+        $.each(onTags, function(index, value) {
+            var keyword = $(value).text();
+
+            if (keyword != '') {
+                keywordList.push(keyword);
+            }
+        });
+        // console.log(keywordList);
+
+        searchData = keywordList;
+    }
+
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'POST',
+        dataType: 'json',
+        url: "{{ route('sub.lecture.get_recommand_video_data') }}",
+        data: {
+            'search_method': searchMethod,
+            'search_data': searchData,
+            'bcate_id': '@if (isset($lectureInfo)) {{ $lectureInfo->bcate_id }} @endif',
+            'scate_id': '@if (isset($lectureInfo)) {{ $lectureInfo->scate_id }} @endif',
+        },
+        // contentType: false,
+        // processData: false,
+        success: (data) => {
+            if (data.status == 'success') {
+                // alert('done!');
+
+                // 쿼리 확인
+                console.log(data.query);
+
+                if (data.resData.length != 0) {
+                    // console.log(data.resData);
+
+                    $('#div_video_list').empty();
+                    $('#div_video_list').append(data.resData);
+
+                    // 조회된 영상 수가 8개 미만일 경우 더보기 버튼 숨김
+                    if (data.isShowMore) {
+                        $('#show_more_dolearn_video').show();
+                    } else {
+                        $('#show_more_dolearn_video').hide();
+                    }
+                }
+
+                // 조회된 영상이 없을 경우 더보기 버튼 숨김
+                if (data.count == 0) {
+                    html = '<span style="margin-left:15px">강의 영상 목록이 없습니다.</span>';
+                    $('#div_video_list').empty();
+                    $('#div_video_list').append(html);
+                    $('#show_more_dolearn_video').hide();
+                }
+
+            } else {
+                alert('강의 영상 목록 조회에 실패했습니다.\n관리자에게 문의 바랍니다.');
+                console.log('code: ' + data.code + '\nmessage: ' + data.msg);
+            }
+        },
+        error: function(request, status, error) {
+            console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
+        },
+        complete: function(data) {
+            //
+        }
+    });
+}
+
+// URL을 등록해서 강의 영상에 추가
+function addUrlToVideoList() {
+
+    // 소단원을 선택했을 경우에만 강의 영상 추가 가능
+    if (!$('#div_schap div.on').find('.t1').length) {
+        alert('소단원을 선택해주세요.');
+        $('#input_url').val('');
+        $('[href="#layer1add1url1"]').first().triggerHandler('click');
+
+        return false;
+    }
+
+    var url = $('#input_url').val();
+    var _video = '';  // 강의 태그
+        _video += '<div class="item" style="cursor:pointer;">';
+        _video +=   '<div class="control move" title="끌어서 놓기로 순서 이동"></div>';
+        _video +=   '<div class="tg1">';
+        _video +=       '<span class="t1 form-static1">' + url + '</span>';
+        _video +=   '</div>';
+        _video +=   '<div class="eg1">';
+        _video +=       '<a class="b1 preview"><span class="b1t1">미리보기 영상 없음</span></a>';
+        _video +=       '<button type="button" class="b1 edit"><span class="b1t1">수정</span></button>';
+        _video +=       '<button type="button" class="b1 del"><span class="b1t1">삭제</span></button>';
+        _video +=   '</div>';
+        _video += '</div>';
+    var $_video = $(_video);
+    var _bchapId = $('#div_schap div.on').find('.t1').attr('bchap_id');
+    var _schapId = $('#div_schap div.on').find('.t1').attr('schap_id');
+    var analysisYn = 'Y';
+
+    if (url == '') {
+        alert('URL을 입력해주세요.');
+        return false;
+    } else if (url.includes('www.youtube.com/watch?v=')) {
+        $videoId = url.split('www.youtube.com/watch?v=')[1];
+    } else if (url.includes('youtu.be/')) {
+        $videoId = url.split('youtu.be/')[1];
+    } else {
+        alert('URL 형식이 맞지 않습니다. 다시 입력해주세요.');
+    }
+
+    // URL에서 유튜브 영상 id 추출 후 DB에 있는지 확인.  TODO: 없으면 유튜브 API 사용해야 함
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'POST',
+        dataType: 'json',
+        url: "{{ route('sub.lecture.get_video_data') }}",
+        data: {
+            'video_id': $videoId,
+        },
+        // contentType: false,
+        // processData: false,
+        success: (data) => {
+            if (data.status == 'success') {
+                // alert('done!');
+                if (!data.exist) {
+                    analysisYn = 'N';
+                    alert('입력하신 URL은 분석이 필요한 영상으로\n내용검색 및 자막의 기능 사용이 제한됩니다.\n분석은 2~3일 소요되며 완료시 알림으로 알려드립니다.');
+                }
+
+                $('#input_url').val('');
+                $('[href="#layer1add1url1"]').first().triggerHandler('click');
+
+                $('#dropZone').hide();
+                $_video.find('span').first().attr({
+                    bchap_id: _bchapId,
+                    schap_id: _schapId,
+                    video_id: $videoId,
+                    analysis_yn: analysisYn
+                });
+
+                $_video.find('.t1').text(data.videoTitle);
+                $_video.appendTo('#div_video');
+
+                getMainVideoList();
+
+            } else {
+                alert('code: ' + data.code + '\nmessage: ' + data.msg);
+            }
+        },
+        error: function(request, status, error) {
+            console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
+        },
+        complete: function(data) {
+            //
+        }
+    });
+}
+
+// 커리큘럼 저장
+function saveCurriculum() {
+    var lectureIdx = '{{ $lectureIdx }}';
     var mainVideoId = $('#main_video').val();
-    var bcateId = '{{ $tempInfo->main_bcate_id }}';
-    var scateId = '{{ $tempInfo->main_scate_id }}';
+    var bcateId = '{{ $lectureInfo->bcate_id }}';
+    var scateId = '{{ $lectureInfo->scate_id }}';
     var bchapList = new Array();
     var schapList = new Array();
     var videoList = new Array();
@@ -1133,9 +1250,6 @@ function saveAndGoNextStep(nextStep) {
             bchapList.push(data);
         }
     });
-
-    // 배열 첫 번째 요소 제거
-    // bchapList.shift();
 
     // 소단원 목록을 json 형태로 변환
     $('#div_schap').find('.t1').each(function() {
@@ -1172,233 +1286,29 @@ function saveAndGoNextStep(nextStep) {
         }
     });
 
-    if (nextStep != 'introduce') {
-        // 입력 데이터 유효성 검사
-        if (bchapList.length == 0) {
-            alert('대단원을 생성해주세요.');
-            return false;
-        }
-
-        if (schapList.length == 0) {
-            alert('소단원을 생성해주세요.');
-            return false;
-        }
-
-        if (videoList.length == 0) {
-            alert('강의 영상을 등록해주세요.');
-            return false;
-        }
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'POST',
-            dataType: 'json',
-            url: "{{ route('sub.lecture.tempsave_add_lecture') }}",
-            data: {
-                'step': '{{ $step }}',
-                'main_video_id': mainVideoId,
-                'bcate_id': bcateId,
-                'scate_id': scateId,
-                'bchap_list': JSON.stringify(bchapList),
-                'schap_list': JSON.stringify(schapList),
-                'video_list': JSON.stringify(videoList)
-            },
-            // contentType: false,
-            // processData: false,
-            success: (data) => {
-                if (data.status == 'success') {
-                    // alert('done!');
-                    location.href='/sub/lecture/add_new_lecture?step=' + nextStep + '&is_free={{ $isFree }}';
-                } else {
-                    alert('code: ' + data.code + '\nmessage: ' + data.msg);
-                }
-            },
-            error: function(request, status, error) {
-                console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
-            },
-            complete: function(data) {
-                //
-            }
-        });
-    } else {
-        if (confirm('저장하지 않은 정보는 사라집니다.\n이전 단계로 돌아가시겠습니까?')) {
-            location.href='/sub/lecture/add_new_lecture?step=' + nextStep + '&is_free={{ $isFree }}';
-        } else {
-            return false;
-        }
-    }
-}
-
-// 추천 강의 영상 조회
-function getRecommandVideoData(searchMethod, searchData) {
-    if (searchMethod == 'keyword') {
-        var keywordList = [];
-        var onTags = $('.tg1').find('.on');
-
-        // 선택된 주제 이름 배열로 저장
-        $.each(onTags, function(index, value) {
-            var keyword = $(value).text();
-
-            if (keyword != '') {
-                keywordList.push(keyword);
-            }
-        });
-        // console.log(keywordList);
-
-        searchData = keywordList;
-    }
-
     $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         type: 'POST',
         dataType: 'json',
-        url: "{{ route('sub.lecture.get_recommand_video_data') }}",
+        url: "{{ route('manage.lecture.save_curriculum') }}",
         data: {
-            'search_method': searchMethod,
-            'search_data': searchData,
-            'bcate_id': '@if (isset($tempInfo)) {{ $tempInfo->main_bcate_id }} @endif',
-            'scate_id': '@if (isset($tempInfo)) {{ $tempInfo->main_scate_id }} @endif',
+            'lecture_idx': lectureIdx,
+            'main_video_id': mainVideoId,
+            'bcate_id': bcateId,
+            'scate_id': scateId,
+            'bchap_list': JSON.stringify(bchapList),
+            'schap_list': JSON.stringify(schapList),
+            'video_list': JSON.stringify(videoList)
         },
         // contentType: false,
         // processData: false,
         success: (data) => {
             if (data.status == 'success') {
                 // alert('done!');
-
-                // 쿼리 확인
-                // console.log(data.query);
-
-                if (data.resData.length != 0) {
-                    // console.log(data.resData);
-
-                    $('#div_video_list').empty();
-                    $('#div_video_list').append(data.resData);
-
-                    // 조회된 영상 수가 8개 미만일 경우 더보기 버튼 숨김
-                    if (data.isShowMore) {
-                        $('#show_more_dolearn_video').show();
-                    } else {
-                        $('#show_more_dolearn_video').hide();
-                    }
-                }
-
-                // 조회된 영상이 없을 경우 더보기 버튼 숨김
-                if (data.count == 0) {
-                    html = '<span style="margin-left:15px">강의 영상 목록이 없습니다.</span>';
-
-                    $('#div_video_list').empty();
-                    $('#div_video_list').append(html);
-                    $('#show_more_dolearn_video').hide();
-                }
-
-            } else {
-                alert('강의 영상 목록 조회에 실패했습니다.\n관리자에게 문의 바랍니다.');
-                console.log('code: ' + data.code + '\nmessage: ' + data.msg);
-            }
-        },
-        error: function(request, status, error) {
-            console.log('code: ' + request.status + '\nmessage: ' + request.responseText + '\nerror: ' + error);
-        },
-        complete: function(data) {
-            //
-        }
-    });
-}
-
-// URL을 등록해서 강의 영상에 추가
-function addUrlToVideoList() {
-
-    // 소단원을 선택했을 경우에만 강의 영상 추가 가능
-    if (!$('#div_schap div.on').find('.t1').length) {
-        alert('소단원을 선택해주세요.');
-        $('#input_url').val('');
-        $('[href="#layer1add1url1"]').first().triggerHandler('click');
-
-        return false;
-    }
-
-    var url = $('#input_url').val();
-    var _video = ''; // 강의 태그
-        _video += '<div class="item" style="cursor: pointer">';
-        _video +=   '<div class="control move" title="끌어서 놓기로 순서 이동"></div>';
-        _video +=   '<div class="tg1">';
-        _video +=       '<span class="t1 form-static1">' + url + '</span>';
-        _video +=   '</div>';
-        _video +=   '<div class="eg1">';
-        _video +=       '<a class="b1 preview"><span class="b1t1">미리보기 영상 없음</span></a>';
-        _video +=       '<button type="button" class="b1 edit"><span class="b1t1">수정</span></button>';
-        _video +=       '<button type="button" class="b1 del"><span class="b1t1">삭제</span></button>';
-        _video +=   '</div>';
-        _video += '</div>';
-    var $_video = $(_video);
-    var _bchapId = $('#div_schap div.on').find('.t1').attr('bchap_id');
-    var _schapId = $('#div_schap div.on').find('.t1').attr('schap_id');
-    var analysisYn = 'Y';
-
-    if (url == '') {
-        alert('URL을 입력해주세요.');
-        return false;
-    } else if (url.includes('www.youtube.com/watch?v=')) {
-        $videoId = url.split('www.youtube.com/watch?v=')[1];
-    } else if (url.includes('youtu.be/')) {
-        $videoId = url.split('youtu.be/')[1];
-    } else {
-        alert('URL 형식이 맞지 않습니다. 다시 입력해주세요.');
-        return false;
-    }
-
-    if ($videoId == '') {
-        alert('영상 ID를 입력해주세요.');
-        return false;
-    }
-
-    // URL에서 유튜브 영상 id 추출 후 DB에 있는지 확인  TODO: 없으면 유튜브 API로 분석 필요함
-    $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        type: 'POST',
-        dataType: 'json',
-        url: "{{ route('sub.lecture.get_video_data') }}",
-        data: {
-            'video_id': $videoId,
-        },
-        // contentType: false,
-        // processData: false,
-        success: (data) => {
-            if (data.status == 'success') {
-                // alert('done!');
-                if (!data.exist) {
-                    analysisYn = 'N';
-                    alert('입력하신 URL은 분석이 필요한 영상으로\n내용검색 및 자막의 기능 사용이 제한됩니다.\n분석은 2~3일 소요되며 완료시 알림으로 알려드립니다.');
-                }
-
-                // url 입력 폼 초기화
-                $('#input_url').val('');
-                // url 로 영상 등록 레이어 팝업 닫기
-                $('[href="#layer1add1url1"]').first().triggerHandler('click');
-
-                $('#dropZone').hide();
-                $_video.find('span').first().attr({
-                    bchap_id: _bchapId,
-                    schap_id: _schapId,
-                    video_id: $videoId,
-                    analysis_yn: analysisYn
-                });
-
-                if (!data.exist) {
-                    $_video.find('.t1').text('미등록 영상 ID : ' + data.videoTitle + ' (제목을 수정해주세요.)');
-                } else {
-                    $_video.find('.t1').text(data.videoTitle);
-                }
-                $_video.appendTo('#div_video');
-
-                getMainVideoList();
-
+                alert('커리큘럼 정보가 수정되었습니다.');
+                location.href='/manage/lecture/curriculum?idx={{ $lectureIdx }}';
             } else {
                 alert('code: ' + data.code + '\nmessage: ' + data.msg);
             }
@@ -1427,11 +1337,6 @@ $('#add_video_btn').click(function() {
     }
 
     $('#dropZone').hide();
-
-    if (selectedItemList.length == 0) {
-        alert('영상을 선택해주세요.');
-        return false;
-    }
 
     selectedItemList.each(function(index, element) {
         var _video = '';
