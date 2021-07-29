@@ -493,9 +493,382 @@ class LectureController extends Controller{
         // 해당 강좌의 전체 후기 수
         $reviewAllCnt = count($reviewAllList);
 
-        return view('sub.lecture.lecture_detail', compact('isApplicatedLecture', 'lectureDetail', 'bchapterList', 'curriSchapterList', 'curriVideoList', 'countVideo', 'operationLectureList', 'instructorInfo', 'youtuberInfoList', 'reviewList', 'ratingSum', 'ratingCntArr', 'reviewAllCnt'));
+        $noticeInfo = DB::select('select m.*, u.nickname, u.save_profile_image from my_lecture_notice m, users u where m.writer_id = u.email and lecture_id = ? order by idx desc limit 0, 1', [$idx]);
+        if(count($noticeInfo)>0){
+            $noticeInfo=$noticeInfo[0];
+            $totalcount = DB::select('select count(*) totalcount from my_lecture_notice where lecture_id = ?', [$idx])[0]->totalcount;
+            $noticePage = pagenationToAjax(1, $totalcount, 1);
+
+            $lectureNoticeCommentList = DB::select('select c.*, u.nickname, u.save_profile_image from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" and c.post_type ="lecture_notice" order by c.status DESC, idx desc', [$noticeInfo->idx]);
+            $inIdx ='';
+            if(count($lectureNoticeCommentList)>0){
+                $inIdx .= " and reply_id IN (".$lectureNoticeCommentList[0]->idx;
+                for($i =1; $i<count($lectureNoticeCommentList); $i++){
+                    $inIdx .= ",".$lectureNoticeCommentList[$i]->idx;
+                }
+                $inIdx.=") ";
+            }
+
+            $recommentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "Y"  and c.status!="delete" '.$inIdx.'order by idx desc', [$noticeInfo->idx]);
+
+        }else{
+            $noticePage = pagenationToAjax(1, 0, 1);
+        }
+        return view('sub.lecture.lecture_detail', compact('isApplicatedLecture', 'lectureDetail', 'bchapterList', 'curriSchapterList', 'curriVideoList', 'countVideo', 'operationLectureList', 'instructorInfo', 'youtuberInfoList', 'reviewList', 'ratingSum', 'ratingCntArr', 'reviewAllCnt', 'noticeInfo', 'noticePage', 'lectureNoticeCommentList', 'recommentList'));
+    }
+    public function lectureNotice(Request $request){
+        $lectureID = $request->post('lectureID');
+        $page = $request->post('page', 1);
+        $noticeInfo = DB::select('select m.*, u.nickname, u.save_profile_image from my_lecture_notice m, users u where m.writer_id = u.email and lecture_id = ? order by idx desc limit '.($page-1).', 1', [$lectureID])[0];
+        $result['query'] = ('select m.*, u.nickname, u.save_profile_image from my_lecture_notice m, users u where m.writer_id = u.email and lecture_id = '.$lectureID.' order by idx desc limit '.$page.', 1');
+        $totalcount = DB::select('select count(*) totalcount from my_lecture_notice where lecture_id =?', [$lectureID]);
+        $result['idx']=$noticeInfo->idx;
+        $lectureNoticeCommentList = DB::select('select c.*, u.nickname, u.save_profile_image from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" and c.post_type ="lecture_notice" order by c.status DESC, idx desc', [$noticeInfo->idx]);
+        $inIdx ='';
+        if(count($lectureNoticeCommentList)>0){
+            $inIdx .= " and reply_id IN (".$lectureNoticeCommentList[0]->idx;
+            for($i =1; $i<count($lectureNoticeCommentList); $i++){
+                $inIdx .= ",".$lectureNoticeCommentList[$i]->idx;
+            }
+            $inIdx.=") ";
+        }
+
+        $recommentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "Y"  and c.status!="delete" '.$inIdx.'order by idx desc', [$noticeInfo->idx]);
+
+
+
+        $html = '';
+        if($noticeInfo!=null){
+            $html .= '<input type="hidden" value="'. $noticeInfo->idx .'" id="noticeIdx">';
+            $html .= '<div class="w1 item">';
+            $html .= '  <div class="w1w1">';
+            $html .= '      <div class="f1">';
+            $html .= '          <span class="f1p1">';
+            if($noticeInfo->save_profile_image=='')
+            $html .= '              <img src="'.asset('assets/images/lib/noimg1face1.png').'" alt="이미지 없음" />';
+            else
+            $html .= '              <img src="'.asset('storage/uploads/profile/'.$noticeInfo->save_profile_name).'" alt="{{ $noticeInfo->save_profile_name }}" />';
+            $html .= '          </span>';
+            $html .= '      </div>';
+            $html .= '  </div>';
+            $html .= '  <div class="w1w2">';
+            $html .= '      <div class="tt1">';
+            $html .=            $noticeInfo->title;
+            $html .= '      </div>';
+            $html .= '      <div class="tg1">';
+            $html .= '          <span class="t1">'.$noticeInfo->nickname.'</span>';
+            $html .= '          <span class="t2">'. format_date($noticeInfo->write_at).'</span>';
+            $html .= '      </div>';
+            $html .= '      <div class="tg2">';
+            $html .=            $noticeInfo->content;
+            $html .= '      </div>';
+            $html .= '      <div class="eg1">';
+            $html .= '          <a href="javascript:void(0);" class="cp1like1"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">43</span></a>';
+            $html .= '      <!-- cp1menu1 -->';
+            $html .= '          <div class="cp1menu1 toggle1s1">';
+            $html .= '              <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
+            $html .= '                  <div class="cp1menu1c toggle-c">';
+            $html .= '                      <a href="javascript:void(0);" target="_blank" rel="noopener" title="새 창" class="b2 report"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
+            $html .= '                  </div>';
+            $html .= '              </div>';
+            $html .= '          <!-- /cp1menu1 -->';
+            $html .= '          </div>';
+            $html .= '      </div>';
+            $html .= '  </div>';
+            $html .= '<!-- /게시글 -->';
+            $html .= '<!-- 댓글작성 -->';
+            $html .= '  <div class="w1 item reply">';
+            $html .= '    <textarea rows="3" cols="80" title="댓글작성" class="w100 type1"></textarea>';
+            $html .= '      <div class="tar">';
+            $html .= '          <button type="submit" class="button submit semismall" onclick="enrollEvent2(this)" value="N">등록하기</button>';
+            $html .= '      </div>';
+            $html .= '  </div>';
+            $html .= '<!-- /댓글작성 -->';
+
+            // 댓글
+            foreach($lectureNoticeCommentList as $lectureNoticeComment){
+                $html .= '  <div class="w1 item reply">';
+                $html .= '    <div class="w1w1">';
+                $html .= '        <div class="f1">';
+                $html .= '            <span class="f1p1">';
+                if($lectureNoticeComment->save_profile_image!='') $html .= '                <img src="'.asset('storage/uploads/profile/'.$lectureNoticeComment->save_profile_image).'" alt="이미지 없음" />';
+                else $html .= '               <img src="'.asset('assets/images/lib/noimg1face1.png').'" alt="이미지 없음" />';
+                $html .= '            </span>';
+                $html .= '        </div>';
+                $html .= '    </div>';
+                $html .= '    <div class="w1w2">';
+                $html .= '        <div class="tg1">';
+                $html .= '            <span class="t1">'.$lectureNoticeComment->nickname.'</span>';
+                $html .= '            <span class="t2">'.format_date($lectureNoticeComment->writed_at ).'</span>';
+                $html .= '        </div>';
+                $html .= '        <div class="tg2">';
+                $html .=                $lectureNoticeComment->content;
+                $html .= '        </div>';
+                $html .= '        <div class="eg1">';
+                $html .= '            <a href="javascript:void(0)" class="cp1like2" onclick="likeClick(this)" data-value="comment"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">'.$lectureNoticeComment->likes.'</span></a>';
+                $html .= '            <div class="cp1menu1 toggle1s1">';
+                $html .= '                <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
+                $html .= '                <div class="cp1menu1c toggle-c">';
+                $html .= '                    <a href="javascript:void(0)" rel="noopener" title="새 창" class="b2 report" onclick="reportClick(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
+                $html .= '                </div>';
+                $html .= '           </div>';
+                $html .= '        </div>';
+                $html .= '        <div class="toggle1s1">';
+                $html .= '            <a href="javascript:void(0);" class="b1 toggle-b fsS2">답글</a>';
+                $html .= '            <div class="toggle-c" style="display:none;">';
+                $html .= '                <textarea rows="3" cols="80" title="대댓글작성" class="w100 type1"></textarea>';
+                $html .= '                <div class="tar">';
+                $html .= '                    <input type="hidden" value="'.$lectureNoticeComment->idx.'">';
+                $html .= '                    <button type="button" class="button toggle-close secondary semismall mgr05em">취소</button>';
+                $html .= '                    <button type="submit" class="button submit semismall"  onclick="enrollEvent2(this)" value="Y">등록</button>';
+                $html .= '                </div>';
+                $html .= '            </div>';
+                $html .= '        </div>';
+                $keys = array_keys( array_column($recommentList, 'reply_id'),  $lectureNoticeComment->idx);
+                if(count($keys)>0){
+                    $html .= '        <div class="toggle1s2">';
+                    $html .= '            <a href="javascript:void(0);" class="b1 toggle1s2-b cp1switch2 switch fsS2">';
+                    $html .= '                <span class="cp1switch2-t1 sw-off">답글 보기</span>';
+                    $html .= '                <span class="cp1switch2-t1 sw-on">답글 숨기기</span>';
+                    $html .= '                <i class="ic1"></i>';
+                    $html .= '            </a>';
+                    $html .= '        <div class="toggle1s2-c" style="display:none;">';
+
+                    foreach ( $keys as $key){
+                        //대댓글
+                        $html .= '            <div class="w1 item reply2">';
+                        $html .= '                <div class="w1w1">';
+                        $html .= '                    <div class="f1">';
+                        $html .= '                        <span class="f1p1">';
+                        if($recommentList[$key]->save_profile_image!=''||$recommentList[$key]->save_profile_image!=null)
+                        $html .= '                      <img src="'.asset('storage/uploads/profile/'.$recommentList[$key]->save_profile_image) .'" alt="이미지 없음" />';
+                        else $html .= '                 <img src="'.asset('assets/images/lib/noimg1face1.png').'" alt="이미지 없음" />';
+                        $html .= '                  </span>';
+                        $html .= '              </div>';
+                        $html .= '          </div>';
+                        $html .= '          <div class="w1w2">';
+                        $html .= '              <div class="tg1">';
+                        $html .= '                  <span class="t1">'.$recommentList[$key]->nickname.'</span>';
+                        $html .= '                  <span class="t2">'.format_date($recommentList[$key]->writed_at).'</span>';
+                        $html .= '              </div>';
+                        $html .= '              <div class="tg2">';
+                        $html .=                     $recommentList[$key]->content;
+                        $html .= '              </div>';
+                        $html .= '              <div class="eg1">';
+                        $html .= '                  <input type="hidden" value="'.$recommentList[$key]->idx.'">';
+                        $html .= '                  <a href="javascript:void(0)" class="cp1like2" onclick="likeClick(this)" data-value="recomment"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">'.$recommentList[$key]->likes.'</span></a>';
+                        $html .= '                  <div class="cp1menu1 toggle1s1">';
+                        $html .= '                      <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
+                        $html .= '                      <div class="cp1menu1c toggle-c">';
+                        $html .= '                          <a href="javascript:void(0)" rel="noopener" title="새 창" class="b2 report" onclick="reportClick(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
+                        $html .= '                      </div>';
+                        $html .= '                  </div>';
+                        $html .= '              </div>';
+                        $html .= '          </div>';
+                        $html .= '      </div>';
+                    }
+                    $html .= '  </div>';
+                    $html .= '</div>';
+                }
+
+
+                $html .= '  </div>';
+                $html .= '</div>';
+
+            }
+
+
+            $html .= '</div>';
+        }
+
+
+        $result['status']='success';
+        $result['html'] = $html;
+        $result['noticePage']=pagenationToAjax($page, $totalcount[0]->totalcount, 1);
+        return response()->json($result, 200);
     }
 
+    public function lectureNoticeCommentEnroll(Request $request){
+
+        $postId = $request->get('postId');
+        $parentId=$request->get('parentId');
+        $postType=$request->get('postType');
+        $content=$request->get('content');
+        $isReply=$request->get('isReply');
+        DB::table('comment')->insert(array(
+            'post_id'=>$postId,
+            'post_type'=>$postType,
+            'writer_id'=>Auth::user()->email,
+            'reply_id'=>$parentId,
+            'content'=>$content,
+            'writed_at'=>now(),
+            'is_reply'=>$isReply,
+            'status'=>'active'
+        ));
+        $noticeInfo = DB::select('select m.*, u.nickname, u.save_profile_image from my_lecture_notice m, users u where m.writer_id = u.email and idx = ? order by idx desc limit 1', [$postId])[0];
+        $lectureNoticeCommentList = DB::select('select c.*, u.nickname, u.save_profile_image from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" and c.post_type ="lecture_notice" order by c.status DESC, idx desc', [$postId]);
+        $inIdx ='';
+        if(count($lectureNoticeCommentList)>0){
+            $inIdx .= " and reply_id IN (".$lectureNoticeCommentList[0]->idx;
+            for($i =1; $i<count($lectureNoticeCommentList); $i++){
+                $inIdx .= ",".$lectureNoticeCommentList[$i]->idx;
+            }
+            $inIdx.=") ";
+        }
+
+        $recommentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "Y"  and c.status!="delete" '.$inIdx.'order by idx desc', [$postId]);
+
+
+
+        $html = '';
+        if($noticeInfo!=null){
+            $html .= '<input type="hidden" value="'. $noticeInfo->idx .'" id="noticeIdx">';
+            $html .= '<div class="w1 item">';
+            $html .= '  <div class="w1w1">';
+            $html .= '      <div class="f1">';
+            $html .= '          <span class="f1p1">';
+            if($noticeInfo->save_profile_image=='')
+            $html .= '              <img src="'.asset('assets/images/lib/noimg1face1.png').'" alt="이미지 없음" />';
+            else
+            $html .= '              <img src="'.asset('storage/uploads/profile/'.$noticeInfo->save_profile_name).'" alt="{{ $noticeInfo->save_profile_name }}" />';
+            $html .= '          </span>';
+            $html .= '      </div>';
+            $html .= '  </div>';
+            $html .= '  <div class="w1w2">';
+            $html .= '      <div class="tt1">';
+            $html .=            $noticeInfo->title;
+            $html .= '      </div>';
+            $html .= '      <div class="tg1">';
+            $html .= '          <span class="t1">'.$noticeInfo->nickname.'</span>';
+            $html .= '          <span class="t2">'. format_date($noticeInfo->write_at).'</span>';
+            $html .= '      </div>';
+            $html .= '      <div class="tg2">';
+            $html .=            $noticeInfo->content;
+            $html .= '      </div>';
+            $html .= '      <div class="eg1">';
+            $html .= '          <a href="javascript:void(0);" class="cp1like1"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">43</span></a>';
+            $html .= '      <!-- cp1menu1 -->';
+            $html .= '          <div class="cp1menu1 toggle1s1">';
+            $html .= '              <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
+            $html .= '                  <div class="cp1menu1c toggle-c">';
+            $html .= '                      <a href="javascript:void(0);" target="_blank" rel="noopener" title="새 창" class="b2 report"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
+            $html .= '                  </div>';
+            $html .= '              </div>';
+            $html .= '          <!-- /cp1menu1 -->';
+            $html .= '          </div>';
+            $html .= '      </div>';
+            $html .= '  </div>';
+            $html .= '<!-- /게시글 -->';
+            $html .= '<!-- 댓글작성 -->';
+            $html .= '  <div class="w1 item reply">';
+            $html .= '    <textarea rows="3" cols="80" title="댓글작성" class="w100 type1"></textarea>';
+            $html .= '      <div class="tar">';
+            $html .= '          <button type="submit" class="button submit semismall" onclick="(enrollEvent2this)" value="N">등록하기</button>';
+            $html .= '      </div>';
+            $html .= '  </div>';
+            $html .= '<!-- /댓글작성 -->';
+
+            // 댓글
+            foreach($lectureNoticeCommentList as $lectureNoticeComment){
+                $html .= '  <div class="w1 item reply">';
+                $html .= '    <div class="w1w1">';
+                $html .= '        <div class="f1">';
+                $html .= '            <span class="f1p1">';
+                if($lectureNoticeComment->save_profile_image!='') $html .= '                <img src="'.asset('storage/uploads/profile/'.$lectureNoticeComment->save_profile_image).'" alt="이미지 없음" />';
+                else $html .= '               <img src="'.asset('assets/images/lib/noimg1face1.png').'" alt="이미지 없음" />';
+                $html .= '            </span>';
+                $html .= '        </div>';
+                $html .= '    </div>';
+                $html .= '    <div class="w1w2">';
+                $html .= '        <div class="tg1">';
+                $html .= '            <span class="t1">'.$lectureNoticeComment->nickname.'</span>';
+                $html .= '            <span class="t2">'.format_date($lectureNoticeComment->writed_at ).'</span>';
+                $html .= '        </div>';
+                $html .= '        <div class="tg2">';
+                $html .=                $lectureNoticeComment->content;
+                $html .= '        </div>';
+                $html .= '        <div class="eg1">';
+                $html .= '            <a href="javascript:void(0)" class="cp1like2" onclick="likeClick(this)" data-value="comment"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">'.$lectureNoticeComment->likes.'</span></a>';
+                $html .= '            <div class="cp1menu1 toggle1s1">';
+                $html .= '                <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
+                $html .= '                <div class="cp1menu1c toggle-c">';
+                $html .= '                    <a href="javascript:void(0)" rel="noopener" title="새 창" class="b2 report" onclick="reportClick(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
+                $html .= '                </div>';
+                $html .= '           </div>';
+                $html .= '        </div>';
+                $html .= '        <div class="toggle1s1">';
+                $html .= '            <a href="javascript:void(0);" class="b1 toggle-b fsS2">답글</a>';
+                $html .= '            <div class="toggle-c" style="display:none;">';
+                $html .= '                <textarea rows="3" cols="80" title="대댓글작성" class="w100 type1"></textarea>';
+                $html .= '                <div class="tar">';
+                $html .= '                    <input type="hidden" value="'.$lectureNoticeComment->idx.'">';
+                $html .= '                    <button type="button" class="button toggle-close secondary semismall mgr05em">취소</button>';
+                $html .= '                    <button type="submit" class="button submit semismall"  onclick="enrollEvent2(this)" value="Y">등록</button>';
+                $html .= '                </div>';
+                $html .= '            </div>';
+                $html .= '        </div>';
+                $keys = array_keys( array_column($recommentList, 'reply_id'),  $lectureNoticeComment->idx);
+                if(count($keys)>0){
+                    $html .= '        <div class="toggle1s2">';
+                    $html .= '            <a href="javascript:void(0);" class="b1 toggle1s2-b cp1switch2 switch fsS2">';
+                    $html .= '                <span class="cp1switch2-t1 sw-off">답글 보기</span>';
+                    $html .= '                <span class="cp1switch2-t1 sw-on">답글 숨기기</span>';
+                    $html .= '                <i class="ic1"></i>';
+                    $html .= '            </a>';
+                    $html .= '        <div class="toggle1s2-c" style="display:none;">';
+
+                    foreach ( $keys as $key){
+                        //대댓글
+                        $html .= '            <div class="w1 item reply2">';
+                        $html .= '                <div class="w1w1">';
+                        $html .= '                    <div class="f1">';
+                        $html .= '                        <span class="f1p1">';
+                        if($recommentList[$key]->save_profile_image!=''||$recommentList[$key]->save_profile_image!=null)
+                        $html .= '                      <img src="'.asset('storage/uploads/profile/'.$recommentList[$key]->save_profile_image) .'" alt="이미지 없음" />';
+                        else $html .= '                 <img src="'.asset('assets/images/lib/noimg1face1.png').'" alt="이미지 없음" />';
+                        $html .= '                  </span>';
+                        $html .= '              </div>';
+                        $html .= '          </div>';
+                        $html .= '          <div class="w1w2">';
+                        $html .= '              <div class="tg1">';
+                        $html .= '                  <span class="t1">'.$recommentList[$key]->nickname.'</span>';
+                        $html .= '                  <span class="t2">'.format_date($recommentList[$key]->writed_at).'</span>';
+                        $html .= '              </div>';
+                        $html .= '              <div class="tg2">';
+                        $html .=                     $recommentList[$key]->content;
+                        $html .= '              </div>';
+                        $html .= '              <div class="eg1">';
+                        $html .= '                  <input type="hidden" value="'.$recommentList[$key]->idx.'">';
+                        $html .= '                  <a href="javascript:void(0)" class="cp1like2" onclick="likeClick(this)" data-value="recomment"><span class="cp1like2t1 blind">좋아요</span> <span class="cp1like2t2">'.$recommentList[$key]->likes.'</span></a>';
+                        $html .= '                  <div class="cp1menu1 toggle1s1">';
+                        $html .= '                      <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
+                        $html .= '                      <div class="cp1menu1c toggle-c">';
+                        $html .= '                          <a href="javascript:void(0)" rel="noopener" title="새 창" class="b2 report" onclick="reportClick(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
+                        $html .= '                      </div>';
+                        $html .= '                  </div>';
+                        $html .= '              </div>';
+                        $html .= '          </div>';
+                        $html .= '      </div>';
+                    }
+                    $html .= '  </div>';
+                    $html .= '</div>';
+                }
+
+
+                $html .= '  </div>';
+                $html .= '</div>';
+
+            }
+
+
+            $html .= '</div>';
+        }
+
+
+        $result['status']='success';
+        $result['html'] = $html;
+        return response()->json($result, 200);
+    }
     public function getMoreReview(Request $request) {
         $lectureIdx = $request->post('lecture_idx', '');
         $lastReviewIdx = $request->post('last_review_idx', '');

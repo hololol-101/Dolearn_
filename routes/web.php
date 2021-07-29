@@ -140,6 +140,12 @@ Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
         // 수강 후기 더보기
         Route::post('get_more_review', [LectureController::class, 'getMoreReview'])->name('get_more_review');
 
+        // 강좌 상세 공지사항 보기 페이지
+        Route::post('lecture_notice', [LectureController::class, 'lectureNotice'])->name('lecture_notice');
+
+        // 강좌 상세 공지사항 댓글 등록
+        Route::get('lecture_notice_comment_enroll', [LectureController::class, 'lectureNoticeCommentEnroll'])->name('lecture_notice_comment_enroll');
+
         // 수강 신청
         Route::post('course_application', [LectureController::class, 'courseApplication'])->name('course_application')->middleware('auth');
 
@@ -319,6 +325,10 @@ Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
         Route::get('integrated_search', [SearchController::class, 'integratedSearch'])->name('integrated_search');
 
         Route::post('integrated_search', [SearchController::class, 'integratedSearch'])->name('integrated_search');
+
+        //더보기 클릭
+        Route::get('search_more', [SearchController::class, 'searchMore'])->name('search_more');
+
     });
 });
 

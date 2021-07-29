@@ -73,7 +73,7 @@ $title = '통합검색 - '.$result['title'];
 		<h3 class="h1">
 			<strong class="em0">{{ $result['keyword'] }}</strong>@if ($result['keyword'] != '') 에 대한 @endif 영상 검색결과 <strong class="em0">{{ $result['videoCount'] }}건</strong>
 		</h3>
-		<a href="{{ route('sub.video.video_list', ['type' => 'video', 'keyword' => $result['keyword']]) }}" class="allview button secondary round">전체보기</a>
+		<a href="{{ route('sub.search.integrated_search', ['type' => 'video', 'keyword' => $result['keyword']]) }}" class="allview button secondary round">전체보기</a>
 	</div>
 	<!-- /cp1search2hg1 -->
 
@@ -106,7 +106,21 @@ $title = '통합검색 - '.$result['title'];
     @endif
 	</div>
 	<!-- /lst1 -->
-
+    @if($type=='video')
+    <script>
+        $('.cp1search2hg1 .allview').css('display', 'none');
+    </script>
+    @if( $result['count']>8)
+    <!-- cp1more1 -->
+    <div class="cp1more1">
+        <a href="javascript:void(0);" class="more" onclick="moreClick(this)">
+            <span class="t1">더보기</span>
+            <i class="ic1"></i>
+        </a>
+    </div>
+    <!-- /cp1more1 -->
+    @endif
+    @endif
 </div>
 </div>
 <!-- /cp1fcard3 -->
@@ -122,9 +136,9 @@ $title = '통합검색 - '.$result['title'];
 	<!-- cp1search2hg1 -->
 	<div class="cp1search2hg1">
 		<h3 class="h1">
-			<strong class="em0">{{ $result['keyword'] }}</strong>@if ($result['keyword'] != '') 에 대한 @endif 강좌 검색결과 <strong class="em0">{{ $result['lectureCount'] }}</strong>
+			<strong class="em0">{{ $result['keyword'] }}</strong>@if ($result['keyword'] != '') 에 대한 @endif 강좌 검색결과 <strong class="em0">{{ $result['lectureCount'] }}건</strong>
 		</h3>
-		<a href="{{ route('sub.lecture.lecture_list', ['type' => 'lecture', 'keyword' => $result['keyword']]) }}" class="allview button secondary round">전체보기</a>
+		<a href="{{ route('sub.search.integrated_search', ['type' => 'lecture', 'keyword' => $result['keyword']]) }}" class="allview button secondary round">전체보기</a>
 	</div>
 	<!-- /cp1search2hg1 -->
 
@@ -177,6 +191,22 @@ $title = '통합검색 - '.$result['title'];
     @endif
 	</div>
 	<!-- /lst1 -->
+    @if($type=='lecture')
+        <script>
+            $('.cp1search2hg1 .allview').css('display', 'none');
+        </script>
+
+        @if($result['count']>8)
+            <!-- cp1more1 -->
+            <div class="cp1more1">
+                <a href="javascript:void(0);" class="more" onclick="moreClick(this)">
+                    <span class="t1">더보기</span>
+                    <i class="ic1"></i>
+                </a>
+            </div>
+            <!-- /cp1more1 -->
+        @endif
+    @endif
 
 </div>
 </div>
@@ -193,136 +223,56 @@ $title = '통합검색 - '.$result['title'];
 	<!-- cp1search2hg1 -->
 	<div class="cp1search2hg1">
 		<h3 class="h1">
-			<strong class="em0">{{ $result['keyword'] }}</strong>@if ($result['keyword'] != '') 에 대한 @endif 인사이트 검색결과 <strong class="em0">2건</strong>
+			<strong class="em0">{{ $result['keyword'] }}</strong>@if ($result['keyword'] != '') 에 대한 @endif 인사이트 검색결과 <strong class="em0">{{ $result['insightCount'] }}건</strong>
 		</h3>
-		<a href="{{ route('sub.search.integrated_search', ['type' => 'insight', 'keyword' => '']) }}" class="allview button secondary round">전체보기</a>
-	</div>
+		<a href="{{ route('sub.search.integrated_search', ['type' => 'insight', 'keyword' => $result['keyword']]) }}" class="allview button secondary round" style="display:block;">전체보기</a>
+    </div>
 	<!-- /cp1search2hg1 -->
 
 	<!-- lst1 -->
 	<div class="lst1 even-grid evenmix-23 gap3pct">
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p101.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<!-- <i class="ic1 play">Play</i> -->
-					</div>
-					<div class="tg1">
-						<strong class="t1">직장인들의 필수 항목 엑셀</strong>
-						<span class="t2">엑셀 전문 유튜브 채널 전격 분석!!!!!</span>
-						<span class="t3">2020.03.10</span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p102.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<!-- <i class="ic1 play">Play</i> -->
-					</div>
-					<div class="tg1">
-						<strong class="t1">EXCEL 자격증 대분석 일이삼사오륙칠팔구십일이삼사오륙칠팔구십</strong>
-						<span class="t2">필요없는 건 하지말자! 일이삼사오륙칠팔구십일이삼사오륙칠팔구십</span>
-						<span class="t3">2020.03.10</span>
-					</div>
-				</a>
-			</div>
-		</div>
-        <div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p101.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<!-- <i class="ic1 play">Play</i> -->
-					</div>
-					<div class="tg1">
-						<strong class="t1">직장인들의 필수 항목 엑셀</strong>
-						<span class="t2">엑셀 전문 유튜브 채널 전격 분석!!!!!</span>
-						<span class="t3">2020.03.10</span>
-					</div>
-				</a>
-			</div>
-		</div>
-        <div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p101.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<!-- <i class="ic1 play">Play</i> -->
-					</div>
-					<div class="tg1">
-						<strong class="t1">직장인들의 필수 항목 엑셀</strong>
-						<span class="t2">엑셀 전문 유튜브 채널 전격 분석!!!!!</span>
-						<span class="t3">2020.03.10</span>
-					</div>
-				</a>
-			</div>
-		</div>
-        <div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p101.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<!-- <i class="ic1 play">Play</i> -->
-					</div>
-					<div class="tg1">
-						<strong class="t1">직장인들의 필수 항목 엑셀</strong>
-						<span class="t2">엑셀 전문 유튜브 채널 전격 분석!!!!!</span>
-						<span class="t3">2020.03.10</span>
-					</div>
-				</a>
-			</div>
-		</div>
-        <div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p101.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<!-- <i class="ic1 play">Play</i> -->
-					</div>
-					<div class="tg1">
-						<strong class="t1">직장인들의 필수 항목 엑셀</strong>
-						<span class="t2">엑셀 전문 유튜브 채널 전격 분석!!!!!</span>
-						<span class="t3">2020.03.10</span>
-					</div>
-				</a>
-			</div>
-		</div>
-        <div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/lib/x3/x3p101.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-						<!-- <i class="ic1 play">Play</i> -->
-					</div>
-					<div class="tg1">
-						<strong class="t1">직장인들의 필수 항목 엑셀</strong>
-						<span class="t2">엑셀 전문 유튜브 채널 전격 분석!!!!!</span>
-						<span class="t3">2020.03.10</span>
-					</div>
-				</a>
-			</div>
-		</div>
+        @if (count($insightList)>0)
+        @foreach ( $insightList as $insight )
+            <div class="item column">
+                <div class="w1">
+                    <a href="{{ route('sub.community.trend_detail', ['id'=>$insight->idx]) }}" class="a1">
+                        <div class="f1">
+                            <span class="f1p1">
+                                <img src="{{ asset('storage/uploads/thumbnail/'.$insight->main_image) }}" alt="{{ $insight->main_image }}" />
+                            </span>
+                            <!-- <i class="ic1 play">Play</i> -->
+                        </div>
+                        <div class="tg1">
+                            <strong class="t1">{{ $insight->title }}</strong>
+                            <span class="t2">{{ $insight->summary }}</span>
+                            <span class="t3">{{ date('Y.m.d', strtotime($insight->writed_at)) }}</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        @endforeach
+        @else
+        <div style="margin-left: 30px;">인사이트 정보가 없습니다.</div>
+        @endif
+
 	</div>
 	<!-- /lst1 -->
+    @if($type=='insight' )
+        <script>
+            $('.cp1search2hg1 .allview').css('display', 'none');
+        </script>
 
+        @if($result['count']>6)
+            <!-- cp1more1 -->
+            <div class="cp1more1">
+                <a href="javascript:void(0);" class="more" onclick="moreClick(this)">
+                    <span class="t1">더보기</span>
+                    <i class="ic1"></i>
+                </a>
+            </div>
+            <!-- /cp1more1 -->
+        @endif
+    @endif
 </div>
 </div>
 <!-- /cp1fcard8 -->
@@ -338,193 +288,58 @@ $title = '통합검색 - '.$result['title'];
 	<!-- cp1search2hg1 -->
 	<div class="cp1search2hg1">
 		<h3 class="h1">
-			<strong class="em0">{{ $result['keyword'] }}</strong>@if ($result['keyword'] != '') 에 대한 @endif 강사 검색결과 <strong class="em0">5건</strong>
+			<strong class="em0">{{ $result['keyword'] }}</strong>@if ($result['keyword'] != '') 에 대한 @endif 강사 검색결과 <strong class="em0">{{ $result['instructorCount'] }}건</strong>
 		</h3>
-		<a href="{{ route('sub.search.integrated_search', ['type' => 'instructor', 'keyword' => '']) }}" class="allview button secondary round">전체보기</a>
+        <a href="{{ route('sub.search.integrated_search', ['type' => 'instructor', 'keyword' => $result['keyword']]) }}" class="allview button secondary round">전체보기</a>
 	</div>
 	<!-- /cp1search2hg1 -->
 
 	<!-- lst1 -->
 	<div class="lst1 even-grid evenmix-35 gap5pct">
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p601.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">설민석</strong>
-						<span class="t2"><span class="t2t1">강좌 수</span> <span class="t2t2">20</span></span>
-						<span class="t2"><span class="t2t1">수강후기</span> <span class="t2t2">2450</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p602.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">차홍</strong>
-						<span class="t2"><span class="t2t1">강좌 수</span> <span class="t2t2">20</span></span>
-						<span class="t2"><span class="t2t1">수강후기</span> <span class="t2t2">2450</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p603.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">강소라</strong>
-						<span class="t2"><span class="t2t1">강좌 수</span> <span class="t2t2">20</span></span>
-						<span class="t2"><span class="t2t1">수강후기</span> <span class="t2t2">2450</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p604.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">강사이름오륙칠팔구십</strong>
-						<span class="t2"><span class="t2t1">강좌 수</span> <span class="t2t2">20</span></span>
-						<span class="t2"><span class="t2t1">수강후기</span> <span class="t2t2">2450</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p604.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">강사명</strong>
-						<span class="t2"><span class="t2t1">강좌 수</span> <span class="t2t2">20</span></span>
-						<span class="t2"><span class="t2t1">수강후기</span> <span class="t2t2">2450</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-        <div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p604.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">강사명</strong>
-						<span class="t2"><span class="t2t1">강좌 수</span> <span class="t2t2">20</span></span>
-						<span class="t2"><span class="t2t1">수강후기</span> <span class="t2t2">2450</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-        <div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p604.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">강사명</strong>
-						<span class="t2"><span class="t2t1">강좌 수</span> <span class="t2t2">20</span></span>
-						<span class="t2"><span class="t2t1">수강후기</span> <span class="t2t2">2450</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-        <div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p604.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">강사명</strong>
-						<span class="t2"><span class="t2t1">강좌 수</span> <span class="t2t2">20</span></span>
-						<span class="t2"><span class="t2t1">수강후기</span> <span class="t2t2">2450</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-        <div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p604.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">강사명</strong>
-						<span class="t2"><span class="t2t1">강좌 수</span> <span class="t2t2">20</span></span>
-						<span class="t2"><span class="t2t1">수강후기</span> <span class="t2t2">2450</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-        <div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p604.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">강사명</strong>
-						<span class="t2"><span class="t2t1">강좌 수</span> <span class="t2t2">20</span></span>
-						<span class="t2"><span class="t2t1">수강후기</span> <span class="t2t2">2450</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-        <div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p604.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">강사명</strong>
-						<span class="t2"><span class="t2t1">강좌 수</span> <span class="t2t2">20</span></span>
-						<span class="t2"><span class="t2t1">수강후기</span> <span class="t2t2">2450</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
+        @if (count($instructorList)>0)
+        @foreach ( $instructorList as $instructor )
+            <div class="item column">
+                <div class="w1">
+                    <a href="{{ route('etc.user_introduction', ['type'=>'instructor', 'user_idx'=>$instructor->id]) }}" class="a1">
+                        <div class="f1">
+                            <span class="f1p1">
+                                @if($instructor->save_profile_image=='')
+                                <img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="★대체텍스트필수" />
+                                @else
+                                <img src="{{ asset('storage/uploads/profile/'.$instructor->save_profile_image) }}" alt="{{ $instructor->save_profile_image }}" />
+                                @endif
+                            </span>
+                        </div>
+                        <div class="tg1">
+                            <strong class="t1">{{ $instructor->nickname }}</strong>
+                            <span class="t2"><span class="t2t1">강좌 수</span> <span class="t2t2">{{ $instructor->lectureCount }}</span></span>
+                            <span class="t2"><span class="t2t1">수강후기</span> <span class="t2t2">{{ $instructor->reviewCount }}</span></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        @endforeach
+        @else
+            <div style="margin-left: 30px;">강사 정보가 없습니다.</div>
+        @endif
 	</div>
 	<!-- /lst1 -->
+    @if($type=='instructor' )
+        <script>
+            $('.cp1search2hg1 .allview').css('display', 'none');
+        </script>
 
+        @if($result['count']>10)
+            <!-- cp1more1 -->
+            <div class="cp1more1">
+                <a href="javascript:void(0);" class="more" onclick="moreClick(this)">
+                    <span class="t1">더보기</span>
+                    <i class="ic1"></i>
+                </a>
+            </div>
+        <!-- /cp1more1 -->
+        @endif
+    @endif
 </div>
 </div>
 <!-- /cp1fcard9 -->
@@ -540,215 +355,65 @@ $title = '통합검색 - '.$result['title'];
 	<!-- cp1search2hg1 -->
 	<div class="cp1search2hg1">
 		<h3 class="h1">
-			<strong class="em0">{{ $result['keyword'] }}</strong>@if ($result['keyword'] != '') 에 대한 @endif 유튜버 검색결과 <strong class="em0">12건</strong>
+			<strong class="em0">{{ $result['keyword'] }}</strong>@if ($result['keyword'] != '') 에 대한 @endif 유튜버 검색결과 <strong class="em0">{{ $result['youtuberCount'] }}건</strong>
 		</h3>
-		<a href="{{ route('sub.search.integrated_search', ['type' => 'youtuber', 'keyword' => '']) }}" class="allview button secondary round">전체보기</a>
+		<a href="{{ route('sub.search.integrated_search', ['type' => 'youtuber', 'keyword' => $result['keyword']]) }}" class="allview button secondary round">전체보기</a>
 	</div>
 	<!-- /cp1search2hg1 -->
-
 	<!-- lst1 -->
 	<div class="lst1 even-grid evenmix-35 gap5pct">
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p601.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">유튜버이름</strong>
-						<span class="t2"><span class="t2t1">조회 수</span> <span class="t2t2">22</span></span>
-						<span class="t2"><span class="t2t1">구독자 수</span> <span class="t2t2">10.1만</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p602.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">차홍</strong>
-						<span class="t2"><span class="t2t1">조회 수</span> <span class="t2t2">22</span></span>
-						<span class="t2"><span class="t2t1">구독자 수</span> <span class="t2t2">10.1만</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p603.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">강소라</strong>
-						<span class="t2"><span class="t2t1">조회 수</span> <span class="t2t2">22</span></span>
-						<span class="t2"><span class="t2t1">구독자 수</span> <span class="t2t2">10.1만</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p604.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">유튜버이름륙칠팔구십</strong>
-						<span class="t2"><span class="t2t1">조회 수</span> <span class="t2t2">22</span></span>
-						<span class="t2"><span class="t2t1">구독자 수</span> <span class="t2t2">10.1만</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p604.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">유튜버이름</strong>
-						<span class="t2"><span class="t2t1">조회 수</span> <span class="t2t2">22</span></span>
-						<span class="t2"><span class="t2t1">구독자 수</span> <span class="t2t2">10.1만</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p601.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">설민석</strong>
-						<span class="t2"><span class="t2t1">조회 수</span> <span class="t2t2">22</span></span>
-						<span class="t2"><span class="t2t1">구독자 수</span> <span class="t2t2">10.1만</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p602.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">차홍</strong>
-						<span class="t2"><span class="t2t1">조회 수</span> <span class="t2t2">22</span></span>
-						<span class="t2"><span class="t2t1">구독자 수</span> <span class="t2t2">10.1만</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p603.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">강소라</strong>
-						<span class="t2"><span class="t2t1">조회 수</span> <span class="t2t2">22</span></span>
-						<span class="t2"><span class="t2t1">구독자 수</span> <span class="t2t2">10.1만</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p604.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">유튜버이름륙칠팔구십</strong>
-						<span class="t2"><span class="t2t1">조회 수</span> <span class="t2t2">22</span></span>
-						<span class="t2"><span class="t2t1">구독자 수</span> <span class="t2t2">10.1만</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="item column">
-			<div class="w1">
-				<a href="?#★" class="a1">
-					<div class="f1">
-						<span class="f1p1">
-							<img src="{{ asset('assets/images/main/x1/x1p604.jpg') }}" alt="★대체텍스트필수" />
-						</span>
-					</div>
-					<div class="tg1">
-						<strong class="t1">유튜버이름</strong>
-						<span class="t2"><span class="t2t1">조회 수</span> <span class="t2t2">22</span></span>
-						<span class="t2"><span class="t2t1">구독자 수</span> <span class="t2t2">10.1만</span></span>
-					</div>
-				</a>
-			</div>
-		</div>
-	</div>
-	<!-- /lst1 -->
+        @if (count($youtuberList)>0)
 
+        @foreach ( $youtuberList as $youtuber )
+        <div class="item column">
+			<div class="w1">
+				<a href="{{ route('etc.user_introduction', ['type'=>'youtuber', 'user_idx'=>$youtuber->id]) }}" class="a1">
+					<div class="f1">
+						<span class="f1p1">
+                            @if ($youtuber->save_profile_image=='')
+                            <img src="{{ asset('assets/images/lib/noimg1face1.png') }}" alt="★대체텍스트필수" />
+                            @else
+                            <img src="{{ asset('storage/uploads/profile/'.$youtuber->save_profile_image) }}" alt="{{ $youtuber->save_profile_image }}" />
+                            @endif
+							</span>
+					</div>
+					<div class="tg1">
+						<strong class="t1">{{ $youtuber->nickname }}</strong>
+						<span class="t2"><span class="t2t1">조회 수</span> <span class="t2t2">@if (strlen($youtuber->sum_hit)>4){{ number_format($youtuber->sum_hit/10000, 1) }} 만 @else {{ number_format($youtuber->sum_hit/10000, 1) }} @endif </span></span>
+						<span class="t2"><span class="t2t1">구독자 수</span> <span class="t2t2">10.1만</span></span>
+					</div>
+				</a>
+			</div>
+		</div>
+        @endforeach
+        @else
+        <div style="margin-left: 30px;">유튜버 정보가 없습니다.</div>
+        @endif
+
+    </div>
+	<!-- /lst1 -->
+    @if($type=='youtuber' )
+    <script>
+        $('.cp1search2hg1 .allview').css('display', 'none');
+    </script>
+
+    @if($result['count']>10)
+    <!-- cp1more1 -->
+    <div class="cp1more1">
+        <a href="javascript:void(0);" class="more" onclick="moreClick(this)">
+            <span class="t1">더보기</span>
+            <i class="ic1"></i>
+        </a>
+    </div>
+    @endif
+    <!-- /cp1more1 -->
+    @endif
 </div>
 </div>
 <!-- /cp1fcard9 -->
 @endif
 {{-- /유튜버 검색 --}}
 
-<script>/*<![CDATA[*/
-	//$(function(){
-		/** ◇◆ 전체보기 비활성 활성. 20210310. @m.
-		 * 이건 그냥 보여주기 샘플. 개발자 동작 처리 필요!
-		 */
-		(function(){
-			var my1 = '#cp1fcard8a1', // 인사이트 래퍼
-				my2 = '#cp1fcard9a1', // 강사 래퍼
-				my3 = '#cp1fcard9a2', // 유튜버 래퍼
-				item = '.lst1>.item', // 항목
-				b1 = '.allview.button', // 전체 보기
-				v = '';
-
-			// 초기화
-			$(my1)	.find(b1).hide();
-			$(my2)	.find(b1).hide();
-			$(my3)	.find(b1).hide();
-
-			// 동작 ( 항목 수 초과하면 활성)
-			if( $(my1).find(item).length > 6 ){
-				$(my1)	.find(b1).show();
-			}
-			if( $(my2).find(item).length > 10 ){
-				$(my2)	.find(b1).show();
-			}
-			if( $(my3).find(item).length > 10 ){
-				$(my3)	.find(b1).show();
-			}
-
-		})();
-	//});
-/*]]>*/</script>
 @else
 
 {{-- 검색 결과가 없을 경우 --}}
@@ -760,5 +425,32 @@ $title = '통합검색 - '.$result['title'];
 <!-- /container -->
 </div>
 <!-- /#body -->
+<script>
+    function moreClick(obj){
+        var my = $(obj);
+        var currentCount = my.parents('.wrap1').find('.lst1 .item').length;
+        $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'GET',
+                dataType: 'json',
+                url : "{{ route('sub.search.search_more') }}",
+                data: {
+                    'type': '{{ $type }}',
+                    'count': currentCount,
+                    'keyword': '{{ $result["keyword"] }}'
+                },
+                success : (result) => {
+                    my.parents('.wrap1').find('.lst1').append(result.html);
 
+                    if( my.parents('.wrap1').find('.lst1 .item').length=='{{ $result["count"] }}'){
+                        my.parent('.cp1more1').css('display', 'none')
+                    }
+                }, error: function(request) {
+                        console.log('code: ' + request.status + '\nmessage: ' + request.responseText);
+                }
+            });
+    }
+</script>
 @endsection

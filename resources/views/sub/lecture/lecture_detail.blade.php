@@ -323,5 +323,6 @@ function getMoreReview() {
         }
     });
 }
+
 </script>
 @endsection

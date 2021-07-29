@@ -197,11 +197,9 @@ if ( !function_exists("storeAttachFile") ) { // 파일 저장
     }
 }
 if(!function_exists('pagenationToAjax')){
-    function pagenationToAjax($curPage, $totalCount){
+    function pagenationToAjax($curPage, $totalCount,$dataPerPage=10){
         // 페이지 이동 시 화면 새로고침이 아닌 pageClick 실행
         //현재 페이지
-        $dataPerPage=10;
-        //한 페이지당 표시할 데이터 수
         $pageCount=10;
         //보여줄 페이지 수
         $totalPage = ceil($totalCount/$dataPerPage);
