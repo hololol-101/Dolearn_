@@ -24,6 +24,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ServiceInquiryController;
+use App\Http\Controllers\NoticeController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -697,7 +698,6 @@ Route::group(['prefix'=>'serviceinquiry', 'as'=>'serviceinquiry.'], function(){
         // 최신 트렌드 수정 저장
         Route::post('edit', [ServiceInquiryController::class, 'trendEdit'])->name('edit');
 
-
         // 최신 트렌드 상세
         Route::get('detail', [ServiceInquiryController::class, 'trendDetail'])->name('detail');
 
@@ -723,6 +723,16 @@ Route::group(['prefix'=>'report', 'as'=>'report.'], function(){
 
 });
 
+//신고
+Route::group(['prefix'=>'notice', 'as'=>'notice.'], function(){
+
+    //글 좋아요
+    Route::get('like', [NoticeController::class, 'like'])->name('like');
+
+    //글 싫어요
+    Route::get('report', [NoticeController::class, 'report'])->name('report');
+
+});
 
 // 테스트...
 // 인증

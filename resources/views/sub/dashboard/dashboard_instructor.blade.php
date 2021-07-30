@@ -5,7 +5,7 @@
  * 20210305 | @m | 요구반영. 결함개선. 고도화.
  * ~20210308 | @m |
  * 20210413 | @m | 요구반영
- * 20210708 | @m | 
+ * 20210708 | @m |
  */
 -->
 @extends('master_sub')
@@ -174,9 +174,9 @@
 			<div class="hg1 bd0">
 				<h4 class="h1">수강자 수</h4>
 				<select class="type1 mg0 pdt0 pdb0 pdl075em fsS2" style="height:2.2em;" title="선택옵션">
-					<option value="">7일</option>
-					<option value="">30일</option>
-					<option value="">1년</option>
+					<option value="7">7일</option>
+					<option value="30">30일</option>
+					<option value="1">1년</option>
 				</select>
 			</div>
 			<div class="cont">
@@ -292,9 +292,9 @@
 			<div class="hg1 bd0">
 				<h4 class="h1">일일 수강신청 수</h4>
 				<select class="type1 mg0 pdt0 pdb0 pdl075em fsS2" style="height:2.2em;" title="선택옵션">
-					<option value="">7일</option>
-					<option value="">30일</option>
-					<option value="">1년</option>
+					<option value="7">7일</option>
+					<option value="30">30일</option>
+					<option value="1">1년</option>
 				</select>
 			</div>
 			<div class="cont">
@@ -320,7 +320,7 @@
 									datasets: [{
 										label: '일일 수강신청 수',
 										yAxisID: 'y-axis-1',
-										data: [6, 7, 10, 14, 9, 12, 11],
+										data: [6, 7, 10, 14, 10, 12, 11],
 										borderColor:'#74b7b2',
 										backgroundColor:'rgba(116,183,178, 0)',
 										borderWidth: 2,
@@ -400,7 +400,221 @@
 		</div>
 		<!-- /cp3chart1 -->
 
+		<script>
+            var label =[[],[],[]]
+            var date =[[],[],[]]
+            var today = new Date();
+            console.log("today: "+today)
+            for(var i=0;i<7;i++){
+                var today = new Date();
+                today.setDate( today.getDate()-6+i)
+                label[0][i] = today.getFullYear()+"."+(Number(today.getMonth())+1)+"."+today.getDate();
+            }
+            for(var i=0;i<=6;i++){
+                var today = new Date();
+                today.setDate( today.getDate()-(6-i)*5)
+                label[1][i] = today.getFullYear()+"."+(Number(today.getMonth())+1)+"."+today.getDate();
+            }
 
+            for(var i=0;i<=12;i++){
+                var today = new Date();
+                today.setDate(1)
+                today.setMonth( Number(today.getMonth()) -12+i)
+                label[2][i] = today.getFullYear()+"."+(Number(today.getMonth())+1);
+            }
+
+            console.log(label);
+
+			$(".w3 .cp3chart1 .type1").on("change", function(){
+				var cycle = $(".w3 .cp3chart1 .type1 option:selected").val();
+                var labels;
+                if(cycle == "7"){
+                    labels = label[0]
+                }else if(cycle == "30"){
+                    labels = label[1]
+                }else{
+                    labels = label[2]
+                }
+				var ctx = document.getElementById('myChart2').getContext('2d');
+				var dateset =  {
+					type: 'line',
+					data: {
+						labels: labels,
+						datasets: [{
+							label: '수강자 수',
+							yAxisID: 'y-axis-1',
+							data: [100, 100, 100, 245, 295, 330, 420],
+							borderColor:'#74b7b2',
+							backgroundColor:'rgba(116,183,178, 0)',
+							borderWidth: 2,
+							pointRadius: 4,
+							pointBackgroundColor: '#74b7b2',
+							tension: 0 // .4
+							}]
+						},
+								options: {
+									title: {
+										//display: true,
+										fontColor: '#ccc',
+										fontSize: 16,
+										text: '수강자 변화량'
+									},
+									legend: {
+										display: false, // 범례 감춤
+										labels: {
+											boxWidth: 6,
+											fontColor: '#ccc',
+											fontSize: 12,
+											padding: 16,
+											usePointStyle: true
+										}
+									},
+									scales: {
+										xAxes: [{
+											ticks: {
+												beginAtZero: true,
+												padding: 16,
+												fontColor: '#888'
+											},
+											scaleLabel: {
+												//display: true,
+												fontColor: '#ccc',
+												fontSize: 12,
+												labelString: "년.월.일"
+											},
+											gridLines: {
+												color: 'rgba(255,255,255, .1)',
+												drawOnChartArea: false,
+												drawBorder: true,
+												drawTicks: false
+											}
+										}],
+										yAxes: [{
+											id: 'y-axis-1',
+											display: true,
+											position: 'left',
+											ticks: {
+												beginAtZero: true,
+												padding: 16,
+												fontColor: '#888'
+											},
+											scaleLabel: {
+												//display: true,
+												fontColor: 'rgba(0,128,255, 1)',
+												fontSize: 12,
+												labelString: "단위(명)"
+											},
+											gridLines: {
+												color: 'rgba(255,255,255, .1)',
+												drawBorder: false,
+												drawTicks: false,
+												zeroLineColor: 'rgba(255,255,255, .1)'
+											}
+										}]
+									}
+								}
+							};
+
+				var myChart = new Chart(ctx,dateset)
+
+				console.log(dateset['data']['labels'])
+
+			})
+			$(".w4 .cp3chart1 .type1").on("change", function(){
+                var cycle = $(".w3 .cp3chart1 .type1 option:selected").val();
+				var ctx = document.getElementById('myChart3').getContext('2d');
+                var labels;
+                if(cycle == "7"){
+                    labels = label[0]
+                }else if(cycle == "30"){
+                    labels = label[1]
+                }else{
+                    labels = label[2]
+                }
+				var ctx = document.getElementById('myChart3').getContext('2d');
+				var dateset =  {
+					type: 'line',
+					data: {
+						labels: labels,
+						datasets: [{
+							label: '수강자 수',
+							yAxisID: 'y-axis-1',
+							data: [100, 100, 100, 245, 295, 330, 420],
+							borderColor:'#74b7b2',
+							backgroundColor:'rgba(116,183,178, 0)',
+							borderWidth: 2,
+							pointRadius: 4,
+							pointBackgroundColor: '#74b7b2',
+							tension: 0 // .4
+							}]
+						},
+								options: {
+									title: {
+										//display: true,
+										fontColor: '#ccc',
+										fontSize: 16,
+										text: '수강자 변화량'
+									},
+									legend: {
+										display: false, // 범례 감춤
+										labels: {
+											boxWidth: 6,
+											fontColor: '#ccc',
+											fontSize: 12,
+											padding: 16,
+											usePointStyle: true
+										}
+									},
+									scales: {
+										xAxes: [{
+											ticks: {
+												beginAtZero: true,
+												padding: 16,
+												fontColor: '#888'
+											},
+											scaleLabel: {
+												//display: true,
+												fontColor: '#ccc',
+												fontSize: 12,
+												labelString: "년.월.일"
+											},
+											gridLines: {
+												color: 'rgba(255,255,255, .1)',
+												drawOnChartArea: false,
+												drawBorder: true,
+												drawTicks: false
+											}
+										}],
+										yAxes: [{
+											id: 'y-axis-1',
+											display: true,
+											position: 'left',
+											ticks: {
+												beginAtZero: true,
+												padding: 16,
+												fontColor: '#888'
+											},
+											scaleLabel: {
+												//display: true,
+												fontColor: 'rgba(0,128,255, 1)',
+												fontSize: 12,
+												labelString: "단위(명)"
+											},
+											gridLines: {
+												color: 'rgba(255,255,255, .1)',
+												drawBorder: false,
+												drawTicks: false,
+												zeroLineColor: 'rgba(255,255,255, .1)'
+											}
+										}]
+									}
+								}
+							};
+
+				var myChart = new Chart(ctx,dateset)
+			})
+
+		</script>
 	</div>
 	<!-- <div class="w5">
 	</div> -->
@@ -414,60 +628,21 @@
 			</div>
 			<div class="cont">
 				<ul class="lst1">
+					@if(count($recentReviewList)==0)
+						<div> 최근 일주일 이내에 등록된 수강후기가 없습니다.</div>
+					@endif
+                    @foreach ( $recentReviewList as $recentReview )
 					<li class="li1">
-						<a href="#?" class="a1">
+						<a href="{{ route('manage.lecture.review_list', ["idx"=>$recentReview->lecture_idx]) }}" class="a1">
 							<div class="t1">
-								<span class="t1t1">최근 등록된 수강후기 내용 01 최근 등록된 수강후기 내용 01 일이삼사오륙칠팔구십</span>
-								<span class="t1t2">새로운 수강후기가 등록된 강좌 제목 01 새로운 수강후기가 등록된 강좌 일이삼사오륙칠팔구십</span>
+								<span class="t1t1">{{ $recentReview->content }}</span>
+								<span class="t1t2">{{ $recentReview->title }}</span>
 							</div>
-							<span class="t2">4분전</span>
+							<span class="t2">{{ format_date($recentReview->writed_at) }}</span>
 						</a>
 					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 수강후기 내용 02</span>
-								<span class="t1t2">새로운 수강후기가 등록된 강좌 제목 02</span>
-							</div>
-							<span class="t2">1일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 수강후기 내용 03</span>
-								<span class="t1t2">새로운 수강후기가 등록된 강좌 제목 03</span>
-							</div>
-							<span class="t2">2일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 수강후기 내용 04</span>
-								<span class="t1t2">새로운 수강후기가 등록된 강좌 제목 04</span>
-							</div>
-							<span class="t2">4일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 수강후기 내용 05</span>
-								<span class="t1t2">새로운 수강후기가 등록된 강좌 제목 05</span>
-							</div>
-							<span class="t2">5일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 수강후기 내용 06</span>
-								<span class="t1t2">새로운 수강후기가 등록된 강좌 제목 06</span>
-							</div>
-							<span class="t2">6일전</span>
-						</a>
-					</li>
+                    @endforeach
+
 				</ul>
 			</div>
 		</div>
@@ -483,60 +658,20 @@
 			</div>
 			<div class="cont">
 				<ul class="lst1">
+					@if(count($nonSolveQnaList)==0)
+						<div> 최근 일주일 이내에 등록된 미해결질문이 없습니다.</div>
+					@endif
+                    @foreach ( $nonSolveQnaList as $nonSolveQna )
 					<li class="li1">
-						<a href="#?" class="a1">
+						<a href="{{ route('manage.lecture.qna_detail', ["idx"=>$nonSolveQna->lecture_idx, "qna_idx"=>$nonSolveQna->idx]) }}" class="a1">
 							<div class="t1">
-								<span class="t1t1">최근 등록된 미해결질문 제목 01 최근 등록된 미해결질문 제목 01 일이삼사오륙칠팔구십</span>
-								<span class="t1t2">새로운 미해결질문이 등록된 강좌 제목 01 새로운 미해결질문이 등록된 강좌 일이삼사오륙칠팔구십</span>
+								<span class="t1t1">{{ $nonSolveQna->title }}</span>
+								<span class="t1t2">{{ $nonSolveQna->content }}</span>
 							</div>
-							<span class="t2">4분전</span>
+							<span class="t2">{{ format_date($nonSolveQna->writed_at) }}</span>
 						</a>
 					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 미해결질문 제목 내용 02</span>
-								<span class="t1t2">새로운 미해결질문이 등록된 강좌 제목  02</span>
-							</div>
-							<span class="t2">1일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 미해결질문 제목 내용 03</span>
-								<span class="t1t2">새로운 미해결질문이 등록된 강좌 제목  03</span>
-							</div>
-							<span class="t2">2일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 미해결질문 제목 내용 04</span>
-								<span class="t1t2">새로운 미해결질문이 등록된 강좌 제목  04</span>
-							</div>
-							<span class="t2">4일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 미해결질문 제목 내용 05</span>
-								<span class="t1t2">새로운 미해결질문이 등록된 강좌 제목  05</span>
-							</div>
-							<span class="t2">5일전</span>
-						</a>
-					</li>
-					<li class="li1">
-						<a href="#?" class="a1">
-							<div class="t1">
-								<span class="t1t1">최근 등록된 미해결질문 제목 내용 06</span>
-								<span class="t1t2">새로운 미해결질문이 등록된 강좌 제목  06</span>
-							</div>
-							<span class="t2">6일전</span>
-						</a>
-					</li>
+                    @endforeach
 				</ul>
 			</div>
 		</div>

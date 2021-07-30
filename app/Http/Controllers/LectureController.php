@@ -499,6 +499,9 @@ class LectureController extends Controller{
             $totalcount = DB::select('select count(*) totalcount from my_lecture_notice where lecture_id = ?', [$idx])[0]->totalcount;
             $noticePage = pagenationToAjax(1, $totalcount, 1);
 
+            // 공지사항 좋아요 수
+            $lectureLike = DB::select('SELECT count(*) cnt FROM my_likes WHERE writing_id = ? AND program_id = "lecture_notice"', [$noticeInfo->idx])[0]->cnt;
+
             $lectureNoticeCommentList = DB::select('select c.*, u.nickname, u.save_profile_image from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" and c.post_type ="lecture_notice" order by c.status DESC, idx desc', [$noticeInfo->idx]);
             $inIdx ='';
             if(count($lectureNoticeCommentList)>0){
@@ -507,6 +510,7 @@ class LectureController extends Controller{
                     $inIdx .= ",".$lectureNoticeCommentList[$i]->idx;
                 }
                 $inIdx.=") ";
+
             }
 
             $recommentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "Y"  and c.status!="delete" '.$inIdx.'order by idx desc', [$noticeInfo->idx]);
@@ -514,15 +518,21 @@ class LectureController extends Controller{
         }else{
             $noticePage = pagenationToAjax(1, 0, 1);
         }
-        return view('sub.lecture.lecture_detail', compact('isApplicatedLecture', 'lectureDetail', 'bchapterList', 'curriSchapterList', 'curriVideoList', 'countVideo', 'operationLectureList', 'instructorInfo', 'youtuberInfoList', 'reviewList', 'ratingSum', 'ratingCntArr', 'reviewAllCnt', 'noticeInfo', 'noticePage', 'lectureNoticeCommentList', 'recommentList'));
+        return view('sub.lecture.lecture_detail', compact('isApplicatedLecture', 'lectureDetail', 'lectureLike', 'bchapterList', 'curriSchapterList', 'curriVideoList', 'countVideo', 'operationLectureList', 'instructorInfo', 'youtuberInfoList', 'reviewList', 'ratingSum', 'ratingCntArr', 'reviewAllCnt', 'noticeInfo', 'noticePage', 'lectureNoticeCommentList', 'recommentList'));
     }
     public function lectureNotice(Request $request){
         $lectureID = $request->post('lectureID');
         $page = $request->post('page', 1);
+
+        //페이지에 해당하는 공지사항 조회
         $noticeInfo = DB::select('select m.*, u.nickname, u.save_profile_image from my_lecture_notice m, users u where m.writer_id = u.email and lecture_id = ? order by idx desc limit '.($page-1).', 1', [$lectureID])[0];
-        $result['query'] = ('select m.*, u.nickname, u.save_profile_image from my_lecture_notice m, users u where m.writer_id = u.email and lecture_id = '.$lectureID.' order by idx desc limit '.$page.', 1');
+        // 공지사항 좋아요 수
+        $lectureLike = DB::select('SELECT count(*) cnt FROM my_likes WHERE writing_id = ? AND program_id = "lecture_notice"', [$noticeInfo->idx])[0]->cnt;
+        // 총 공지사항 수
         $totalcount = DB::select('select count(*) totalcount from my_lecture_notice where lecture_id =?', [$lectureID]);
         $result['idx']=$noticeInfo->idx;
+
+        //공지사항 댓글
         $lectureNoticeCommentList = DB::select('select c.*, u.nickname, u.save_profile_image from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" and c.post_type ="lecture_notice" order by c.status DESC, idx desc', [$noticeInfo->idx]);
         $inIdx ='';
         if(count($lectureNoticeCommentList)>0){
@@ -532,10 +542,8 @@ class LectureController extends Controller{
             }
             $inIdx.=") ";
         }
-
+        //대댓글
         $recommentList = DB::select('select * from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "Y"  and c.status!="delete" '.$inIdx.'order by idx desc', [$noticeInfo->idx]);
-
-
 
         $html = '';
         if($noticeInfo!=null){
@@ -563,12 +571,12 @@ class LectureController extends Controller{
             $html .=            $noticeInfo->content;
             $html .= '      </div>';
             $html .= '      <div class="eg1">';
-            $html .= '          <a href="javascript:void(0);" class="cp1like1"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">43</span></a>';
+            $html .= '          <a href="javascript:void(0);" class="cp1like1" onclick="boardLike(this)"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">'.$lectureLike.'</span></a>';
             $html .= '      <!-- cp1menu1 -->';
             $html .= '          <div class="cp1menu1 toggle1s1">';
             $html .= '              <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
             $html .= '                  <div class="cp1menu1c toggle-c">';
-            $html .= '                      <a href="javascript:void(0);" target="_blank" rel="noopener" title="새 창" class="b2 report"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
+            $html .= '                      <a href="javascript:void(0);" rel="noopener" title="새 창" class="b2 report" onclick="boardReport(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
             $html .= '                  </div>';
             $html .= '              </div>';
             $html .= '          <!-- /cp1menu1 -->';
@@ -705,7 +713,13 @@ class LectureController extends Controller{
             'is_reply'=>$isReply,
             'status'=>'active'
         ));
+        //공지사항 정보
         $noticeInfo = DB::select('select m.*, u.nickname, u.save_profile_image from my_lecture_notice m, users u where m.writer_id = u.email and idx = ? order by idx desc limit 1', [$postId])[0];
+
+        // 공지사항 좋아요 수
+        $lectureLike = DB::select('SELECT count(*) cnt FROM my_likes WHERE writing_id = ? AND program_id = "lecture_notice"', [$noticeInfo->idx])[0]->cnt;
+
+        //댓글 정보
         $lectureNoticeCommentList = DB::select('select c.*, u.nickname, u.save_profile_image from comment c join users u on c.writer_id = u.email where c.post_id = ? and c.is_reply = "N"  and c.status!="delete" and c.post_type ="lecture_notice" order by c.status DESC, idx desc', [$postId]);
         $inIdx ='';
         if(count($lectureNoticeCommentList)>0){
@@ -746,12 +760,12 @@ class LectureController extends Controller{
             $html .=            $noticeInfo->content;
             $html .= '      </div>';
             $html .= '      <div class="eg1">';
-            $html .= '          <a href="javascript:void(0);" class="cp1like1"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">43</span></a>';
+            $html .= '          <a href="javascript:void(0);" class="cp1like1" onclick="boardLike(this)"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">'.$lectureLike.'</span></a>';
             $html .= '      <!-- cp1menu1 -->';
             $html .= '          <div class="cp1menu1 toggle1s1">';
             $html .= '              <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
             $html .= '                  <div class="cp1menu1c toggle-c">';
-            $html .= '                      <a href="javascript:void(0);" target="_blank" rel="noopener" title="새 창" class="b2 report"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
+            $html .= '                      <a href="javascript:void(0);" rel="noopener" title="새 창" class="b2 report" onclick="boardReport(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
             $html .= '                  </div>';
             $html .= '              </div>';
             $html .= '          <!-- /cp1menu1 -->';

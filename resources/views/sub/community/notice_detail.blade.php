@@ -61,12 +61,12 @@
                     {!! $boardView->content !!}
 				</div>
 				<div class="eg1">
-					<a href="#★" class="cp1like1"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">0</span></a>
+					<a href="javascript:void(0)" class="cp1like1" onclick="boardLike(this)" ><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">0</span></a>
 					<!-- cp1menu1 -->
 					<div class="cp1menu1 toggle1s1">
 						<strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>
 						<div class="cp1menu1c toggle-c">
-							<a href="#★" target="_blank" rel="noopener" title="새 창" class="b2 report"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>
+							<a href="javascript:void(0)" rel="noopener" title="새 창" class="b2 report" onclick="boardReport(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>
 						</div>
 					</div>
 					<!-- /cp1menu1 -->
@@ -95,5 +95,59 @@
 <!-- /container -->
 </div>
 <!-- /#body -->
+<script>
 
+function boardLike(obj){
+    var my = $(obj);
+    var likeNum = my.find('.cp1like1t2').text();
+    var idx ='{{ $boardView->idx }}';
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'GET',
+        dataType: 'json',
+        url: "{{ route('notice.like') }}",
+        data: {
+            'writingId':idx,
+            'programId':"notice"
+        },
+        success: (data) => {
+            if(data.status =="like"){
+                my.find('.cp1like1t2').text(parseInt(likeNum)+1);
+            }else{
+                my.find('.cp1like1t2').text(parseInt(likeNum)-1);
+            }
+        }, error: function(response) {
+            console.log(response);
+        }
+    })
+}
+function boardReport(obj){
+    var my = $(obj);
+    var idx ='{{ $boardView->idx }}';
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'GET',
+        dataType: 'json',
+        url: "{{ route('notice.report') }}",
+        data: {
+            'type':"notice",
+            'targetId':idx,
+            'content':''
+        },
+        success: (data) => {
+            if(data.status =="create"){
+                alert("신고접수가 완료되었습니다.");
+            }else{
+                alert('이미 신고접수를 하셨습니다.');
+            }
+        }, error: function(response) {
+            console.log(response);
+        }
+    })
+}
+</script>
 @endsection

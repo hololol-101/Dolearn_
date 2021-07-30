@@ -51,7 +51,18 @@ class DashboardController extends Controller{
             return view('sub.dashboard.dashboard_student', compact('role', 'userName', 'interest_arr', 'lectureNumber', 'nonReadNotification','lastShowLecture', 'lastShowVideo', 'lastNonSolvedComment', 'lastVideoNote'));
         } else if ($prerole == 'instructor') {
             $lectureInfo = DB::select('SELECT AVG(l.rating) score_avg, SUM(l.student_cnt) student_cnt , COUNT(Distinct l.idx) lecture_cnt FROM users u LEFT JOIN lecture l ON l.owner_id = u.email  WHERE u.nickname = ?', [$userName])[0];
-            return view('sub.dashboard.dashboard_instructor', compact('role', 'userName', 'lectureInfo'));
+            $nonSolveQnaList = DB::select('SELECT m.* FROM my_question m WHERE m.lecture_idx IN (SELECT l.idx from lecture l WHERE l.owner_id = ?) AND m.solution_yn = "N" AND ( m.writed_at BETWEEN DATE_ADD(NOW(),INTERVAL -1 WEEK ) AND NOW()) ORDER BY idx desc limit 6', [$email]);
+            $recentReviewList = DB::select('SELECT lr.*, l.title FROM lecture_review lr, lecture l WHERE lr.lecture_idx = l.idx and lr.lecture_idx IN (SELECT idx from lecture WHERE owner_id = ?)  AND ( lr.writed_at BETWEEN DATE_ADD(NOW(),INTERVAL -1 WEEK ) AND NOW()) ORDER BY idx desc limit 6', [$email]);
+            DB::statement('SET @a = 0;');
+            $yearData = DB::select('
+            SELECT ml.month, ml.cnt, @a := @a + ml.cnt AS SUM
+            FROM ( SELECT COUNT(*) cnt, MONTH(applicated_at) MONTH, applicated_at
+                FROM my_lecture
+                WHERE applicated_at>=date_add(now(), interval -1 year) and lecture_idx  IN (SELECT idx FROM lecture WHERE owner_id = "ohz05@dataedu.co.kr")
+                GROUP BY MONTH(applicated_at)
+                ) ml
+            ', [$email]);
+            return view('sub.dashboard.dashboard_instructor', compact('role', 'userName', 'lectureInfo', 'nonSolveQnaList', 'recentReviewList', 'yearData'));
 
         } else if ($prerole == 'youtuber') {
             $totalVideoNum = DB::select('SELECT count(*) total_video FROM _youtube_fulldata_temp WHERE channel = ?',[$userName])[0]->total_video;

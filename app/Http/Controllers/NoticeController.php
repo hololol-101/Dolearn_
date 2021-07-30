@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 use Intervention\Image\ImageManagerStatic as Image;
 use App\Notice; // model 클래스 상속
 use App\Http\Controllers\fileuploadController;
@@ -42,10 +45,10 @@ class NoticeController extends Controller
 
         $boardList = Notice::orderby('pos')->orderby('thread')->skip($startNum)->take($writeList)->get();
         // 테이블에서 가져온 DB 뷰에서 사용 할 수 있는 변수에 저장.
-        
+
         $pageIndex = getPageIndex($totalCount, $pageNumList, $writeList, $pageNum);
         // 게시판 page nav
-      
+
         return view('doadm.notice.index', [
             'totalCount'=>$totalCount,
             'boardList'=>$boardList,
@@ -55,7 +58,7 @@ class NoticeController extends Controller
             'totalPage'=>$totalPage,
             'pageIndex'=>$pageIndex
             ]);
-            // 요청된 정보 처리 후 결과 되돌려줌        
+            // 요청된 정보 처리 후 결과 되돌려줌
     }
 
     public function read($post) //뷰 페이지 메소드
@@ -63,14 +66,14 @@ class NoticeController extends Controller
         //$pIdx = $request->segment(3); <- Request $request
         $pIdx = $post;
 
-    // ** 전달 된 $ id별로 게시물 세부 정보 가져 오기 * / 
-    // $post = Notice::where([ 'idx' => $id])-> first ();      
+    // ** 전달 된 $ id별로 게시물 세부 정보 가져 오기 * /
+    // $post = Notice::where([ 'idx' => $id])-> first ();
         // read count+1
         //Notice::where('idx', $pIdx)->update(['views'=>Notice::raw('views+1')]);
         Notice::find($pIdx)->increment('views'); // 선언된 pk
-        
+
         // Read
-        $read = Notice::where(['idx' => $pIdx])->first();    
+        $read = Notice::where(['idx' => $pIdx])->first();
 
         return view('doadm.notice.read', ['boardView' => $read]);
     }
@@ -79,9 +82,9 @@ class NoticeController extends Controller
     {
         //$pIdx = $request->segment(3); <- Request $request
         $pIdx = $post;
-      
+
         // Read
-        $read = Notice::where(['idx' => $pIdx])->first();    
+        $read = Notice::where(['idx' => $pIdx])->first();
 
         return view('doadm.notice.form', ['boardEdit' => $read, 'action' => 'edit']);
     }
@@ -96,14 +99,14 @@ class NoticeController extends Controller
         $pIdx = $post;
 
         // Read
-        $read = Notice::select('idx', 'subject')->where(['idx' => $pIdx])->first();    
+        $read = Notice::select('idx', 'subject')->where(['idx' => $pIdx])->first();
 
         return view('doadm.notice.form', ['boardReply' => $read, 'action' => 'reply']);
     }
-   
+
     public function save(Request $request) //저장 메소드
     {
-        
+
         $wmode = $request->input('wmode');
         $page = $request->input('page');
         $iSubject = $request->input('iSubject');
@@ -112,21 +115,21 @@ class NoticeController extends Controller
         $iPublic = $request->input('iPublic');
         $iNotice = $request->input('iNotice');
         $agreement = $request->input('agreement');
-        
+
         if ( $wmode == "insert" ) {
 
             $_pos = Notice::min('pos');
             $pos = ($_pos) ? $_pos - 1 : -1;
-            
+
             $ip = getenv("REMOTE_ADDR");
             $reg_date=time();
-            
+
             $uploadController = new fileuploadController(public_path().'/upload/notice');
             $fileNames = $uploadController->define_($request->file('iFile'));
-            
+
             /* 위즈윅 이미지 업로드 START */
             $dom = new \DOMDocument();
-            
+
             $dom->loadHtml('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'.$iContent, LIBXML_NOERROR  | LIBXML_NOWARNING);
             $images = $dom->getElementsByTagName('img');
 
@@ -144,13 +147,13 @@ class NoticeController extends Controller
                    $img->setAttribute('src', $image_name);
                }
             }
- 
+
             $iContent = $dom->saveHTML();
-            $iContent = preg_replace('~<(?:!DOCTYPE|/?(?:html|head|body|meta))[^>]*>\s*~i', '', $iContent);   // 불필요한 태그삭제 
-            /* 위즈윅 이미지 업로드 STOP */   
-               
+            $iContent = preg_replace('~<(?:!DOCTYPE|/?(?:html|head|body|meta))[^>]*>\s*~i', '', $iContent);   // 불필요한 태그삭제
+            /* 위즈윅 이미지 업로드 STOP */
+
             $Insert = new Notice;
-            
+
             $Insert->subject = $iSubject;
             $Insert->name = "관리자";
             $Insert->userid = "admin";
@@ -158,7 +161,7 @@ class NoticeController extends Controller
             $Insert->regdate = $reg_date;
             $Insert->pos = $pos;
             $Insert->remoteaddr = $ip;
-            
+
             $oCnt = count($fileNames);
             $j = 1;
             for ( $i = 0; $i < $oCnt; $i++ ) {
@@ -168,19 +171,19 @@ class NoticeController extends Controller
                     $j++;
                 }
             }
-                        
+
             if (!isNull($iNotice)) {
                 $Insert->notice_yn = $iNotice;
             }
             $Insert->save();
-        
+
         return redirect("/doadm/notice");
         }
 
         if ( $wmode == "reply_ok" ) {
-            
+
             $reIdx = $request->input('reIdx');
-            
+
             // 부모게시판 포지션등 가져오기
             $read = Notice::select('pos', 'thread', 'depth')->where(['idx' => $reIdx])->first();
             $oThread = $read->thread + 1;
@@ -195,16 +198,16 @@ class NoticeController extends Controller
             }
 
             // 순서 update
-            Notice::where('pos', '=', $oPos)->where('thread', '>=', $oThread)->update(['thread'=>Notice::raw('thread+1')]);              
+            Notice::where('pos', '=', $oPos)->where('thread', '>=', $oThread)->update(['thread'=>Notice::raw('thread+1')]);
             $ip = getenv("REMOTE_ADDR");
             $reg_date=time();
-            
+
             $uploadController = new fileuploadController(public_path().'/upload/notice');
             $fileNames = $uploadController->define_($request->file('iFile'));
-            
+
             /* 위즈윅 이미지 업로드 START */
             $dom = new \DOMDocument();
-            
+
             $dom->loadHtml('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'.$iContent, LIBXML_NOERROR  | LIBXML_NOWARNING);
             $images = $dom->getElementsByTagName('img');
 
@@ -222,13 +225,13 @@ class NoticeController extends Controller
                    $img->setAttribute('src', $image_name);
                }
             }
- 
+
             $iContent = $dom->saveHTML();
-            $iContent = preg_replace('~<(?:!DOCTYPE|/?(?:html|head|body|meta))[^>]*>\s*~i', '', $iContent);   // 불필요한 태그삭제 
-            /* 위즈윅 이미지 업로드 STOP */   
-               
-            $Insert = new Notice;   
-            
+            $iContent = preg_replace('~<(?:!DOCTYPE|/?(?:html|head|body|meta))[^>]*>\s*~i', '', $iContent);   // 불필요한 태그삭제
+            /* 위즈윅 이미지 업로드 STOP */
+
+            $Insert = new Notice;
+
             $Insert->subject = $iSubject;
             $Insert->name = "관리자";
             $Insert->userid = "admin";
@@ -238,7 +241,7 @@ class NoticeController extends Controller
             $Insert->thread = $oThread;
             $Insert->depth = $oDepth;
             $Insert->remoteaddr = $ip;
-            
+
             $oCnt = count($fileNames);
             $j = 1;
             for ( $i = 0; $i < $oCnt; $i++ ) {
@@ -248,23 +251,23 @@ class NoticeController extends Controller
                     $j++;
                 }
             }
-                        
+
             if (!isNull($iNotice)) {
                 $Insert->notice_yn = $iNotice;
             }
             $Insert->save();
-        
+
         return redirect("/doadm/notice");
         }
 
-        
+
         if ( $wmode == "edit_ok" ) {
-            
+
         $pIdx = $request->input('pIdx');
 
          /* 위즈윅 이미지 업로드 START */
         $dom = new \DOMDocument();
-        
+
         $dom->loadHtml('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'.$iContent, LIBXML_NOERROR  | LIBXML_NOWARNING);
         $images = $dom->getElementsByTagName('img');
 
@@ -284,14 +287,14 @@ class NoticeController extends Controller
         }
 
         $iContent = $dom->saveHTML();
-        $iContent = preg_replace('~<(?:!DOCTYPE|/?(?:html|head|body|meta))[^>]*>\s*~i', '', $iContent);   // 불필요한 태그삭제 
-        
+        $iContent = preg_replace('~<(?:!DOCTYPE|/?(?:html|head|body|meta))[^>]*>\s*~i', '', $iContent);   // 불필요한 태그삭제
+
         $Update = Notice::where('idx', $pIdx) -> first();
         $Update -> subject = $iSubject;
         $Update -> content = $iContent;
         $Update -> modifydate = time();
         $Update -> save();
-            
+
         return redirect("/doadm/notice/".$pIdx."/edit");
 
     // 파일 정렬
@@ -301,19 +304,60 @@ class NoticeController extends Controller
     if ( !isNull($oFile[0][file_name3]) ) $eFile_name[] = $oFile[0][file_name3];
     if ( !isNull($oFile[0][file_name4]) ) $eFile_name[] = $oFile[0][file_name4];
     if ( !isNull($oFile[0][file_name5]) ) $eFile_name[] = $oFile[0][file_name5];
-*/                
-            
+*/
+
         }
     }
     public function delete($post) //뷰 페이지 메소드
     {
         //$pIdx = $request->segment(3); <- Request $request
         $pIdx = $post;
-      
+
         // Read
-        Notice::where(['idx' => $pIdx])->delete();    
+        Notice::where(['idx' => $pIdx])->delete();
 
         return redirect('/doadm/notice')->with('success', 'Student deleted successfully');
     }
-    
+    function like(Request $request){
+        $writingId = $request->get('writingId');
+        $programId = $request->get('programId');
+        $email = Auth::user()->email;
+        $isCheck = DB::select('select count(*) cnt from my_likes where writing_id = ? and program_id = ? and user_id =?', [$writingId, $programId, $email])[0]->cnt;
+        if($isCheck==0){
+            DB::table('my_likes')->insert(array(
+                'user_id'=> $email,
+                'writing_id'=>$writingId,
+                'program_id'=>$programId,
+                'conn_host'=>$_SERVER['REMOTE_ADDR'],
+                'conn_time'=>now()
+            ));
+            $result['status']="like";
+        }else{
+            DB::delete('delete from my_likes where writing_id = ? and program_id = ? and user_id =?', [$writingId, $programId, $email]);
+            $result['status']="dislike";
+        }
+        return response()->json($result, 200);
+    }
+    function report(Request $request){
+        $type = $request->get('type');
+        $targetId = $request->get('targetId');
+        $content = $request->get('content');
+        $email = Auth::user()->email;
+        $isCheck = DB::select('select count(*) cnt from report where writer_id = ? and type = ? and target_id =?', [$email, $type, $targetId])[0]->cnt;
+        if($isCheck ==0){
+            DB::table('report')->insert(array(
+                'writer_id'=>$email,
+                'type'=>$type,
+                'target_id'=>$targetId,
+                'content'=>$content,
+                'reported_host'=>$_SERVER['REMOTE_ADDR'],
+                'reported_at'=>now()
+            ));
+            $result['status']="create";
+        }else{
+            $result['status']="exist";
+        }
+        return response()->json($result, 200);
+    }
+
 }
