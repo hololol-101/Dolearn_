@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AccountController extends Controller{
 
@@ -28,7 +29,19 @@ class AccountController extends Controller{
             $isExist = DB::select("SELECT * FROM users WHERE email = '$email' or nickname='$nickname'");
 
             if(count($isExist)<1){
-                $insertUser = DB::insert('INSERT INTO users (email, password, nickname, role, event_yn, created_at, last_conn_at, regist_host, last_conn_host) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', [$email, $hash_pw, $nickname, $role, $event_yn, now(), now(), $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_ADDR']]);
+                DB::table('users')->insert(array(
+                    'email'=>$email,
+                    'password'=>$hash_pw,
+                    'nickname'=>$nickname,
+                    'role'=>$role,
+                    'notification_1'=>'Y',
+                    'notification_2'=>'Y',
+                    'event_yn'=>$event_yn,
+                    'created_at'=>now(),
+                    'last_conn_at'=>now(),
+                    'regist_host'=>$_SERVER['REMOTE_ADDR'],
+                    'last_conn_host'=>$_SERVER['REMOTE_ADDR']
+                ));
                 $request->session()->put('email', $email);
                 $request->session()->put('role', $role);
                 return response()->json(array('msg'=> "Create"), 200);
@@ -91,7 +104,6 @@ class AccountController extends Controller{
         $email = $user->email;
         $nickname = $user->nickname;
         $email_verified_at = $user->email_verified_at;
-        $password = $user->password;
         $role = $request->post('role');
 
         //닉네임이 다를 경우 존재하는 닉네임인지 확인
@@ -121,20 +133,29 @@ class AccountController extends Controller{
             [$email, $nickname, $req['textarea01'], $email_verified_at, now(), $user->id]);
 
             return response()->json(array('msg'=> "success"), 200);
-        }else if(password_verify($req['password'],  $password)){    // 일반계정 수정할 경우 비밀번호 확인
-            //새 비밀번호를 입력한 경우 비밀번호 변경
-            if(isset($req['newPassword'])){
-                $password = password_hash($req['newPassword'], PASSWORD_DEFAULT);
-            }
-
-            $query=DB::update('UPDATE users SET email=?, password=?, nickname=?, introduction=?, email_verified_at=?, updated_at=? where id = ?',
-            [$email, $password, $nickname, $req['textarea01'], $email_verified_at, now(), $user->id]);
+        }else{    // 일반계정 수정할 경우
+            $query=DB::update('UPDATE users SET email=?,  nickname=?, introduction=?, email_verified_at=?, updated_at=? where id = ?',
+            [$email, $nickname, $req['textarea01'], $email_verified_at, now(), $user->id]);
 
             return response()->json(array('msg'=> "success"), 200);
-        }else{ //일반계정 비번 다를경우
-            return response()->json(array('msg'=> "PasswordError"), 200);
         }
         return response()->json(array('msg'=> "success"), 200);
+    }
+    public function changePassword(Request $request){
+        $origin = $request->post('password');
+        $newPwd = $request->post('newPwd');
+        $email = Auth::user()->email;
+        if(password_verify($origin, Auth::user()->password)){
+            DB::table('users')->where('email', Auth::user()->email)->update( array(
+                    'password'=>password_hash($newPwd,PASSWORD_DEFAULT)
+            ));
+            Session::flush();
+            Auth::attempt(['email' => $email, 'password' => $newPwd]);
+            return response()->json(array('msg'=>'success'), 200);
+
+        }else{
+            return response()->json(array('msg'=>'wrongPwd'), 200);
+        }
     }
     public function saveProfileImage(Request $request){
 

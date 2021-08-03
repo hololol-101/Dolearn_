@@ -35,6 +35,7 @@
     </div>
     <!-- owl-carousel -->
     <div class="owl-carousel owl-theme">
+        @if (count($operatingLectureList) > 0)
         @foreach ($operatingLectureList as $operatingLecture)
         <div class="item">
             <div class="w1">
@@ -67,6 +68,9 @@
             </div>
         </div>
         @endforeach
+        @else
+
+        @endif
     </div>
     <!-- /owl-carousel -->
 </div>

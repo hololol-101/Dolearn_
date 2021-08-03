@@ -207,7 +207,6 @@ function pageClick(obj){
             'page':$(my).html()
         },
         success: (data) => {
-            console.log(data.idx)
             $('.pagination').empty().append(data.noticePage);
             $('.cp1bbs4view1').empty().append(data.html);
 
@@ -216,7 +215,7 @@ function pageClick(obj){
         }
     })
 }
-function enrollEvent2(obj){
+function enrollEvent(obj){
     var my = obj;
     var content = $(my).parent().siblings('textarea').val();
     var value = $(my).val();

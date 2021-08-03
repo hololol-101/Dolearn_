@@ -423,7 +423,6 @@ class LearningController extends Controller{
 
     public function saveQna(Request $request) {
         $userId = Auth::user()->email;
-        $userName = Auth::user()->nickname;
         $lectureIdx = $request->post('lecture_idx', '');
         $videoId = $request->post('video_id', '');
         $qnaTitle = $request->post('qna_title', '');
@@ -436,7 +435,6 @@ class LearningController extends Controller{
                 'lecture_idx' => $lectureIdx,
                 'video_id' => $videoId,
                 'writer_id' => $userId,
-                'writer_name' => $userName,
                 'title' => $qnaTitle,
                 'content' => $qnaContent,
                 'public_yn' => $publicYn,
@@ -578,7 +576,6 @@ class LearningController extends Controller{
             return response()->json($result);
         }
     }
-
     public function deleteVideo(Request $request) {
         $videoId = $request->post('video_id', '');
         $directoryIdx = $request->post('directory_idx', '');

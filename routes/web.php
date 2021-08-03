@@ -70,6 +70,9 @@ Route::group(['prefix'=>'account', 'as'=>'account.'], function() {
     // 프로필 전체 설정 저장
     Route::post('profile_update_all', [AccountController::class, 'profileUpdateAll'])->name('profile_update_all');
 
+    // 비밀번호 변경
+    Route::post('change_password', [AccountController::class, 'changePassword'])->name('change_password');
+
     // 프로필 이미지 저장
     Route::post('save_profile_image', [AccountController::class, 'saveProfileImage'])->name('save_profile_image');
 
@@ -98,8 +101,14 @@ Route::group(['prefix'=>'sub', 'as'=>'sub.'], function() {
         //댓글 가져오기
         Route::get('index', [CommentController::class, 'index'])->name('index');
 
+        //댓글 전체가져오기
+        Route::get('index_all', [CommentController::class, 'indexAll'])->name('index_all');
+
         //댓글 등록
         Route::post('create', [CommentController::class, 'create'])->name('create');
+
+        //댓글 등록 (페이지네이션 없는 버전)
+        Route::post('create_all', [CommentController::class, 'createAll'])->name('create_all');
 
         //좋아요
         Route::get('like', [CommentController::class, 'like'])->name('like');
@@ -704,6 +713,19 @@ Route::group(['prefix'=>'serviceinquiry', 'as'=>'serviceinquiry.'], function(){
     });
 
 
+    Route::group(['prefix'=>'manageAccount', 'as'=>'manageAccount.'], function(){
+        // 사용자 정보 가져오기
+        Route::get('index', [ServiceInquiryController::class, 'maIndex'])->name('index');
+
+        // 사용자 정보 검색해서 가져오기
+        Route::post('index', [ServiceInquiryController::class, 'maIndex'])->name('index');
+
+        // 사용자 정보 상세보기
+        Route::get('detail', [ServiceInquiryController::class, 'maDetail'])->name('detail');
+
+        // 사용자 정보 수정
+        Route::post('detail', [ServiceInquiryController::class, 'maDetail'])->name('detail');
+    });
 
     // 첨부 파일 다운
     Route::get('download_attach_file', [ServiceInquiryController::class, 'downloadAttachFile'])->name('download_attach_file');

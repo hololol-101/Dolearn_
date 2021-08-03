@@ -41,28 +41,48 @@
 						<script>/*<![CDATA[*/
 							$(function(){
 
-								/** ◇◆ 저장하기클릭샘플 | 20210119. @m
-								 * 이건 그냥 보여주기 샘플. 개발자 동작 처리 필요!
-								 */
 								(function(){
 									var $my = $('.cp1playlist1'),
 										$b = $('.makelist .b1', $my),
 										$lst = $('.lst1', $my);
 										$input = $('input.text', $my);
 									var sn = 999;
+
 									$b.on('click', function(e){
-										e.preventDefault();
-										++sn;
-										var html = '';
-										html += '<li class="li1">';
-										html += '	<span class="tg1">';
-										html += '		<input type="checkbox" name="★1checkbox0" id="★1checkbox0e'+ sn +'" /> <label for="★1checkbox0e'+ sn +'">';
-										html += '			'+ $input.val();
-										html += '		</label>';
-										html += '	</span>';
-										html += '	<span class="st1">저장됨</span>';
-										html += '</li>';
-										$lst.append($(html));
+                                        e.preventDefault();
+
+                                        $.ajax({
+                                            headers: {
+                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                            },
+                                            type: 'POST',
+                                            dataType: 'json',
+                                            url: "{{ route('sub.video.add_playlist_directory') }}",
+                                            data: {
+                                                'directory_title': $input.val()
+                                            },
+                                            success: (response) => {
+                                                if (response.status == 'success') {
+                                                    ++sn;
+                                                    var html = '';
+                                                    html += '<li class="li1" directory_idx="'+response.idx+'">';
+                                                    html += '	<span class="tg1">';
+                                                    html += '		<input type="checkbox" name="★1checkbox0" id="★1checkbox0e" /> <label for="★1checkbox0e">';
+                                                    html += '			'+ $input.val();
+                                                    html += '		</label>';
+                                                    html += '	</span>';
+                                                    html += '	<span class="st1">저장됨</span>';
+                                                    html += '</li>';
+                                                    $lst.append($(html));
+
+                                                } else {
+                                                    alert(response.msg);
+                                                }
+                                            },
+                                            error: function(response) {
+                                                console.log(response);
+                                            }
+                                        });
 									});
 								})();
 
@@ -122,7 +142,7 @@
                             console.log('del ok');
                             $(this).find('.st1').text('삭제됨');
 
-                        } else {
+                        } else if(){
                             alert(response.msg);
                         }
                     },
@@ -151,9 +171,6 @@
                     success: (response) => {
                         if (response.status == 'success') {
                             $(this).addClass('on');
-
-                        } else if (response.status == 'exist') {
-                            alert('이미 재생목록에 추가된 영상입니다.');
 
                         } else {
                             alert(response.msg);

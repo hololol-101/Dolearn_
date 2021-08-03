@@ -66,7 +66,7 @@
 					<div class="cp1menu1 toggle1s1">
 						<strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>
 						<div class="cp1menu1c toggle-c">
-							<a href="javascript:void(0)" rel="noopener" title="새 창" class="b2 report" onclick="boardReport(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>
+							<a href="#layer1report1post1" rel="noopener" title="새 창" class="b2 report toggle"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>
 						</div>
 					</div>
 					<!-- /cp1menu1 -->
@@ -74,6 +74,9 @@
 			</div>
 		</div>
 		<!-- /게시글 -->
+        <!-- (레이어팝업) -->
+        @include('sub.lecture.inc_layer_report_post')
+
 		<!-- 댓글작성 -->
         @include('sub.comment.form')
         <div id="commentSrc"></div>
@@ -98,6 +101,10 @@
 <script>
 
 function boardLike(obj){
+    @if (!Auth::check())
+        alert("로그인 후 이용해주세요.");
+        return false;
+    @endif
     var my = $(obj);
     var likeNum = my.find('.cp1like1t2').text();
     var idx ='{{ $boardView->idx }}';
@@ -123,31 +130,41 @@ function boardLike(obj){
         }
     })
 }
-function boardReport(obj){
-    var my = $(obj);
+$('#layer1report1post1').find(':button').on('click', function(){
+    @if (!Auth::check())
+        alert("로그인 후 이용해주세요.");
+        return false;
+    @endif
+
     var idx ='{{ $boardView->idx }}';
+    var my = $('#layer1report1post1');
+    var content = $('input[name="★1radio2"]:checked').siblings('label').text()
+    if(content ==''){
+        alert('신고사유를 선택해주세요!');
+        return false;
+    }
     $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        type: 'GET',
+        type: 'POST',
         dataType: 'json',
-        url: "{{ route('notice.report') }}",
+        url : "{{ route('report.report') }}",
         data: {
-            'type':"notice",
-            'targetId':idx,
-            'content':''
+            'type':'notice',
+            'idx':idx,
+            'content': content
         },
-        success: (data) => {
-            if(data.status =="create"){
-                alert("신고접수가 완료되었습니다.");
+        success : (data) => {
+            if(data.status=="success"){
+                alert("신고접수가 완료되었습니다.")
             }else{
-                alert('이미 신고접수를 하셨습니다.');
+                alert("이미 신고접수를 하셨습니다.")
             }
-        }, error: function(response) {
-            console.log(response);
         }
-    })
-}
+    });
+
+})
+
 </script>
 @endsection

@@ -97,7 +97,7 @@ if (isset($tempInfo)) {
 									<ul class="cp1dl1 mgt05em">
 									<li class="di1">
 											<span class="dt1">강사명</span> <span class="sep">:</span>
-											<span class="dd1"><a href="javascript:void(0);" class="a1">@if (isset($tempInfo)) {{ $tempInfo->user_id }} @endif</a></span>
+											<span class="dd1"><a href="javascript:void(0);" class="a1">@if (isset($tempInfo)) {{ $tempInfo->nickname }} @endif</a></span>
 									</li>
 									<li class="di1">
 											<span class="dt1">난이도</span> <span class="sep">:</span>

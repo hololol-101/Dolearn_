@@ -5,7 +5,7 @@
  * 20210209 | @m | 요구반영. 결함개선. 고도화.
  * ~20210210~20210217 | @m |
  * 20210407 | @m | 요구반영
- * 20210708 | @m | 
+ * 20210708 | @m |
  */
 -->
 @extends('master_sub')
@@ -131,7 +131,7 @@
 				<li class="li1">최대용량 2MB</li>
 				</ul>
 			</div>
-            <button type="button" class="b2 button submit block large" disabled="disabled">전체 설정 저장하기</button>
+            <button type="button" class="b2 button submit block large" >전체 설정 저장하기</button>
         </div>
 		<!-- /cp1profile1write1 -->
 
@@ -260,16 +260,17 @@
 		</div>
         @if($role=='')
 		<div class="form1item1">
-			<label for="★1pw1" class="tt1 fl">비밀번호</label>
+			<label for="★1pw1" class="tt1 fl">비밀번호 변경</label>
 			<a href="#" class="fr bdb1px">비밀번호를 모르신다면?</a>
 			<input type="password" id="★1pw1" value="" placeholder="기존 비밀번호" title="기존 비밀번호" class="w100 type1 text-pw1"/>
 			<input type="password" id="★1pw2" value="" placeholder="새 비밀번호" title="새 비밀번호" class="w100 type1 text-pw2" />
 			<input type="password" id="★1pw3" value="" placeholder="새 비밀번호 확인" title="새 비밀번호 확인" class="w100 type1 text-pw3" />
+            <div class="tar">
+				<button type="button" class="button primary" >저장하기</button>
+			</div>
 		</div>
         @endif
 		<!-- /폼아이템들 -->
-
-
 		<div class="ofh mgt1em mgb1em">
 			<a href="{{ route('account.withdraw') }}" class="fr">회원탈퇴 &gt;</a>
 		</div>
@@ -281,50 +282,56 @@
 </form>
 <!-- /form -->
 
-<script>/*<![CDATA[*/
-
-	$(function(){
-		(function(){
-			var $my = $('.form1'),
-				$button = $('.button','.cp1profile1write1'); // 전체 설정 저장하기 버튼
-			var fcs = ['.text-name', '.text-email', '.text-pw1', '.text-pw2', '.text-pw3']; // 닉네임, 이메일, 기존 비밀번호, 새 비밀번호, 새 비밀번호 확인 제외
-
-			var $fc0 = $(fcs[0], $my),
-				$fc1 = $(fcs[1], $my),
-				$fc2 = $(fcs[2], $my),
-				$fc3 = $(fcs[3], $my),
-				$fc4 = $(fcs[4], $my);
-
-
-
-			// 입력 변화
-			$my.find( fcs[0] + ', ' + fcs[1] + ', ' + fcs[2] + ', ' + fcs[3] + ', ' + fcs[4] ).on('change keyup paste', function(e){
-				e.preventDefault();
-				//console.log( $(this).val() );
-				chkForm();
-			});
-
-			function chkForm(){
-                @if($role!='')
-                $button.removeAttr('disabled');
-                @else
-				//if( $fc0.val() && $fc1.val() && $fc2.val() && $fc3.val() && $fc4.val() ){
-				if( $fc0.val() && $fc1.val() && $fc2.val() ){ // 새 비밀번호, 새 비밀번호 확인 제외
-					$button.removeAttr('disabled');
-				}else{
-					$button.attr({'disabled': 'disabled'});
-				}
-                @endif
-			}
-			chkForm();
-
-		})();
-
-	});
-</script>
 <script>
+    $('.form1item1 .button').on("click", function(){
+        let password = $('#★1pw1').val();
+        let newPwd = $('#★1pw2').val();
+        let newRePwd = $('#★1pw3').val();
+        if(password.length<8){
+            alert('비밀번호가 잘못되었습니다.');
+            return false;
+        }
+        if(newPwd.length<8){
+            alert('비밀번호를 8자리 이상 입력해주세요.');
+            return false;
+        }
+        if(newPwd!=newRePwd){
+            alert('새 비밀번호 확인이 잘못되었습니다.');
+            return false;
+        }
+
+        $.ajax({
+            headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'POST',
+            dataType: 'json',
+            url: "{{ route('account.change_password')}}",
+            data: {
+                'password':password,
+                'newPwd':newPwd
+            },
+            success: (response) => {
+                if(response.msg == 'wrongPwd'){
+                    alert("기존 비밀번호가 일치하지 않습니다.");
+                }
+                else{
+                    //메인 페이지 이동
+                    alert("프로필 수정이 완료되었습니다. 메인로 이동합니다.");
+                    location.href = "{{ route('main') }}";
+                }
+            },
+            error: (response)=> {
+                alert(response.msg);
+            }
+        });
+
+    })
+
+
     @if($role!='')
     $('.button', $('.cp1profile1write1')).on("click", function(){
+        alert('all')
         let nickname = $('#★1text0');
         let email = $('#★1text1');
         let data= {
@@ -385,22 +392,6 @@
             email.focus();
             return false;
         }
-        if(newpw.val()!=""){
-            if(newpw.val().length<8){
-                alert("최소 8자의 비밀번호를 입력해주세요.");
-                newpw.focus();
-                return false;
-            }
-            if(newpw.val()!=newpwre.val()){
-                alert("비밀번호 확인이 다릅니다.");
-                newpwre.focus();
-                return false;
-            }
-            else{
-                data.newPassword = newpw.val();
-            }
-        }
-
         $.ajax({
             headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -410,11 +401,7 @@
             url: "{{ route('account.profile_update_all')}}",
             data: data,
             success: (response) => {
-                if(response.msg == 'PasswordError'){
-                    alert("비밀번호를 잘못입력하셨습니다.");
-                    pwd.focus();
-                }
-                else if(response.msg == 'ExistNick'){
+                if(response.msg == 'ExistNick'){
                     alert("이미 해당 닉네임이 존재합니다.");
                     nickname.focus();
                 }

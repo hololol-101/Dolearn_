@@ -79,13 +79,13 @@ $popup = isset($_GET['isPopup']) ? $_GET['isPopup'] : 'fail';
     @endif
 
     @if ($role == 'instructor')
-        @if (count($operatingLectureList) > 0)
             <!-- 강사 : 현재 운영중인 강좌 -->
             @include('main.inc_operating_lecture')
-
+            @if (count($operatingLectureList) > 0)
             <!-- 강사 : 내가 운영중인 강좌와 비슷한 -->
             @include('main.inc_similar_my_operating_lecture')
-        @endif
+            @endif
+
     @endif
 
     @if ($role == 'youtuber')

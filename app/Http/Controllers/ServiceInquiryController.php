@@ -481,6 +481,82 @@ class ServiceInquiryController extends Controller{
         return view('doadm.trend.read', compact('trendInfo', 'ranking'));
     }
 
+
+    public function maIndex(Request $request){
+        if($request->isMethod('GET')){
+            $userList = DB::select('select id, email, nickname, role, status  from users order by id desc');
+        }else{
+            $type = $request->post('type');
+            $src = $request->post('search');
+            $where ="";
+            if($type!="all"){
+                $where = "where role = '".$type."'";
+            }
+            if($src!=""){
+                if($where!=""){
+                    $where .= "and (email like '%".$src."%' or nickname like '%".$src."%')";
+
+                }else{
+                    $where = "where email like '%".$src."%' or nickname like '%".$src."%'";
+                }
+            }
+            $userList = DB::select('select id, email, nickname, role, status  from users '.$where.' order by id desc');
+        }
+        return view('doadm.manageAccount.index', compact('userList'));
+    }
+    public function maDetail(Request $request){
+        if($request->isMethod('GET')){
+            $id = $request->get('id');
+            $userInfo = DB::select('select * from users where id = ?', [$id])[0];
+            return view('doadm.manageAccount.read', compact('userInfo'));
+        }else{
+            $id = $request->post('id');
+            $email = $request->post('email');
+            $password = $request->post('password');
+            $nickname = $request->post('nickname');
+            $type = $request->post('type');
+            $status = $request->post('status');
+            if($type=="youtuber"){
+                DB::table('users')->where('id', $id)->update(array(
+                    'email'=>$email,
+                    'password'=>password_hash('youtube', PASSWORD_DEFAULT),
+                    'nickname'=>$nickname,
+                    'role'=>$type,
+                    'status'=>$status,
+                    'updated_at'=>now(),
+                    'update_host'=>$_SERVER["REMOTE_ADDR"]
+                ));
+            }
+            if($password!=null){
+                DB::table('users')->where('id', $id)->update(array(
+                    'email'=>$email,
+                    'password'=>password_hash($password, PASSWORD_DEFAULT),
+                    'nickname'=>$nickname,
+                    'role'=>$type,
+                    'status'=>$status,
+                    'updated_at'=>now(),
+                    'update_host'=>$_SERVER["REMOTE_ADDR"]
+                ));
+            }else{
+                DB::table('users')->where('id', $id)->update(array(
+                    'email'=>$email,
+                    'nickname'=>$nickname,
+                    'role'=>$type,
+                    'status'=>$status,
+                    'updated_at'=>now(),
+                    'update_host'=>$_SERVER["REMOTE_ADDR"]
+
+                ));
+            }
+            return redirect()->route('serviceinquiry.manageAccount.index')."<script>alert('정보수정이 완료되었습니다.')</script>";
+        }
+    }
+    public function maAnswerEdit(Request $request){
+
+        return view('doadm.manageAccount.form');
+
+    }
+
     public function downloadAttachFile(Request $request){
         //첨부파일 다운
         $filename= $request->get('filename');
@@ -490,4 +566,5 @@ class ServiceInquiryController extends Controller{
         return response()->download(public_path('/storage/uploads/attach/'.$filename));
 
     }
+
 }

@@ -588,7 +588,7 @@ class LectureController extends Controller{
             $html .= '  <div class="w1 item reply">';
             $html .= '    <textarea rows="3" cols="80" title="댓글작성" class="w100 type1"></textarea>';
             $html .= '      <div class="tar">';
-            $html .= '          <button type="submit" class="button submit semismall" onclick="enrollEvent2(this)" value="N">등록하기</button>';
+            $html .= '          <button type="submit" class="button submit semismall" onclick="enrollEvent(this)" value="N">등록하기</button>';
             $html .= '      </div>';
             $html .= '  </div>';
             $html .= '<!-- /댓글작성 -->';
@@ -628,7 +628,7 @@ class LectureController extends Controller{
                 $html .= '                <div class="tar">';
                 $html .= '                    <input type="hidden" value="'.$lectureNoticeComment->idx.'">';
                 $html .= '                    <button type="button" class="button toggle-close secondary semismall mgr05em">취소</button>';
-                $html .= '                    <button type="submit" class="button submit semismall"  onclick="enrollEvent2(this)" value="Y">등록</button>';
+                $html .= '                    <button type="submit" class="button submit semismall"  onclick="enrollEvent(this)" value="Y">등록</button>';
                 $html .= '                </div>';
                 $html .= '            </div>';
                 $html .= '        </div>';
@@ -777,7 +777,7 @@ class LectureController extends Controller{
             $html .= '  <div class="w1 item reply">';
             $html .= '    <textarea rows="3" cols="80" title="댓글작성" class="w100 type1"></textarea>';
             $html .= '      <div class="tar">';
-            $html .= '          <button type="submit" class="button submit semismall" onclick="(enrollEvent2this)" value="N">등록하기</button>';
+            $html .= '          <button type="submit" class="button submit semismall" onclick="(enrollEventthis)" value="N">등록하기</button>';
             $html .= '      </div>';
             $html .= '  </div>';
             $html .= '<!-- /댓글작성 -->';
@@ -817,7 +817,7 @@ class LectureController extends Controller{
                 $html .= '                <div class="tar">';
                 $html .= '                    <input type="hidden" value="'.$lectureNoticeComment->idx.'">';
                 $html .= '                    <button type="button" class="button toggle-close secondary semismall mgr05em">취소</button>';
-                $html .= '                    <button type="submit" class="button submit semismall"  onclick="enrollEvent2(this)" value="Y">등록</button>';
+                $html .= '                    <button type="submit" class="button submit semismall"  onclick="enrollEvent(this)" value="Y">등록</button>';
                 $html .= '                </div>';
                 $html .= '            </div>';
                 $html .= '        </div>';
@@ -1056,7 +1056,7 @@ class LectureController extends Controller{
         $bcategoryList = DB::select('SELECT * FROM b_category');
 
         // 기존에 임시 저장된 데이터가 있는지 확인
-        $tempInfoResult = DB::select('SELECT * FROM tempsave_add_lecture WHERE session_id="'.$sessionId.'" AND user_id="'.$userId.'"');
+        $tempInfoResult = DB::select('SELECT t.*, u.nickname FROM tempsave_add_lecture t, users u WHERE t.user_id = u.email and t.session_id="'.$sessionId.'" AND t.user_id="'.$userId.'"');
 
         if (count($tempInfoResult) > 0) {
             $tempInfo = $tempInfoResult[0];

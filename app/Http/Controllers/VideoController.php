@@ -575,14 +575,14 @@ class VideoController extends Controller{
 
         try {
             // 새 재생목록 디렉터리 생성
-            DB::table('playlist_directory')->insert([
+            $idx = DB::table('playlist_directory')->insertGetId([
                 'user_id' => $userId,
                 'title' => $directoryTitle,
                 'created_at' => now()
             ]);
 
             $result['status'] = 'success';
-
+            $result['idx'] = $idx;
         } catch(Exception $e) {
             $result['status'] = 'fail';
             $result['msg'] = $e->getMessage();

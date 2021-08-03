@@ -323,16 +323,14 @@ $(document).ready(function() {
         },
         type: 'GET',
         dataType: 'json',
-        url : "{{ route('sub.comment.index') }}",
+        url : "{{ route('sub.comment.index_all') }}",
         data: {
             'postId': postId,
-            'page':1,
             'postType':"question",
             'permission':permission
         },
         success : (result) => {
             $('#commentSrc').empty().append(result.html);
-            $('#commentPage').empty().append(result.pageIndex['htmlCode']);
         }
     });
 });

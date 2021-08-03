@@ -324,7 +324,7 @@ class ManageLectureController extends Controller {
             $bchapterList = DB::table('b_chapter')->where('lecture_idx', $idx)->where('status', 'active')->orderBy('order')->get();
             $schapterList = DB::table('s_chapter')->where('lecture_idx', $idx)->where('status', 'active')->orderBy('order')->get();
             // $videoInfoList = DB::select('SELECT curri.bchap_id, curri.schap_id, curri.preview_yn, video.analysis_yn, video.uid, curri.new_video_title FROM curriculum curri, _youtube_fulldata_temp video WHERE curri.video_id = video.uid AND curri.lecture_idx = "'.$idx.'" AND curri.status = "active"');
-            $videoInfoList = DB::select('SELECT curri.bchap_id, curri.schap_id, curri.preview_yn, video.uid, curri.new_video_title FROM curriculum curri, _youtube_fulldata_temp video WHERE curri.video_id = video.uid AND curri.lecture_idx = "'.$idx.'" AND curri.status = "active"');
+            $videoInfoList = DB::select('SELECT curri.bchap_id, curri.schap_id, curri.preview_yn, video.uid, curri.new_video_title, curri.comment FROM curriculum curri, _youtube_fulldata_temp video WHERE curri.video_id = video.uid AND curri.lecture_idx = "'.$idx.'" AND curri.status = "active"');
 
             // 유료 강좌일 경우 추천 영상 목록 조회 안함
             if ($isFree == 'Y') {
@@ -356,6 +356,7 @@ class ManageLectureController extends Controller {
         $videoList = json_decode($request->post('video_list'));
 
         try {
+
             // 기존 저장된 커리큘럼 업데이트(status = ready/active -> delete)
             DB::table('curriculum')->where('lecture_idx', $lectureIdx)->update(['status' => 'delete', 'deleted_at' => now()]);
             DB::table('s_chapter')->where('lecture_idx', $lectureIdx)->update(['status' => 'delete', 'deleted_at' => now()]);
@@ -366,6 +367,7 @@ class ManageLectureController extends Controller {
                 'main_video_id' => $mainVideoId,
                 'updated_at' => now()
             ));
+            // my_curriculum 수장
 
             // 수정된 대단원 저장
             foreach($bchapList as $key => $bchap) {
@@ -421,6 +423,7 @@ class ManageLectureController extends Controller {
                         'bchap_id' => $video->bchapId,
                         'schap_id' => $video->schapId,
                         'video_id' => $video->videoId,
+                        'comment' => $video->comment,
                         'ori_video_title' => $videoIdx[0]->subject,
                         'new_video_title' => $video->videoTitle,
                         'preview_yn' => $video->previewYn,

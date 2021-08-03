@@ -8,6 +8,8 @@
 @php
     $page = isset($_GET['page'])?$_GET['page']:1;
 @endphp
+@include('sub.lecture.inc_layer_report_post')
+
 <script>
 function enrollEvent(obj){
     var my = obj;
@@ -27,18 +29,16 @@ function enrollEvent(obj){
         },
         type: 'POST',
         dataType: 'json',
-        url : "{{ route('sub.comment.create') }}",
+        url : "{{ route('sub.comment.create_all') }}",
         data: {
             'postId': {{ $boardView->idx }},
             'parentId': idx,
             'postType':"notice",
             'content': content,
             'isReply': value,
-            'page':{{ $page }}
         },
         success : (result) => {
             $('#commentSrc').empty().append(result.html);
-            $('#commentPage').empty().append(result.pageIndex['htmlCode']);
         }
     });
     @else
@@ -81,37 +81,7 @@ function likeClick(obj){
         alert("로그인 후 이용해주세요.");
     @endif
 }
-function reportClick(obj){
-    @if (Auth::check())
-        var my = obj;
-        var idx = $(my).closest('.w1w2').find('input[type="hidden"]').val();
 
-        $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        type: 'POST',
-        dataType: 'json',
-        url : "{{ route('report.report') }}",
-        data: {
-            'type':'comment',
-            'idx': idx,
-            'content': ''
-        },
-        success : (data) => {
-            if(data.status=="success"){
-                alert("신고접수가 완료되었습니다.")
-            }else{
-                alert("이미 신고접수를 하셨습니다.")
-            }
-        }
-    });
-
-    @else
-        alert("로그인 후 이용해주세요.");
-    @endif
-
-}
 $(document).ready(function() {
 
     $.ajax({
@@ -120,18 +90,17 @@ $(document).ready(function() {
         },
         type: 'GET',
         dataType: 'json',
-        url : "{{ route('sub.comment.index') }}",
+        url : "{{ route('sub.comment.index_all') }}",
         data: {
             'postId': {{ $boardView->idx }},
-            'page':{{ $page }},
             'postType':"notice"
         },
         success : (result) => {
             $('#commentSrc').empty().append(result.html);
-            $('#commentPage').empty().append(result.pageIndex['htmlCode']);
         }
     });
 
 
 });
+
 </script>

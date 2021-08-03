@@ -8,7 +8,7 @@
 		<div class="d2"><div class="bg"></div>
 			<ul>
 				<li class="m1"><a href="?#★">사이트관리</a></li>
-				<li class="m2"><a href="?#★">디자인템플릿관리</a></li>
+                <li class="m2"><a href="?#★">디자인템플릿관리</a></li>
 				<li class="m3 on"><a href="?#★">메뉴/콘텐츠관리</a></li>
 				<li class="m6"><a href="?#★">지도관리</a></li>
 				<li class="m7"><a href="?#★">지도분류관리</a></li>
@@ -21,6 +21,8 @@
                 <li class="m11"><a href="{{ route('serviceinquiry.faq.index') }}">FAQ</a></li>
                 <li class="m11"><a href="{{ route('serviceinquiry.qna.index') }}">Q&A관리</a></li>
 				<li class="m11"><a href="{{ route('serviceinquiry.trend.index') }}">최신트렌드</a></li>
+                <li class="m1"><a href="{{ route('serviceinquiry.manageAccount.index') }}">사용자 계정 관리</a></li>
+
 
             </ul>
 		</div>

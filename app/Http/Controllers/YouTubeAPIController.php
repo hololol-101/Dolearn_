@@ -66,16 +66,35 @@ class YouTubeAPIController extends Controller{
 
             $res = $youtube->channels->listChannels('snippet', array('mine'=>'true'));
             $existChannel = $res->pageInfo->totalResults;
-
             if($existChannel>0){//채널이 존재하는 경우
                 $snippet = $res->items[0]->snippet;
                 //이미 회원인지 확인
-                $check=DB::select('select * from users where email = ? and role != "student" ', [$me->email]);
-                if(count($check)){
-                    if(password_verify('youtube', $check[0]->password)){
+                $check=DB::select('select COUNT(case when role!="student" then 1 END) exist, COUNT(case when role="student" then 1 END) basic  from users where email = ? ', [$me->email])[0];
+                if($check->exist>0){
+                    //유튜브 계정 혹은 강사 계정이 존재할 경우
                         return '<script>alert("이미 존재하는 계정입니다.")</script>'.view('account.signup');
-                    }
-                }
+                }else if($check->basic>0){
+                    // 일반 계정이 존재할 경우 일반계정에 정보 덮어쓰기
+                    //url 이미지 DB에 저장
+                    $image = file_get_contents($snippet->thumbnails->default->url);
+                    $imageName = $snippet->title."profileImg";
+                    $imageStoreName = $imageName.time().".jpg";
+                    file_put_contents( 'storage/uploads/profile/'.$imageStoreName, $image);
+                    DB::table('users')->where('email',$me->email)->update(array(
+                        'password'=>password_hash('youtube', PASSWORD_DEFAULT),
+                        'nickname'=> $snippet->title,
+                        'role'=>'youtuber',
+                        'introduction'=>$snippet->description,
+                        'ori_profile_image'=>$imageName,
+                        'save_profile_image'=>$imageStoreName,
+                        'notification_4'=>'Y',
+                        'updated_at'=>now(),
+                        'update_host'=>$_SERVER['REMOTE_ADDR']
+                    ));
+                    $request->session()->put('email', $me->email);
+                    $request->session()->put('role', 'youtuber');
+                    return redirect()->route('main');
+                }else{
                 //url 이미지 DB에 저장
                 $image = file_get_contents($snippet->thumbnails->default->url);
                 $imageName = $snippet->title."profileImg";
@@ -87,6 +106,8 @@ class YouTubeAPIController extends Controller{
                 $request->session()->put('email', $me->email);
                 $request->session()->put('role', 'youtuber');
                 return redirect()->route('main');
+
+                }
             }
             else{// 채널이 없는 경우
                 return '<script>alert("유튜브 채널이 없습니다.\n유튜브 채널을 등록해주세요.")</script>'.view('account.signup');
@@ -142,10 +163,8 @@ class YouTubeAPIController extends Controller{
             $check=DB::select('select * from users where email = ? and role != "student"', [$me->email]);
 
             if(count($check)>0){
-                if(password_verify('youtube', $check[0]->password)){
-                    Auth::attempt(['email' => $me->email, 'password' => 'youtube']);
+                Auth::attempt(['email' => $me->email, 'password' => 'youtube']);
 
-                }
                 //탈퇴한 경우
                 if(Auth::user()->status=="withdraw"){
                     Auth::logout();

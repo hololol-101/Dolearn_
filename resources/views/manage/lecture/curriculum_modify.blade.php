@@ -5,8 +5,8 @@
  * 20210224 | @m | 요구반영. 결함개선. 고도화.
  * ~20210302 | @m |
  * 20210412 | @m | 요구반영
- * 20210525 | @m | 
- * 20210708 | @m | 
+ * 20210525 | @m |
+ * 20210708 | @m |
  * 20210721 | @m | makeDrag1() 드래그앤드롭에 스크롤 추가
  */
 -->
@@ -168,7 +168,7 @@ if ($isFree != '') {
                             <div class="item" style="cursor:pointer">
                                 <div class="control move" title="끌어서 놓기로 순서 이동"></div>
                                 <div class="tg1">
-                                    <span class="t1 form-static1" bchap_id="{{ $videoInfo->bchap_id }}" schap_id="{{ $videoInfo->schap_id }}" video_id="{{ $videoInfo->uid }}" preview_yn="{{ $videoInfo->preview_yn }}">{{ $videoInfo->new_video_title }}</span>
+                                    <span class="t1 form-static1" bchap_id="{{ $videoInfo->bchap_id }}" schap_id="{{ $videoInfo->schap_id }}" video_id="{{ $videoInfo->uid }}" preview_yn="{{ $videoInfo->preview_yn }}" comment="{{ $videoInfo->comment }}">{{ $videoInfo->new_video_title }}</span>
                                     {{-- <span class="t1 form-static1" bchap_id="{{ $videoInfo->bchap_id }}" schap_id="{{ $videoInfo->schap_id }}" video_id="{{ $videoInfo->uid }}" analysis_yn="{{ $videoInfo->analysis_yn }}" preview_yn="{{ $videoInfo->preview_yn }}">{{ $videoInfo->new_video_title }}</span> --}}
                                 </div>
                                 <div class="eg1">
@@ -566,7 +566,7 @@ if ($isFree != '') {
 				// 마우스 이동 | 터치 이동
 				$(document).on('mousemove touchmove', function(e){
 
-					// 20210721	
+					// 20210721
 					if(e.originalEvent.touches || e.originalEvent.changedTouches){ // 터치 있으면
 						var e = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0]; // 싱글 터치
 					}else{
@@ -596,7 +596,7 @@ if ($isFree != '') {
 
 			// 드래그 동작
 			function doDrag(e, $c){
-				ey = e.clientY - sy; 
+				ey = e.clientY - sy;
 				nScrollTop = $cont.scrollTop(); // 현재 scrollTop 값
 				ey = ey + nScrollTop - sScrollTop; // 스크롤 위치 변경값 더하여 계산
 
@@ -1380,8 +1380,8 @@ function saveCurriculum() {
         data.videoId = $(this).attr('video_id');
         data.analysisYn = $(this).attr('analysis_yn');
         data.previewYn = $(this).attr('preview_yn');
+        data.comment = $(this).attr('comment');
         data.videoTitle = $(this).text();
-
         if(!isEmpty(data.previewYn)) {
             data.previewYn = $(this).attr('preview_yn');
         } else {
@@ -1436,6 +1436,7 @@ $('#add_video_btn').click(function() {
     var _bchapId = $('#div_schap div.on').find('.t1').attr('bchap_id');
     var _schapId = $('#div_schap div.on').find('.t1').attr('schap_id');
     var analysisYn = 'Y';
+    var comment = '';
 
     // 소단원을 선택했을 경우에만 강의 영상 추가 가능
     if (!$('#div_schap div.on').find('.t1').length) {
@@ -1465,7 +1466,8 @@ $('#add_video_btn').click(function() {
             bchap_id: _bchapId,
             schap_id: _schapId,
             video_id: $(element).find('.video_id').val(),
-            analysis_yn: analysisYn
+            analysis_yn: analysisYn,
+            comment: comment
         });
 
         $_video.find('.t1').text($(element).find('.t1').text());
