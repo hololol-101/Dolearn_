@@ -29,7 +29,7 @@
 @if ($qaInfo->question_attach_file!='')
 <ul>
     <li>
-        <a href="{{ route('serviceinquiry.download_attach_file', ['filename'=>$qaInfo->question_attach_file]) }}" class="filename">{{ $qaInfo->question_attach_file }}</a>
+        <a href="{{ route('admin.download_attach_file', ['filename'=>$qaInfo->question_attach_file]) }}" class="filename">{{ $qaInfo->question_attach_file }}</a>
         <a href="javascrpt:void(0)"  title="바로보기 [새 창]" onclick="openNewPage('{{ asset('storage/uploads/attach/'.$qaInfo->question_attach_file) }}')" class="b1 quickview"><i class="ic1"></i> 바로보기</a></li>
 </ul>
 @endif
@@ -54,8 +54,8 @@
         <a href="?" class="button next default"><span class="t1">다음</span></a>
     </p>
     <p class="right">
-        <a href="{{ route('serviceinquiry.qna.answer', ['idx'=> $qaInfo->idx]) }}" class="button">답변</a>
-        <a href="{{ route('serviceinquiry.qna.index') }}" class="button">목록</a>
+        <a href="{{ route('admin.qna.answer', ['idx'=> $qaInfo->idx]) }}" class="button">답변</a>
+        <a href="{{ route('admin.qna.index') }}" class="button">목록</a>
     </p>
 
     </div>
@@ -79,7 +79,7 @@
 
                         @foreach ($fileArray as $file )
                             <li><a href="javascript:void(0)" class="filename">{{ $file }}</a>
-                            <a href="{{ route('serviceinquiry.download_attach_file', ['filename'=>$file]) }}" title="바로보기 [새 창]" class="b1 download" )"><i class="ic1"></i> 다운로드</a>
+                            <a href="{{ route('admin.download_attach_file', ['filename'=>$file]) }}" title="바로보기 [새 창]" class="b1 download" )"><i class="ic1"></i> 다운로드</a>
                             <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick ="openNewPage('{{ asset('storage/uploads/attach/'.$file) }}')"><i class="ic1"></i> 바로보기</a></li>
                             <a class="b1 quickview"><i class="ic1"></i> <span class="blind">바로보기</span> 변환중…</a></li>
                             </li>
@@ -93,7 +93,7 @@
             </div>
             </p>
             <p style="text-align:right">
-                <a href="{{ route('serviceinquiry.qna.answer', ['idx'=> $qaInfo->idx, 'status'=>'edit']) }}" class="button">수정</a>
+                <a href="{{ route('admin.qna.answer', ['idx'=> $qaInfo->idx, 'status'=>'edit']) }}" class="button">수정</a>
                 {{-- <a href="/doadm/notice/{{ $qaInfo->idx }}/delete" class="button">삭제</a> --}}
             </p>
 
@@ -112,7 +112,7 @@
         <a href="?" class="button next default"><span class="t1">다음</span></a>
     </p>
     <p class="right">
-        <a href="{{ route('serviceinquiry.qna.index') }}" class="button">목록</a>
+        <a href="{{ route('admin.qna.index') }}" class="button">목록</a>
     </p></div>
 
     </div>

@@ -139,9 +139,9 @@
     <a href="?" class="button next default"><span class="t1">다음</span></a>
 </p>
 <p class="right">
-    <a href="{{ route('serviceinquiry.trend.edit',['idx'=>$trendInfo->idx]) }}" class="button">수정</a>
-    <a href="{{ route('serviceinquiry.trend.delete',['idx'=>$trendInfo->idx]) }}" class="button">삭제</a>
-    <a href="{{ route('serviceinquiry.trend.index') }}" class="button">목록</a>
+    <a href="{{ route('admin.trend.edit',['idx'=>$trendInfo->idx]) }}" class="button">수정</a>
+    <a href="{{ route('admin.trend.delete',['idx'=>$trendInfo->idx]) }}" class="button">삭제</a>
+    <a href="{{ route('admin.trend.index') }}" class="button">목록</a>
 </p>
 </div>
 <!-- /infomenu1 -->

@@ -9,7 +9,7 @@
 
 <!-- search1select1 -->
 <div class="search1select1">
-    <form id="f1s1s1" action="{{ route('serviceinquiry.manageAccount.index') }}" method="POST">
+    <form id="f1s1s1" action="{{ route('admin.manageAccount.index') }}" method="POST">
         @csrf
         <fieldset><legend class="blind">게시물 검색</legend>
         <select id="f1s1s1select1" name="type" title="선택옵션1" class="select1">
@@ -61,7 +61,7 @@
         <td>{{ $user->id }}</td>
         <td style="text-align=center;">
 
-            <a href="{{ route('serviceinquiry.manageAccount.detail', ['id'=>$user->id]) }}">
+            <a href="{{ route('admin.manageAccount.detail', ['id'=>$user->id]) }}">
                 {{ $user->email }}
             </a>
         </td>
@@ -104,7 +104,7 @@
         <a href="?" onclick="history.go(-1); return false;" class="button default">이전</a>
     </p>
     <p class="right">
-        <a href="{{ route('serviceinquiry.faq.create') }}" class="button">글작성</a>
+        <a href="{{ route('admin.faq.create') }}" class="button">글작성</a>
     </p>
 
 </div>

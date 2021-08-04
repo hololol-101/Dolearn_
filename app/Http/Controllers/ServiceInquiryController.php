@@ -94,7 +94,7 @@ class ServiceInquiryController extends Controller{
                 'attach_file'=>$files,
                 'public_yn'=>$isPublic
             ));
-            return redirect()->route('serviceinquiry.faq.detail', compact('idx'));
+            return redirect()->route('admin.faq.detail', compact('idx'));
 
 
         }
@@ -142,7 +142,7 @@ class ServiceInquiryController extends Controller{
                 'attach_file'=>$files,
                 'public_yn'=>$isPublic
             ));
-            return redirect()->route('serviceinquiry.faq.index');
+            return redirect()->route('admin.faq.index');
 
         }
     }
@@ -150,7 +150,7 @@ class ServiceInquiryController extends Controller{
         //FAQ 삭제
         $idx = $request->get('idx');
         DB::delete('delete from faq where idx = ?', [$idx]);
-        return redirect()->route('serviceinquiry.faq.index');
+        return redirect()->route('admin.faq.index');
     }
     public function qaIndex(Request $request){
         $pageNum     = $request->get('page', 1);
@@ -231,7 +231,7 @@ class ServiceInquiryController extends Controller{
             //QnA 답변 알림
             createNotification('qna', $info->writer_id, '','1:1 문의에 답변이 등록되었습니다.', '');
 
-            return redirect()->route('serviceinquiry.qna.detail', ['idx'=>$idx]);
+            return redirect()->route('admin.qna.detail', ['idx'=>$idx]);
         }
     }
     public function qaAnswerEdit(Request $request){
@@ -276,7 +276,7 @@ class ServiceInquiryController extends Controller{
             //QnA 답변 알림
         createNotification('qna', $info->writer_id, '','1:1 문의에 답변이 등록되었습니다.', $idx);
 
-        return redirect()->route('serviceinquiry.qna.detail', ['idx'=>$idx]);
+        return redirect()->route('admin.qna.detail', ['idx'=>$idx]);
     }
     public function trendIndex(Request $request){
         $pageNum     = $request->get('page', 1);
@@ -367,7 +367,7 @@ class ServiceInquiryController extends Controller{
                 'ranking3'=>$ranking[3],
                 'ranking4'=>$ranking[4]
             ));
-            return redirect()->route('serviceinquiry.trend.index');
+            return redirect()->route('admin.trend.index');
         }
     }
     public function trendEdit(Request $request){
@@ -444,13 +444,13 @@ class ServiceInquiryController extends Controller{
                 'ranking3'=>$ranking[3],
                 'ranking4'=>$ranking[4]
             ));
-            return redirect()->route('serviceinquiry.trend.detail', ['idx'=>$idx]);
+            return redirect()->route('admin.trend.detail', ['idx'=>$idx]);
         }
     }
     public function trendDelete(Request $request){
         $idx = $request->get('idx');
         DB::delete('delete from latest_trend where idx = ?', [$idx]);
-        return redirect()->route('serviceinquiry.trend.index');
+        return redirect()->route('admin.trend.index');
     }
     public function trendDetail(Request $request){
         $idx = $request->get('idx');
@@ -548,7 +548,7 @@ class ServiceInquiryController extends Controller{
 
                 ));
             }
-            return redirect()->route('serviceinquiry.manageAccount.index')."<script>alert('정보수정이 완료되었습니다.')</script>";
+            return redirect()->route('admin.manageAccount.index')."<script>alert('정보수정이 완료되었습니다.')</script>";
         }
     }
     public function maAnswerEdit(Request $request){

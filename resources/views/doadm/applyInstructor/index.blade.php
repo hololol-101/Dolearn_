@@ -47,26 +47,40 @@
         <thead>
         <tr>
         <th scope="col" style="width:auto;">번호</th>
+        <th scope="col" style="width:4em">분류</th>
         <th scope="col" style="width:50%;">제목</th>
         <th scope="col" style="width:4em;">작성자</th>
         <th scope="col" style="width:6em;">작성일</th>
+        <th scope="col" style="width:auto;">첨부</th>
         <th scope="col" style="width:auto;">공개여부</th>
         </tr>
         </thead>
         <tbody>
-        @foreach($trendList as $trendItem)
+        @foreach($faqlist as $faItem)
         <tr>
-        <td>{{ $trendItem->idx }}</td>
+        <td>{{ $faItem->idx }}</td>
+        @if($faItem->division =="basic")
+            <td>일반</td>
+        @elseif ($faItem->division =="instructor")
+            <td>강사</td>
+        @elseif ($faItem->division =="student")
+            <td>수강자</td>
+        @elseif ($faItem->division =="pay")
+            <td>결제</td>
+        @endif
         <td class="tal">
-        <a href="{{ route('admin.trend.detail', ['idx'=>$trendItem->idx]) }}">{{ $trendItem->title }}</a>
+        <a href="{{ route('serviceinquiry.faq.detail', ['idx'=>$faItem->idx]) }}">{{ $faItem->title }}</a>
         </td>
-        <td>{{ $trendItem->adminname }}</td>
-        <td>{{ date('Y.m.d',strtotime($trendItem->writed_at)) }}</td>
-        <td>{{ $trendItem->public_yn }}</td>
+        <td>{{ $faItem->adminname }}</td>
+        <td>{{ date('Y.m.d',strtotime($faItem->writed_at)) }}</td>
+        <td>
+            <a href="filename.zip"><img src="/_res/A/img/board/icon/ic16_zip.png" width="16" height="16" alt="zip 파일 첨부"></a>
+            <a href="filename.zip"><img src="/_res/A/img/board/icon/ic16_file.png" width="16" height="16" alt="파일 첨부"></a>
+            <a href="filename.odf"><img src="/_res/A/img/board/icon/ic16_file.png" width="16" height="16" alt="파일 첨부"></a>
+        </td>
+        <td>{{ $faItem->public_yn }}</td>
         </tr>
         @endforeach
-
-
         </tbody>
     </table>
 </div>
@@ -84,7 +98,7 @@
         <a href="?" onclick="history.go(-1); return false;" class="button default">이전</a>
     </p>
     <p class="right">
-        <a href="{{ route('admin.trend.create') }}" class="button">글작성</a>
+        <a href="{{ route('serviceinquiry.faq.create') }}" class="button">글작성</a>
     </p>
 
 </div>

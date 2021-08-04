@@ -29,7 +29,7 @@
 
     @foreach ($fileArray as $file )
     <li><a href="javascript:void(0)" class="filename">{{ $file }}</a>
-        <a href="{{ route('admin.download_attach_file', ['filename'=>$file]) }}" title="바로보기 [새 창]" class="b1 download" )"><i class="ic1"></i> 다운로드</a>
+        <a href="{{ route('serviceinquiry.download_attach_file', ['filename'=>$file]) }}" title="바로보기 [새 창]" class="b1 download" )"><i class="ic1"></i> 다운로드</a>
         <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick ="openNewPage('{{ asset('storage/uploads/attach/'.$file) }}')"><i class="ic1"></i> 바로보기</a></li>
         <a class="b1 quickview"><i class="ic1"></i> <span class="blind">바로보기</span> 변환중…</a></li>
         </li>
@@ -58,9 +58,9 @@
     <a href="?" class="button next default"><span class="t1">다음</span></a>
 </p>
 <p class="right">
-    <a href="{{ route('admin.faq.edit',['idx'=>$faqlist->idx]) }}" class="button">수정</a>
-    <a href="{{ route('admin.faq.delete',['idx'=>$faqlist->idx]) }}" class="button">삭제</a>
-    <a href="{{ route('admin.faq.index') }}" class="button">목록</a>
+    <a href="{{ route('serviceinquiry.faq.edit',['idx'=>$faqlist->idx]) }}" class="button">수정</a>
+    <a href="{{ route('serviceinquiry.faq.delete',['idx'=>$faqlist->idx]) }}" class="button">삭제</a>
+    <a href="{{ route('serviceinquiry.faq.index') }}" class="button">목록</a>
 </p>
 </div>
 <!-- /infomenu1 -->

@@ -644,8 +644,8 @@ Route::group(['prefix'=>'notification', 'as'=>'notification.'], function(){
 
 });
 
-// 서비스 문의
-Route::group(['prefix'=>'serviceinquiry', 'as'=>'serviceinquiry.'], function(){
+// 관리자 게정
+Route::group(['prefix'=>'admin', 'as'=>'admin.'], function(){
     Route::group(['prefix'=>'faq', 'as'=>'faq.'], function(){
         // FAQ 가져오기
         Route::get('index', [ServiceInquiryController::class, 'faqIndex'])->name('index');
@@ -672,6 +672,7 @@ Route::group(['prefix'=>'serviceinquiry', 'as'=>'serviceinquiry.'], function(){
         Route::post('create', [ServiceInquiryController::class, 'faqCreate'])->name('create');
 
     });
+
     Route::group(['prefix'=>'qna', 'as'=>'qna.'], function(){
         // Q&A 가져오기
         Route::get('index', [ServiceInquiryController::class, 'qaIndex'])->name('index');
@@ -688,6 +689,7 @@ Route::group(['prefix'=>'serviceinquiry', 'as'=>'serviceinquiry.'], function(){
         // Q&A 답변 수정
         Route::post('answer_edit', [ServiceInquiryController::class, 'qaAnswerEdit'])->name('answer_edit');
     });
+
     Route::group(['prefix'=>'trend', 'as'=>'trend.'], function(){
          // 최신 트렌드 목록
         Route::get('index', [ServiceInquiryController::class, 'trendIndex'])->name('index');
@@ -725,6 +727,21 @@ Route::group(['prefix'=>'serviceinquiry', 'as'=>'serviceinquiry.'], function(){
 
         // 사용자 정보 수정
         Route::post('detail', [ServiceInquiryController::class, 'maDetail'])->name('detail');
+    });
+
+
+    Route::group(['prefix'=>'applyInstructor', 'as'=>'applyInstructor.'], function(){
+        // 사용자 정보 가져오기
+        Route::get('index', [ServiceInquiryController::class, 'aiIndex'])->name('index');
+
+        // 사용자 정보 검색해서 가져오기
+        Route::post('index', [ServiceInquiryController::class, 'aiIndex'])->name('index');
+
+        // 사용자 정보 상세보기
+        Route::get('detail', [ServiceInquiryController::class, 'aiDetail'])->name('detail');
+
+        // 사용자 정보 수정
+        Route::post('detail', [ServiceInquiryController::class, 'aiDetail'])->name('detail');
     });
 
     // 첨부 파일 다운

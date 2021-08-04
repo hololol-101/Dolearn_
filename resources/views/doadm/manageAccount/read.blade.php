@@ -8,7 +8,7 @@
 
 <!-- bbs1view1 -->
 <div class="bbs1view1">
-    <form method="POST" action="{{ route('serviceinquiry.manageAccount.detail') }}">
+    <form method="POST" action="{{ route('admin.manageAccount.detail') }}">
         @csrf
         <h1 class="h1"> 사용자 정보 수정</h1>
         <table class="t1 w100 tttac ttvam fsxd lhD">

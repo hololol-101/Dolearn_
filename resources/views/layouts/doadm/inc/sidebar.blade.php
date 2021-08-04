@@ -7,21 +7,22 @@
 		<li class="m1"><a href='?'><i class='ic1'></i><span class='t1'>메뉴/콘텐츠관리</span></a>
 		<div class="d2"><div class="bg"></div>
 			<ul>
-				<li class="m1"><a href="?#★">사이트관리</a></li>
-                <li class="m2"><a href="?#★">디자인템플릿관리</a></li>
-				<li class="m3 on"><a href="?#★">메뉴/콘텐츠관리</a></li>
-				<li class="m6"><a href="?#★">지도관리</a></li>
+				{{-- <li class="m1"><a href="?#★">사이트관리</a></li>
+                <li class="m2"><a href="?#★">디자인템플릿관리</a></li> --}}
+				<li class="m3 on"><a href="https://new2.dolearn.co.kr/doadm/notice?#%E2%98%85">메뉴/콘텐츠관리</a></li>
+				{{-- <li class="m6"><a href="?#★">지도관리</a></li>
 				<li class="m7"><a href="?#★">지도분류관리</a></li>
 				<li class="m8"><a href="?#★">메뉴이력관리</a></li>
 				<li class="m8"><a href="?#★">메뉴이력통계</a></li>
 				<li class="m9"><a href="?#★">인기메뉴</a></li>
 				<li class="m10"><a href="?#★">최근 업데이트 메뉴</a></li>
 				<li class="m11"><a href="?#★">콘텐츠갱신알림</a></li>
-				<li class="m11"><a href="?#★">웹호환성로깅</a></li>
-                <li class="m11"><a href="{{ route('serviceinquiry.faq.index') }}">FAQ</a></li>
-                <li class="m11"><a href="{{ route('serviceinquiry.qna.index') }}">Q&A관리</a></li>
-				<li class="m11"><a href="{{ route('serviceinquiry.trend.index') }}">최신트렌드</a></li>
-                <li class="m1"><a href="{{ route('serviceinquiry.manageAccount.index') }}">사용자 계정 관리</a></li>
+				<li class="m11"><a href="?#★">웹호환성로깅</a></li> --}}
+                <li class="m11"><a href="{{ route('admin.faq.index') }}">FAQ</a></li>
+                <li class="m11"><a href="{{ route('admin.qna.index') }}">Q&A관리</a></li>
+				<li class="m11"><a href="{{ route('admin.trend.index') }}">최신트렌드</a></li>
+                <li class="m1"><a href="{{ route('admin.manageAccount.index') }}">사용자 계정 관리</a></li>
+                <li class="m1"><a href="{{ route('admin.applyInstructor.index') }}">강사 신청 관리</a></li>
 
 
             </ul>
