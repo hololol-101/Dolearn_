@@ -175,6 +175,17 @@ class YouTubeAPIController extends Controller{
 
                 DB::update('update users set last_conn_at = ?, last_conn_host = ? where email = ? and role = "youtuber"',  [now(),  $_SERVER['REMOTE_ADDR'], $me->email]);
                 DB::insert('insert into signin_log (user_id, user_agent, signin_host, signin_at) values (?, ?, ?, ?)', [$me->email, $_SERVER['HTTP_USER_AGENT'], $_SERVER['REMOTE_ADDR'], now()]);
+
+                $countLearningLecture =  DB::select('select count(*) count FROM my_lecture WHERE user_id = ?',[Auth::user()->email])[0]->count;
+                $request->session()->put('countLearningLecture', $countLearningLecture);
+                if(Auth::user()->role =="instructor"){
+                    $countOperatingLecture = DB::select('select count(Distinct l.idx) count FROM users u LEFT JOIN lecture l ON l.owner_id = u.email  WHERE u.nickname = ?', [Auth::user()->nickname])[0]->count;
+                    $request->session()->put('countOperatingLecture', $countOperatingLecture);
+                }
+                if(Auth::user()->role =="youtuber"){
+                    $countMyVideo = DB::select('select count(*) count from _youtube_fulldata_temp where channel = ?', [Auth::user()->nickname])[0]->count;
+                    $request->session()->put('countMyVideo', $countMyVideo);
+                }
                 return redirect()->route('main');
             }
             else{// 채널이 없는 경우

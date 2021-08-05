@@ -57,7 +57,8 @@ class EtcController extends Controller{
             [$res['accountEmail'], $res['contactEmail'], $res['name'], $res['celphone'], $hope, $res['textarea0'], $filename, $fileReName, now(), "ready"]);
 
             if($query2){
-                return redirect()->back().'<script>alert("강사신청이 완료되었습니다.") </script>';
+                $request->session()->put('message',  "강사계정 신청이 되었습니다. 강사계정으로 업그레이드 되기까지 최대 7일이 소요되며 완료 시, 담당 e-md가 이메일로 연락드립니다.");
+                return redirect()->route('main', compact('msg'));
             }else{
                 return redirect()->back()->with('alert', '강사신청에 실패했습니다.');
             }

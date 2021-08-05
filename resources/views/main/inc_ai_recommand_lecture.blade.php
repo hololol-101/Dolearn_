@@ -9,7 +9,7 @@
             <strong class="h2">{{ key($interest_arr) }}</strong>
             @endif
         </div>
-        <a href="{{ route('sub.lecture.lecture_list') }}" class="more"><span class="t1 blind">더보기</span> <i class="ic1"></i></a>
+        {{-- <a href="{{ route('sub.lecture.lecture_list') }}" class="more"><span class="t1 blind">더보기</span> <i class="ic1"></i></a> --}}
     </div>
     <div class="mControl">
         <button type="button" class="m prev"><i class="ic1"></i><span class="blind">AI 추천강좌 #웹개발. 이전 보기</span></button>

@@ -50,9 +50,9 @@ $order = isset($_GET['order']) ? $_GET['order'] : '';
 		<div id="lnb1c">
 			<ul>
 			<li class="on"><a href="{{ route('manage.instructor.operation_lecture') }}">운영 강좌</a></li>
-			<li><a href="{{ route('manage.instructor.question_list') }}">질문 리스트</a></li>
+			{{-- <li><a href="{{ route('manage.instructor.question_list') }}">질문 리스트</a></li>
 			<li><a href="{{ route('manage.instructor.review_list') }}">수강후기 리스트</a></li>
-			<li><a href="{{ route('manage.instructor.income_info') }}">수익 내역</a></li>
+			<li><a href="{{ route('manage.instructor.income_info') }}">수익 내역</a></li> --}}
 			</ul>
 		</div>
 		<!-- /lnb1c -->

@@ -7,7 +7,7 @@
             {{-- <span class="t1t1">#엑셀</span>
             <span class="t1t1">#엑셀</span> --}}
         </span>
-        <a href="{{ route('sub.lecture.lecture_list') }}" class="more"><span class="t1">더보기</span> <i class="ic1"></i></a>
+        {{-- <a href="{{ route('sub.lecture.lecture_list') }}" class="more"><span class="t1">더보기</span> <i class="ic1"></i></a> --}}
     </div>
     <div class="mControl">
         <button type="button" class="m prev"><i class="ic1"></i><span class="blind">현재 운영중인 강좌와 비슷한 강좌. 이전 보기</span></button>

@@ -415,12 +415,13 @@
                         @if ($userId != '')
                         <a href="{{ route('account.profile_settings') }}" class="a2"><span class="a2t1">{{ $userId }}</span>{{-- <i class="a2ic1">&gt;</i> --}}</a>
                         <div class="tg1">
-							<span class="t1"><span class="t1t1">수강</span> <span class="t1t2">@if (isset($_SESSION['countLearningLecture'])) {{ $_SESSION['countLearningLecture'] }} @endif</span></span>
+
+							<span class="t1"><span class="t1t1">수강</span> <span class="t1t2">@if (session()->has("countLearningLecture")) {{ session()->get("countLearningLecture") }} @else 0 @endif</span></span>
                             @if ($role == 'youtuber')
-							<span class="t1"><span class="t1t1">영상</span> <span class="t1t2">@if (isset($_SESSION['countLearningLecture'])) {{ $_SESSION['countLearningLecture'] }} @endif</span></span>
+							<span class="t1"><span class="t1t1">영상</span> <span class="t1t2">@if (session()->has("countMyVideo")) {{ session()->get("countMyVideo") }} @else 0 @endif</span></span>
                             @endif
                             @if ($role == 'instructor')
-							<span class="t1"><span class="t1t1">운영</span> <span class="t1t2">@if (isset($_SESSION['countOperatingLecture'])) {{ $_SESSION['countOperatingLecture'] }} @endif</span></span>
+							<span class="t1"><span class="t1t1">운영</span> <span class="t1t2">@if (session()->has("countOperatingLecture")) {{ session()->get("countOperatingLecture") }} @else 0 @endif</span></span>
                             @endif
 						</div>
                         @else
@@ -565,7 +566,10 @@
             }, 300);
 
         @endif
-
+        @if(Session::has('message'))
+        alert('{{ session()->get("message") }}');
+        "{{ session()->forget('message') }}"
+        @endif
         @if (Session::has('email')&&Session::has('role'))
             joinemail = '{{ session()->get("email") }}';
             joinrole = '{{ session()->get("role") }}'
