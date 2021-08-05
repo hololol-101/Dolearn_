@@ -439,7 +439,7 @@ class CommunityController extends Controller{
                         foreach (explode(',', $faq->attach_file) as $file){
                         $faqListHtml.='            <ul>';
                         $faqListHtml.='                <li>';
-                        $faqListHtml.='                    <a href="javascript:void(0)" class="filename" onclick="location.href='."'".route('serviceinquiry.download_attach_file', ['filename'=>$file])."'".'">'.$file.'</a>';
+                        $faqListHtml.='                    <a href="javascript:void(0)" class="filename" onclick="location.href='."'".route('admin.download_attach_file', ['filename'=>$file])."'".'">'.$file.'</a>';
                         $faqListHtml.='                    <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick = "window.open('."'".asset('storage/uploads/attach/'.$file)."'".', '."'".'_blank'."'".')"><i class="ic1"></i> 바로보기</a>';
                         $faqListHtml.='                </li>';
                         $faqListHtml.='            </ul>';

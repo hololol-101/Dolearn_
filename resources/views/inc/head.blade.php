@@ -448,7 +448,12 @@
 					</div>
 					<div class="w4">
 						<a href="{{ route('account.logout') }}" class="a4"><span class="a4t1">로그아웃</span></a>
+                        @if ($role == 'instructor')
 						<a href="{{ route('sub.community.service_qna') }}" class="a5"><span class="a5t1">서비스문의</span> <i class="a5ic1">&gt;</i></a>
+                        @else
+                        <a href="{{ route('etc.instructor_application') }}" class="a5"><span class="a5t1">강사계정신청하기</span> <i class="a5ic1">&gt;</i></a>
+                        @endif
+
 					</div>
 				</div>
 			</div>
