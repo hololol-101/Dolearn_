@@ -1,5 +1,4 @@
-@extends('layouts.doadm.doadm_layout') // 레이아웃을 사용함.
-
+@extends('layouts.doadm.doadm_layout')
 @section('content')
 
 <!-- width1s2 -->
@@ -8,33 +7,30 @@
 
 <!-- bbs1view1 -->
 <div class="bbs1view1">
-<h1 class="h1"> {{ $faqlist->title }} </h1>
+
+<h1 class="h1"> {{ $userInfo->dolearn_id }} </h1>
 <!-- info1 -->
 <div class="info1">
 <dl class="dl1">
-<dt class="dt1">작성일</dt>
-<dd class="dd1">{{ date('Y.m.d', strtotime($faqlist->writed_at) ) }}</dd>
+<dt class="dt1">신청일</dt>
+<dd class="dd1">{{ date('Y.m.d', strtotime($userInfo->applicated_at) ) }}</dd>
 <dt class="dt1">작성자</dt>
-<dd class="dd1">{{ $faqlist->adminname }}</dd>
-<dt class="dt1" show>공개 여부</dt>
-<dd class="dd1"><em class="em1">{{$faqlist->public_yn }}</em></dd>
-
+<dd class="dd1">{{ $userInfo->user_name }}</dd>
+<dt class="dt1" show>전화번호</dt>
+<dd class="dd1">{{$userInfo->mobile }}</dd>
+<dt class="dt1" show>희망분야</dt>
+<dd class="dd1">{{$userInfo->hope_part }}</dd>
 </dl>
 </div>
 <!-- /info1 -->
 <!-- attach1 -->
 <div class="attach1">
-@if ($fileArray[0] !='')
+@if ($userInfo->save_attach_file !='')
     <ul>
-
-    @foreach ($fileArray as $file )
-    <li><a href="javascript:void(0)" class="filename">{{ $file }}</a>
-        <a href="{{ route('serviceinquiry.download_attach_file', ['filename'=>$file]) }}" title="바로보기 [새 창]" class="b1 download" )"><i class="ic1"></i> 다운로드</a>
-        <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick ="openNewPage('{{ asset('storage/uploads/attach/'.$file) }}')"><i class="ic1"></i> 바로보기</a></li>
-        <a class="b1 quickview"><i class="ic1"></i> <span class="blind">바로보기</span> 변환중…</a></li>
+    <li><a href="javascript:void(0)" class="filename">{{ $userInfo->save_attach_file  }}</a>
+        <a href="{{ route('admin.download_attach_file', ['filename'=>$userInfo->save_attach_file ]) }}" title="바로보기 [새 창]" class="b1 download" )"><i class="ic1"></i> 다운로드</a>
+        <a href="javascript:void(0)" title="바로보기 [새 창]" class="b1 quickview" onclick ="openNewPage('{{ asset('storage/uploads/attach/'.$userInfo->save_attach_file ) }}')"><i class="ic1"></i> 바로보기</a></li>
         </li>
-
-    @endforeach
 
 </ul>
 @endif
@@ -43,7 +39,7 @@
 <!-- substance -->
 <div class="substance">
 
-{!! $faqlist->content !!}
+{!! $userInfo->introduction !!}
 
 </div>
 <!-- /substance -->
@@ -54,13 +50,14 @@
 <!-- infomenu1 -->
 <div class="infomenu1">
 <p class="left">
-    <a href="?" class="button prev default"><span class="t1">이전</span></a>
-    <a href="?" class="button next default"><span class="t1">다음</span></a>
+    <a href="{{ route('admin.applyInstructor.index') }}" class="button prev default"><span class="t1">목록</span></a>
 </p>
 <p class="right">
-    <a href="{{ route('serviceinquiry.faq.edit',['idx'=>$faqlist->idx]) }}" class="button">수정</a>
-    <a href="{{ route('serviceinquiry.faq.delete',['idx'=>$faqlist->idx]) }}" class="button">삭제</a>
-    <a href="{{ route('serviceinquiry.faq.index') }}" class="button">목록</a>
+    @if ($userInfo->status!="confirm")
+    <button type="button" class="button apply">승인</button>
+    @endif
+    <button type="button" class="button delete">삭제</button>
+
 </p>
 </div>
 <!-- /infomenu1 -->
@@ -68,6 +65,52 @@
     function openNewPage(url){
         window.open(url, "_blank")
     }
+    $('.apply').on("click", function(){
+        let idxs = {{ $userInfo->idx }}
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'GET',
+            dataType: 'json',
+            url : "{{ route('admin.applyInstructor.approve') }}",
+            data: {
+                'idxs': idxs
+            },
+            success : (data) => {
+                console.log(data)
+                if(data.result =="success"){
+                    location.reload();
+                }
+            }, error: (result)=>{
+                console.log(result);
+            }
+        })
+    })
+    $('.delete').on("click", function(){
+        let idxs = {{ $userInfo->idx }}
+        $('input[name=★1checkbox1]:checked').each(function(){
+                idxs+=$(this).attr('idx')+",";
+        })
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'GET',
+            dataType: 'json',
+            url : "{{ route('admin.applyInstructor.delete') }}",
+            data: {
+                'idxs': idxs
+            },
+            success : (data) => {
+                if(data.result =="success"){
+                    location.href = "{{ route('admin.applyInstructor.index') }}"
+                }
+            }, error: (result)=>{
+                console.log(result);
+            }
+        });
+    })
 </script>
 
 </div>

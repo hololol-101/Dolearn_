@@ -777,7 +777,7 @@ class LectureController extends Controller{
             $html .= '  <div class="w1 item reply">';
             $html .= '    <textarea rows="3" cols="80" title="댓글작성" class="w100 type1"></textarea>';
             $html .= '      <div class="tar">';
-            $html .= '          <button type="submit" class="button submit semismall" onclick="(enrollEventthis)" value="N">등록하기</button>';
+            $html .= '          <button type="submit" class="button submit semismall" onclick="enrollEvent(this)" value="N">등록하기</button>';
             $html .= '      </div>';
             $html .= '  </div>';
             $html .= '<!-- /댓글작성 -->';

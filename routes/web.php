@@ -740,8 +740,18 @@ Route::group(['prefix'=>'admin', 'as'=>'admin.'], function(){
         // 사용자 정보 상세보기
         Route::get('detail', [ServiceInquiryController::class, 'aiDetail'])->name('detail');
 
-        // 사용자 정보 수정
-        Route::post('detail', [ServiceInquiryController::class, 'aiDetail'])->name('detail');
+        // 강사 승인
+        Route::get('approve', [ServiceInquiryController::class, 'aiApprove'])->name('approve');
+
+        // 강사 승인
+        Route::post('approve', [ServiceInquiryController::class, 'aiApprove'])->name('approve');
+
+        // 정보 삭제
+        Route::get('delete', [ServiceInquiryController::class, 'aiDelete'])->name('delete');
+
+        // 정보 삭제
+        Route::post('delete', [ServiceInquiryController::class, 'aiDelete'])->name('delete');
+
     });
 
     // 첨부 파일 다운

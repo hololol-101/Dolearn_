@@ -551,10 +551,106 @@ class ServiceInquiryController extends Controller{
             return redirect()->route('admin.manageAccount.index')."<script>alert('정보수정이 완료되었습니다.')</script>";
         }
     }
-    public function maAnswerEdit(Request $request){
 
-        return view('doadm.manageAccount.form');
 
+    public function aiIndex(Request $request){
+        $type = "ready";
+        if($request->isMethod('GET')){
+            $applyList = DB::select('select *  from instructor_application where status ="'.$type.'" order by idx desc');
+        }else{
+            $type = $request->post('type');
+            $src = $request->post('search');
+            $where ="";
+            if($type!="all"){
+                $where = "where status = '".$type."'";
+            }
+            if($src!=""){
+                if($where!=""){
+                    $where .= " and (dolearn_id like '%".$src."%' or email like '%".$src."%' or user_name like '%".$src."%')";
+
+                }else{
+                    $where = "where email like '%".$src."%' or nickname like '%".$src."%'";
+                }
+            }
+            $applyList = DB::select('select * from instructor_application '.$where.' order by idx desc');
+        }
+        return view('doadm.applyInstructor.index', compact('applyList', 'type'));
+    }
+    public function aiDetail(Request $request){
+        if($request->isMethod('GET')){
+            $id = $request->get('idx');
+            $userInfo = DB::select('select * from instructor_application where idx = ?', [$id])[0];
+            return view('doadm.applyInstructor.read', compact('userInfo'));
+        }else{
+            $id = $request->post('id');
+            $email = $request->post('email');
+            $password = $request->post('password');
+            $nickname = $request->post('nickname');
+            $type = $request->post('type');
+            $status = $request->post('status');
+            if($type=="youtuber"){
+                DB::table('users')->where('id', $id)->update(array(
+                    'email'=>$email,
+                    'password'=>password_hash('youtube', PASSWORD_DEFAULT),
+                    'nickname'=>$nickname,
+                    'role'=>$type,
+                    'status'=>$status,
+                    'updated_at'=>now(),
+                    'update_host'=>$_SERVER["REMOTE_ADDR"]
+                ));
+            }
+            if($password!=null){
+                DB::table('users')->where('id', $id)->update(array(
+                    'email'=>$email,
+                    'password'=>password_hash($password, PASSWORD_DEFAULT),
+                    'nickname'=>$nickname,
+                    'role'=>$type,
+                    'status'=>$status,
+                    'updated_at'=>now(),
+                    'update_host'=>$_SERVER["REMOTE_ADDR"]
+                ));
+            }else{
+                DB::table('users')->where('id', $id)->update(array(
+                    'email'=>$email,
+                    'nickname'=>$nickname,
+                    'role'=>$type,
+                    'status'=>$status,
+                    'updated_at'=>now(),
+                    'update_host'=>$_SERVER["REMOTE_ADDR"]
+
+                ));
+            }
+            return redirect()->route('admin.applyInstructor.index')."<script>alert('정보수정이 완료되었습니다.')</script>";
+        }
+    }
+    public function aiApprove(Request $request){
+            //강사 신청 관리 메인 페이지에서 승인 버튼을 누른 경우 -> 여러개 선택가능
+            $idxs = $request->get('idxs');
+            $idxs = explode(',', $idxs);
+            foreach($idxs as $idx){
+                $insInfo = DB::select('select * from instructor_application where idx = ?', [$idx])[0];
+                DB::table('instructor_application')->where('idx', $idx)->update(array(
+                    'status'=>'confirm'
+                ));
+                DB::table('users')->where('email', $insInfo->dolearn_id)->update(array(
+                    'name'=>$insInfo->user_name,
+                    'role'=>"instructor",
+                    'introduction'=>$insInfo->introduction,
+                    'updated_at'=>now(),
+                    'notification_3'=>"Y",
+                    'update_host'=>$_SERVER['REMOTE_ADDR']
+                ));
+            }
+
+        return response(array("result"=>"success"), 200);
+    }
+    public function aiDelete(Request $request){
+        $idxs = $request->get('idxs');
+        $idxs = explode(',', $idxs);
+        foreach($idxs as $idx){
+        DB::delete('delete from instructor_application where idx = ?', [$idx]);
+        }
+        return response(array("result"=>"success"), 200);
     }
 
     public function downloadAttachFile(Request $request){

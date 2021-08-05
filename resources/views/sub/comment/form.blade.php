@@ -5,9 +5,7 @@
         </div>
     </div>
     <!-- /댓글작성 -->
-@php
-    $page = isset($_GET['page'])?$_GET['page']:1;
-@endphp
+
 @include('sub.lecture.inc_layer_report_post')
 
 <script>
