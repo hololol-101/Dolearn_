@@ -7,7 +7,7 @@
 
         <div class="lightbox">
 			<div class="wrap2">
-                <input type="hidden" name="idx" value="">
+                <input type="hidden" name="idx" value="" id="postIdx">
                 <input type="hidden" name="lectureIdx" value="{{ $lectureInfo->idx }}">
 				<!-- ★★(공지사항 생성·수정) -->
                 <div class="hg1">
@@ -15,32 +15,27 @@
 					<a href="#layer1notice1write1" class="b1 close"><i class="ic1"></i> <span class="blind">공지사항 생성·수정 창 닫기</span></a>
 				</div>
 				<div class="cont">
-					<input type="text" id="noticeTitle" placeholder="제목을 입력하세요." name="noticeTitle" class="w100" @if(isset($lectureNotice->title)) value="" @endif/>
+					<input type="text" id="noticeTitle" placeholder="제목을 입력하세요." name="noticeTitle" class="w100"/>
 
 					<!-- cp1write1 -->
 
                     <div class="form1item1">
                         <!-- cp1write1 -->
+
                         <div class="cp1write1">
                             <textarea class="editor" id="editor" name="noticeContent" >
+
                             </textarea>
                         </div>
                         <!-- /cp1write1 -->
                         {{-- <script src="{{ asset('assets/js/ckeditor_load.js') }}"></script> --}}
-                        <script>
-                        $(function() {
-                            // CKEditor load
-                            CKEDITOR.replace('editor', {
-                                height: 500,
-                                filebrowserUploadUrl: "{{ route('ck_file_upload', ['_token' => csrf_token()]) }}",
-                                filebrowserUploadMethod: 'form'
-                            });
-                        });
-                        </script>
+
                     </div>
 					<!-- /cp1write1 -->
-
-					<input type="file" title="첨부파일" name ="file01" class="w100" />
+					<input type="file" id = "file" title="첨부파일" name ="file01" class="w100" onclick="$('#filename0').val(''); $('#filename1').text('')" />
+                    <input type="hidden" id="filename0" name="filename" value="">
+                    <div id="filename1">
+                    </div>
 
 					<!-- infomenu1 -->
 					<div class="infomenu1">
@@ -69,5 +64,4 @@
             return false;
         }
     }
-
 </script>

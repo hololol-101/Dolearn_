@@ -206,6 +206,8 @@
 
 <!-- 공지 사항 -->
 <div id="cp1tabs1pane5" class="cp1tabs1pane">
+    @include('sub.lecture.inc_layer_report_post')
+
 	@include('sub.lecture.inc_lecture_notice')
 </div>
 </div>

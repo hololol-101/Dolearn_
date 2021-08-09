@@ -42,7 +42,7 @@
                 <div class="cp1menu1 toggle1s1">
                     <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>
                     <div class="cp1menu1c toggle-c">
-                        <a href="javascript:void(0);" rel="noopener" title="새 창" class="b2 report" onclick="boardReport(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>
+                        <a href="#layer1report1post1" class="b2 report toggle" data-send-focus="that"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>
                     </div>
                 </div>
                 <!-- /cp1menu1 -->
@@ -185,7 +185,6 @@
 </div>
 <!-- /infomenu1 -->
 @include('manage.lecture.commentlist')
-
 @php
     $page = isset($_GET['page'])?$_GET['page']:1;
 @endphp
@@ -302,4 +301,40 @@ function boardReport(obj){
         }
     })
 }
+
+
+$('#layer1report1post1').find(':button').on('click', function(){
+    var my = $('#layer1report1post1');
+    var idx =$('#noticeIdx').val();
+
+    var content = $('input[name="★1radio2"]:checked').siblings('label').text()
+    if(content ==''){
+        alert('신고사유를 선택해주세요!');
+        return false;
+    }
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'POST',
+        dataType: 'json',
+        url : "{{ route('report.report') }}",
+        data: {
+            'type':'lecture_notice',
+            'idx':idx,
+            'content': content
+        },
+        success : (data) => {
+            if(data.status=="success"){
+                alert("신고접수가 완료되었습니다.")
+            }else{
+                alert("이미 신고접수를 하셨습니다.")
+            }
+            $('#layer1report1post1').removeClass('on');
+            $('#layer1report1post1').css('disable', 'none')
+
+        }
+    });
+})
+
 </script>

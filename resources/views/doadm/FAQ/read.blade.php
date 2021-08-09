@@ -1,4 +1,4 @@
-@extends('layouts.doadm.doadm_layout') // 레이아웃을 사용함.
+@extends('layouts.doadm.doadm_layout')
 
 @section('content')
 

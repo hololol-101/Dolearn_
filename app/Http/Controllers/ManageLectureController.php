@@ -743,10 +743,17 @@ class ManageLectureController extends Controller {
         $idx = $request->post('idx');
         $email = Auth::user()->email;
         $file = $request->file('file01');
+        $filename = $request->file('filename');
+
         $fileReName ='';
         if($file){
             $fileReName =storeAttachFile($file)['fileReName'];
+        }else{
+            if($filename!=null){
+                $fileReName = $filename;
+            }
         }
+
         if($idx!=null){
             //수정
             DB::table('my_lecture_notice')->where('idx', $idx)->update(array(
@@ -755,9 +762,8 @@ class ManageLectureController extends Controller {
             'title' => $noticeTitle,
             'content'=> $noticeContent,
             'attach_file' => $fileReName,
-            'updated_at' => now()
-        ));
-
+            'update_at' => now()
+            ));
         }else{
         //공지 생성
         DB::table('my_lecture_notice')->insert(array(

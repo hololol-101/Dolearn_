@@ -142,7 +142,7 @@
 			<button type="button" class="button small del-check">선택 삭제</button>
 		</div>
 		<div class="right">
-			<a href="#layer1notice1write1" class="button small toggle" data-send-focus="that" onclick="$('#noticeTitle').val(''); $('#editor').empty(); $('#idx').val('');">+ 새 공지</a>
+			<a href="#layer1notice1write1" class="button small toggle secondary" data-send-focus="that" onclick="layerPopup(this)">+ 새 공지</a>
 		</div>
 	</div>
 	<!-- /infomenu1 -->
@@ -175,13 +175,16 @@
 		</tr>
 		</thead>
 		<tbody class="w1item">
+        @php
+            $idx=0;
+        @endphp
         @foreach ($lectureNoticeList as $lectureNotice )
             <tr class="item">
             <td><input type="checkbox" name="★1checkbox1" title="선택" value="{{ $lectureNotice->idx }}"/></td>
             <td class="tal"><a href="#">{{ $lectureNotice->title }}</a></td>
             <td>{{ $lectureNotice->writer_name }}</td>
             <td>{{ $lectureNotice->write_at }}</td>
-            <td><a href="#layer1notice1write1" class="b2 button small secondary edit toggle" data-send-focus="that" data-idx="{{ $lectureNotice->idx }}" data-title="{{ $lectureNotice->title }}" data-content="{{ $lectureNotice->content }}" >수정</a></td>
+            <td><a href="#layer1notice1write1" class="b2 button small secondary edit toggle" id="edit-data{{ $lectureNotice->idx }}" onclick="layerPopup(this)"data-send-focus="that" data-idx="{{ $lectureNotice->idx }}" data-title="{{ $lectureNotice->title }}" data-content="{{ $lectureNotice->content }}" data-file="{{ $lectureNotice->attach_file }}" >수정</a></td>
             </tr>
         @endforeach
 		</tbody>
@@ -357,22 +360,41 @@ function saveLectureSettings() {
     });
 }
 
-$(function(){
-    setTimeout(function(){
-        $('.secondary.edit').click(function(){
-            var content = $(this).data('content');
-            var title = $(this).data('title');
-            var idx = $(this).data('idx');
-            //TODO: content 안나옴
+function layerPopup(obj){
+    var content = $(obj).data('content');
+    var title = $(obj).data('title');
+    var idx = $(obj).data('idx');
+    var file = $(obj).data('file');
+    if(title==undefined)title = "";
+    if(idx==undefined)idx = "";
+    if(content==undefined)content = "";
+    if(file==undefined)file="";
             $('#noticeTitle').val(title);
-            $('#editor').val(content);
-            $('#idx').val(idx);
+            $('#editor').text(content);
+            $('#postIdx').val(idx);
+            if(file!=''){
+                $('#filename0').val(file);
+                $('#filename1').text(file);
+            }else{
+                $('#filename0').val('');
+                $('#filename1').text('');
+            }
 
-        })
+            $('.form1item1').html(
+            '<div class="cp1write1">'
+                +'<textarea class="editor" id="editor" name="noticeContent" >'
+                +content
+                +'</textarea>'
+                +'</div>')
 
-    }, 100);
 
-})
+            CKEDITOR.replace('editor', {
+                height: 500,
+                filebrowserUploadUrl: "{{ route('ck_file_upload', ['_token' => csrf_token()]) }}",
+                filebrowserUploadMethod: 'form'
+            });
+}
+
 
 </script>
 @endsection

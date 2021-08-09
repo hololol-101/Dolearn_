@@ -63,10 +63,7 @@
                                     <a href="javascript:void(0);" class="a1" video_id="{{ $video->uid }}"><span class="t1">{{ $video->new_video_title }}</span> <span class="t2">{{ $videoLen }}</span></a>
                                 </li>
                                 @endforeach
-                                {{-- <li class="li1">
-                                    <a href="?#★" class="g1"><i class="g1ic1"></i></a>
-                                    <a href="?#★" class="a1"><span class="t1">1차 과제 - 무슨무슨 실습파일</span></a>
-                                </li> --}}
+
                             </ul>
                         </div>
                     </div>

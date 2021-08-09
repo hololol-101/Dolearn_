@@ -58,7 +58,6 @@ $popup = isset($_GET['isPopup']) ? $_GET['isPopup'] : 'fail';
                                 <i class="ic1"></i>
                             </a>
                         </div>
-                        <a href="javascript:void(0);" class="more"><span class="t1">전체보기</span></a>
                     </div>
 
                     <!-- fcard2off1 -->
@@ -84,8 +83,36 @@ $popup = isset($_GET['isPopup']) ? $_GET['isPopup'] : 'fail';
             @if (count($operatingLectureList) > 0)
             <!-- 강사 : 내가 운영중인 강좌와 비슷한 -->
             @include('main.inc_similar_my_operating_lecture')
-            @endif
+            @else
+            <!-- fcard2 -->
+            <div id="fcard2">
+                <div class="wrap1">
+                    <div class="hg1">
+                        <div class="w1 toggle1s1">
+                            <h3 class="h1">현재 운영중인 강좌</h3>
+                            <a class="sw1 switch">
+                                <span class="t1">비슷한 강좌 추천받기</span>
+                                <span class="t2 sw-on">ON</span>
+                                <span class="t2 sw-off">OFF</span>
+                                <i class="ic1"></i>
+                            </a>
+                        </div>
+                    </div>
 
+                    <!-- fcard2off1 -->
+                    <div id="fcard2off1">
+                        <a href="{{ route('sub.lecture.add_new_lecture') }}" class="a1">
+                            <div class="tc1">
+                                <span class="t1">새로운 강좌를 개설해 보세요!</span>
+                                <i class="ic1"></i>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- /fcard2off1 -->
+                </div>
+            </div>
+            <!-- /fcard2 -->
+        @endif
     @endif
 
     @if ($role == 'youtuber')
