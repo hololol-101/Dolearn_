@@ -164,7 +164,7 @@
 
 <!-- (레이어팝업) -->
 @include('sub.lecture.inc_layer_report_video')
-
+@include('sub.lecture.inc_layer_report_post')
 
 <!-- cp1tabs1 -->
 <div id="cp1tabs1" class="cp1tabs1">
@@ -206,9 +206,7 @@
 
 <!-- 공지 사항 -->
 <div id="cp1tabs1pane5" class="cp1tabs1pane">
-    @include('sub.lecture.inc_layer_report_post')
-
-	@include('sub.lecture.inc_lecture_notice')
+    @include('sub.lecture.inc_lecture_notice')
 </div>
 </div>
 <!-- /cp1tabs1cont -->

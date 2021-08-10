@@ -572,13 +572,13 @@ class LectureController extends Controller{
             $html .= '      </div>';
             $html .= '      <div class="eg1">';
             $html .= '          <a href="javascript:void(0);" class="cp1like1" onclick="boardLike(this)"><span class="cp1like1t1">좋아요</span> <span class="cp1like1t2">'.$lectureLike.'</span></a>';
-            $html .= '      <!-- cp1menu1 -->';
+            $html .= '          <!-- cp1menu1 -->';
             $html .= '          <div class="cp1menu1 toggle1s1">';
             $html .= '              <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
-            $html .= '                  <div class="cp1menu1c toggle-c">';
-            $html .= '                      <a href="javascript:void(0);" rel="noopener" title="새 창" class="b2 report" onclick="boardReport(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
-            $html .= '                  </div>';
+            $html .= '              <div class="cp1menu1c toggle-c">';
+            $html .= '                  <a href="#layer1report1post1" class="b2 report toggle" data-send-focus="that" onclick="'." $('#layer1report1post1').addClass('on'); $('#layer1report1post1').css('disable', '')".'"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
             $html .= '              </div>';
+            $html .= '          </div>';
             $html .= '          <!-- /cp1menu1 -->';
             $html .= '          </div>';
             $html .= '      </div>';
@@ -765,7 +765,7 @@ class LectureController extends Controller{
             $html .= '          <div class="cp1menu1 toggle1s1">';
             $html .= '              <strong><a href="javascript:void(0);" class="b1 toggle-b"><i class="b1ic1"></i><span class="b1t1">(부가메뉴 여닫기)</span></a></strong>';
             $html .= '                  <div class="cp1menu1c toggle-c">';
-            $html .= '                      <a href="javascript:void(0);" rel="noopener" title="새 창" class="b2 report" onclick="boardReport(this)"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
+            $html .= '                      <a href="#layer1report1post1" class="b2 report toggle" data-send-focus="that" onclick="'." $('#layer1report1post1').addClass('on'); $('#layer1report1post1').css('disable', '')".'"><i class="b2ic1"></i><span class="b2t1">신고하기</span></a>';
             $html .= '                  </div>';
             $html .= '              </div>';
             $html .= '          <!-- /cp1menu1 -->';

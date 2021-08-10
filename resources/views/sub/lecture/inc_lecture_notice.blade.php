@@ -218,7 +218,6 @@ function enrollEvent(obj){
     var my = obj;
     var content = $(my).parent().siblings('textarea').val();
     var value = $(my).val();
-    console.log(value);
     var idx = $(my).siblings('input[type="hidden"]').val();
     if(typeof(idx) =="undefined") idx = 0;
     @if (Auth::check())
@@ -241,7 +240,7 @@ function enrollEvent(obj){
             'isReply': value
         },
         success : (result) => {
-            $('.cp1bbs4view1').empty().append(result.html);
+            $('.cp1bbs4view1').empty().append(result.html).trigger("create");
             // $('#commentPage').empty().append(result.pageIndex['htmlCode']);
         }
     });
@@ -275,33 +274,12 @@ function boardLike(obj){
         }
     })
 }
-function boardReport(obj){
-    var my = $(obj);
-    var idx =$('#noticeIdx').val();
-    $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        type: 'GET',
-        dataType: 'json',
-        url: "{{ route('notice.report') }}",
-        data: {
-            'type':"lecture_notice",
-            'targetId':idx,
-            'content':''
-        },
-        success: (data) => {
-            if(data.status =="create"){
-                alert("신고접수가 완료되었습니다.");
-            }else{
-                alert('이미 신고접수를 하셨습니다.');
-            }
-        }, error: function(response) {
-            console.log(response);
-        }
-    })
-}
 
+$('#reportButton').on("click", function(){
+    alert("hello");
+    $('#layer1report1post1').addClass('on');
+    $('#layer1report1post1').css('disable', '')
+})
 
 $('#layer1report1post1').find(':button').on('click', function(){
     var my = $('#layer1report1post1');
@@ -336,5 +314,8 @@ $('#layer1report1post1').find(':button').on('click', function(){
         }
     });
 })
-
+$('.lightbox .ic1').on("click", function(){
+    $('#layer1report1post1').removeClass('on');
+            $('#layer1report1post1').css('disable', 'none')
+})
 </script>
